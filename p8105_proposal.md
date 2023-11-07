@@ -16,9 +16,13 @@ A Comprehensive Analysis of Hospital Data on Mortality Rates
 # 3. The motivation for this project:
 
 Predictors of in-hospital mortality in patients with heart failure
-admitted to the intensive care unit (ICU) remain unclear. We aimed to
-develop and validate a predictive model for all-cause in-hospital
-mortality in patients with heart failure admitted to the ICU.
+admitted to the intensive care unit (ICU) remain unclear. Aimed to lay a
+solid foundation for Survival Analysis, deepen our understanding of
+Mortality, we conducted a comprehensive research based on the patient’s
+Mortality factors dataset. Although this dataset belongs to
+cross-sectional study, we still can dig out some key patterns that
+affect Mortality and detect abnormal characteristics that indicate the
+death sign at the early stage.
 
 # 4. The intended final products:
 
