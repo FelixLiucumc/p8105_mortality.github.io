@@ -45,14 +45,14 @@ mortality_data %>%
   summarise(count = n(),
             outcome_0 = sum(outcome == 0, na.rm = TRUE),
             outcome_1 = sum(outcome == 1, na.rm = TRUE),
-            percentage = outcome_1/(outcome_0 + outcome_1))
+            percentage = outcome_1/(outcome_0 + outcome_1)) %>%
+  knitr::kable(digits = 3)  
 ```
 
-    ## # A tibble: 5 × 5
-    ##   age_group count outcome_0 outcome_1 percentage
-    ##   <fct>     <int>     <int>     <int>      <dbl>
-    ## 1 Under 20      2         2         0     0     
-    ## 2 20-40        16        15         1     0.0625
-    ## 3 40-60       158       138        20     0.127 
-    ## 4 60-80       492       435        57     0.116 
-    ## 5 Over 60     508       427        81     0.159
+| age_group | count | outcome_0 | outcome_1 | percentage |
+|:----------|------:|----------:|----------:|-----------:|
+| Under 20  |     2 |         2 |         0 |      0.000 |
+| 20-40     |    16 |        15 |         1 |      0.062 |
+| 40-60     |   158 |       138 |        20 |      0.127 |
+| 60-80     |   492 |       435 |        57 |      0.116 |
+| Over 60   |   508 |       427 |        81 |      0.159 |

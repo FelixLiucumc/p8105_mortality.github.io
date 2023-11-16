@@ -39,8 +39,8 @@ mortality_data %>%
   summarise(count = n(),
             outcome_0 = sum(outcome == 0, na.rm = TRUE),
             outcome_1 = sum(outcome == 1, na.rm = TRUE),
-            percentage = outcome_1/(outcome_0 + outcome_1))
-
+            percentage = outcome_1/(outcome_0 + outcome_1)) %>%
+  knitr::kable(digits = 3)  
 
 ```
 
