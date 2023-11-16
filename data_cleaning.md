@@ -3,33 +3,32 @@ data_cleaning
 Candice Yu
 2023-11-16
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax
-for authoring HTML, PDF, and MS Word documents. For more details on
-using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that
-includes both content as well as the output of any embedded R code
-chunks within the document. You can embed an R code chunk like this:
-
 ``` r
-summary(cars)
+mortality_data <- read_csv("mortality_data.csv") %>%
+  janitor::clean_names() %>%
+  drop_na(outcome) 
 ```
 
-    ##      speed           dist       
-    ##  Min.   : 4.0   Min.   :  2.00  
-    ##  1st Qu.:12.0   1st Qu.: 26.00  
-    ##  Median :15.0   Median : 36.00  
-    ##  Mean   :15.4   Mean   : 42.98  
-    ##  3rd Qu.:19.0   3rd Qu.: 56.00  
-    ##  Max.   :25.0   Max.   :120.00
+    ## Rows: 1177 Columns: 51
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## dbl (51): group, ID, outcome, age, gendera, BMI, hypertensive, atrialfibrill...
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 
-## Including Plots
+``` r
+mortality_data %>%
+  group_by(gendera) %>%
+  summarise(
+    count = n(), # total number of entries for each gender
+    outcome_0 = sum(outcome == 0), # number of outcomes with value 0
+    outcome_1 = sum(outcome == 1) # number of outcomes with value 1
+  ) %>%
+  knitr::kable()  
+```
 
-You can also embed plots, for example:
-
-![](data_cleaning_files/figure-gfm/pressure-1.png)<!-- -->
-
-Note that the `echo = FALSE` parameter was added to the code chunk to
-prevent printing of the R code that generated the plot.
+| gendera | count | outcome_0 | outcome_1 |
+|--------:|------:|----------:|----------:|
+|       1 |   558 |       478 |        80 |
+|       2 |   618 |       539 |        79 |
