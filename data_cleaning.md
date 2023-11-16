@@ -17,21 +17,26 @@ mortality_data <- read_csv("mortality_data.csv") %>%
     ## ℹ Use `spec()` to retrieve the full column specification for this data.
     ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 
+# Gender & Outcome
+
 ``` r
 mortality_data %>%
   group_by(gendera) %>%
   summarise(
     count = n(), # total number of entries for each gender
     outcome_0 = sum(outcome == 0), # number of outcomes with value 0
-    outcome_1 = sum(outcome == 1) # number of outcomes with value 1
+    outcome_1 = sum(outcome == 1), # number of outcomes with value 1
+    percentage = outcome_1/count
   ) %>%
-  knitr::kable()  
+  knitr::kable(digits = 3)  
 ```
 
-| gendera | count | outcome_0 | outcome_1 |
-|--------:|------:|----------:|----------:|
-|       1 |   558 |       478 |        80 |
-|       2 |   618 |       539 |        79 |
+| gendera | count | outcome_0 | outcome_1 | percentage |
+|--------:|------:|----------:|----------:|-----------:|
+|       1 |   558 |       478 |        80 |      0.143 |
+|       2 |   618 |       539 |        79 |      0.128 |
+
+# Age & Outcome
 
 ``` r
 # Define age intervals

@@ -16,17 +16,19 @@ mortality_data <- read_csv("mortality_data.csv") %>%
   janitor::clean_names() %>%
   drop_na(outcome) 
 ```
+# Gender & Outcome
 ```{r}
 mortality_data %>%
   group_by(gendera) %>%
   summarise(
     count = n(), # total number of entries for each gender
     outcome_0 = sum(outcome == 0), # number of outcomes with value 0
-    outcome_1 = sum(outcome == 1) # number of outcomes with value 1
+    outcome_1 = sum(outcome == 1), # number of outcomes with value 1
+    percentage = outcome_1/count
   ) %>%
-  knitr::kable()  
+  knitr::kable(digits = 3)  
 ```
-
+# Age & Outcome
 ```{r}
 # Define age intervals
 age_breaks <- c(-Inf, 20, 40, 60, 80, Inf)
