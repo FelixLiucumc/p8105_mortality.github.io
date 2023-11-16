@@ -32,3 +32,27 @@ mortality_data %>%
 |--------:|------:|----------:|----------:|
 |       1 |   558 |       478 |        80 |
 |       2 |   618 |       539 |        79 |
+
+``` r
+# Define age intervals
+age_breaks <- c(-Inf, 20, 40, 60, 80, Inf)
+age_labels <- c('Under 20', '20-40', '40-60', '60-80', 'Over 60')
+
+# Create age groups and summarize outcomes
+mortality_data %>%
+  mutate(age_group = cut(age, breaks = age_breaks, labels = age_labels, right = FALSE)) %>%
+  group_by(age_group) %>%
+  summarise(count = n(),
+            outcome_0 = sum(outcome == 0, na.rm = TRUE),
+            outcome_1 = sum(outcome == 1, na.rm = TRUE),
+            percentage = outcome_1/(outcome_0 + outcome_1))
+```
+
+    ## # A tibble: 5 × 5
+    ##   age_group count outcome_0 outcome_1 percentage
+    ##   <fct>     <int>     <int>     <int>      <dbl>
+    ## 1 Under 20      2         2         0     0     
+    ## 2 20-40        16        15         1     0.0625
+    ## 3 40-60       158       138        20     0.127 
+    ## 4 60-80       492       435        57     0.116 
+    ## 5 Over 60     508       427        81     0.159
