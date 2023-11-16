@@ -41,7 +41,7 @@ mortality_data %>%
 ``` r
 # Define age intervals
 age_breaks <- c(-Inf, 20, 40, 60, 80, Inf)
-age_labels <- c('Under 20', '20-40', '40-60', '60-80', 'Over 60')
+age_labels <- c('Under 20', '20-40', '40-60', '60-80', 'Over 80')
 
 # Create age groups and summarize outcomes
 mortality_data %>%
@@ -60,4 +60,4 @@ mortality_data %>%
 | 20-40     |    16 |        15 |         1 |      0.062 |
 | 40-60     |   158 |       138 |        20 |      0.127 |
 | 60-80     |   492 |       435 |        57 |      0.116 |
-| Over 60   |   508 |       427 |        81 |      0.159 |
+| Over 80   |   508 |       427 |        81 |      0.159 |
