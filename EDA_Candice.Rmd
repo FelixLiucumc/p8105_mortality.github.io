@@ -1,5 +1,5 @@
 ---
-title: "data_cleaning"
+title: "EDA_Candice"
 author: "Candice Yu"
 date: "2023-11-16"
 output: github_document
