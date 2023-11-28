@@ -155,3 +155,75 @@ mortality_data %>%
 | 40-60     |   158 |       138 |        20 |      0.127 |
 | 60-80     |   492 |       435 |        57 |      0.116 |
 | Over 80   |   508 |       427 |        81 |      0.159 |
+
+# Univariate Analysis
+
+``` r
+# Distribution of Age
+ggplot(mortality_data, aes(x = age)) +
+  geom_histogram(binwidth = 1, fill = "steelblue", color = "black") +
+  ggtitle("Age Distribution")
+```
+
+![](EDA_Candice_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+
+``` r
+# Distribution of BMI (handling missing values)
+ggplot(mortality_data %>% drop_na(bmi), aes(x = bmi)) +
+  geom_histogram(binwidth = 1, fill = "darkgreen", color = "black") +
+  ggtitle("BMI Distribution")
+```
+
+![](EDA_Candice_files/figure-gfm/unnamed-chunk-5-2.png)<!-- -->
+
+# Bivariate Analysis
+
+``` r
+# Bivariate Analysis
+ggplot(mortality_data, aes(x = gender, y = age, fill = outcome)) +
+  geom_boxplot()
+```
+
+![](EDA_Candice_files/figure-gfm/unnamed-chunk-6-1.png)<!-- --> \#
+Exploring Outcomes
+
+``` r
+# Age distribution by Outcome
+ggplot(mortality_data, aes(x = age, fill = as.factor(outcome))) +
+  geom_histogram(binwidth = 5, position = "dodge") +
+  ggtitle("Age Distribution by Outcome")
+```
+
+![](EDA_Candice_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+
+``` r
+# Blood Pressure by Outcome
+ggplot(mortality_data, aes(x = systolic_blood_pressure, y = diastolic_blood_pressure, color = as.factor(outcome))) +
+  geom_point(alpha = 0.5) +
+  ggtitle("Blood Pressure by Outcome")
+```
+
+    ## Warning: Removed 15 rows containing missing values (`geom_point()`).
+
+![](EDA_Candice_files/figure-gfm/unnamed-chunk-7-2.png)<!-- -->
+
+``` r
+# BMI by Gender and Outcome
+ggplot(mortality_data %>% drop_na(bmi), aes(x = bmi, fill = as.factor(outcome))) +
+  geom_histogram(binwidth = 1, position = "dodge") +
+  facet_wrap(~gender) +
+  ggtitle("BMI by Gender and Outcome")
+```
+
+![](EDA_Candice_files/figure-gfm/unnamed-chunk-7-3.png)<!-- -->
+
+``` r
+# Heart Rate by Outcome
+ggplot(mortality_data, aes(x = heart_rate, fill = as.factor(outcome))) +
+  geom_density(alpha = 0.7) +
+  ggtitle("Heart Rate Distribution by Outcome")
+```
+
+    ## Warning: Removed 12 rows containing non-finite values (`stat_density()`).
+
+![](EDA_Candice_files/figure-gfm/unnamed-chunk-7-4.png)<!-- -->

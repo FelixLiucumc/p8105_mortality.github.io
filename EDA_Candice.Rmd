@@ -9,6 +9,7 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse)
+library(data.table)
 ```
 
 ```{r}
@@ -69,6 +70,53 @@ mortality_data %>%
             percentage = outcome_1/(outcome_0 + outcome_1)) %>%
   knitr::kable(digits = 3)  
 
+```
+
+# Univariate Analysis
+```{r}
+# Distribution of Age
+ggplot(mortality_data, aes(x = age)) +
+  geom_histogram(binwidth = 1, fill = "steelblue", color = "black") +
+  ggtitle("Age Distribution")
+
+# Distribution of BMI (handling missing values)
+ggplot(mortality_data %>% drop_na(bmi), aes(x = bmi)) +
+  geom_histogram(binwidth = 1, fill = "darkgreen", color = "black") +
+  ggtitle("BMI Distribution")
+
+```
+
+# Bivariate Analysis
+```{r}
+
+# Bivariate Analysis
+ggplot(mortality_data, aes(x = gender, y = age, fill = outcome)) +
+  geom_boxplot()
+
+```
+# Exploring Outcomes
+```{r}
+# Age distribution by Outcome
+ggplot(mortality_data, aes(x = age, fill = as.factor(outcome))) +
+  geom_histogram(binwidth = 5, position = "dodge") +
+  ggtitle("Age Distribution by Outcome")
+
+
+# Blood Pressure by Outcome
+ggplot(mortality_data, aes(x = systolic_blood_pressure, y = diastolic_blood_pressure, color = as.factor(outcome))) +
+  geom_point(alpha = 0.5) +
+  ggtitle("Blood Pressure by Outcome")
+
+# BMI by Gender and Outcome
+ggplot(mortality_data %>% drop_na(bmi), aes(x = bmi, fill = as.factor(outcome))) +
+  geom_histogram(binwidth = 1, position = "dodge") +
+  facet_wrap(~gender) +
+  ggtitle("BMI by Gender and Outcome")
+
+# Heart Rate by Outcome
+ggplot(mortality_data, aes(x = heart_rate, fill = as.factor(outcome))) +
+  geom_density(alpha = 0.7) +
+  ggtitle("Heart Rate Distribution by Outcome")
 ```
 
 
