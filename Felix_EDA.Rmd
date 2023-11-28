@@ -8,6 +8,8 @@ output: github_document
 ```{r setup, message = FALSE}
 library(tidyverse)
 library(corrplot)
+library(FactoMineR)
+library(factoextra)
 ```
 
 
@@ -87,28 +89,37 @@ summary(model_sign)
 
 
 ```{r}
-#pca
+#pca_com
 com_names = 
   com_data |>
   select(hypertensive:copd) |>
-  colnames()
-
-sign_names = 
-  sign_data |>
-  select(heart_rate:ef) |>
   colnames()
 
 vars_com = com_data[, com_names]
 pca_res_com = prcomp(vars_com, scale. = TRUE)
 summary(pca_res_com)
 
-vars_sign = sign_data[, sign_names]
-pca_res_sign = prcomp(vars_sign, scale. = TRUE)
-summary(pca_res_sign)
+res_pca_com = PCA(com_data, graph = FALSE)
+fviz_eig(res_pca_com, addlabels = TRUE, ylim = c(0, 50))
+fviz_pca_var(res_pca_com, col.var = "black")
 ```
 
 
+```{r}
+#pca_sign
+sign_names = 
+  sign_data |>
+  select(heart_rate:ef) |>
+  colnames()
 
+vars_sign = sign_data[, sign_names]
+pca_res_sign = prcomp(vars_sign, scale. = TRUE)
+summary(pca_res_sign)
+
+res_pca_sign = PCA(sign_data, graph = FALSE)
+fviz_eig(res_pca_sign, addlabels = TRUE, ylim = c(0, 50))
+fviz_pca_var(res_pca_sign, col.var = "black")
+```
 
 
 

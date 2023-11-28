@@ -11,6 +11,18 @@ library(corrplot)
     ## Warning: 程辑包'corrplot'是用R版本4.3.2 来建造的
 
 ``` r
+library(FactoMineR)
+```
+
+    ## Warning: 程辑包'FactoMineR'是用R版本4.3.2 来建造的
+
+``` r
+library(factoextra)
+```
+
+    ## Warning: 程辑包'factoextra'是用R版本4.3.2 来建造的
+
+``` r
 mort_data = 
   read_csv("./data/data01.csv") |> 
   janitor::clean_names() |> 
@@ -227,15 +239,10 @@ summary(model_sign)
     ## F-statistic: 5.913 on 36 and 391 DF,  p-value: < 2.2e-16
 
 ``` r
-#pca
+#pca_com
 com_names = 
   com_data |>
   select(hypertensive:copd) |>
-  colnames()
-
-sign_names = 
-  sign_data |>
-  select(heart_rate:ef) |>
   colnames()
 
 vars_com = com_data[, com_names]
@@ -254,6 +261,25 @@ summary(pca_res_com)
     ## Cumulative Proportion  0.92431 1.00000
 
 ``` r
+res_pca_com = PCA(com_data, graph = FALSE)
+fviz_eig(res_pca_com, addlabels = TRUE, ylim = c(0, 50))
+```
+
+![](Felix_EDA_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+
+``` r
+fviz_pca_var(res_pca_com, col.var = "black")
+```
+
+![](Felix_EDA_files/figure-gfm/unnamed-chunk-7-2.png)<!-- -->
+
+``` r
+#pca_sign
+sign_names = 
+  sign_data |>
+  select(heart_rate:ef) |>
+  colnames()
+
 vars_sign = sign_data[, sign_names]
 pca_res_sign = prcomp(vars_sign, scale. = TRUE)
 summary(pca_res_sign)
@@ -284,3 +310,16 @@ summary(pca_res_sign)
     ## Standard deviation     0.02754
     ## Proportion of Variance 0.00002
     ## Cumulative Proportion  1.00000
+
+``` r
+res_pca_sign = PCA(sign_data, graph = FALSE)
+fviz_eig(res_pca_sign, addlabels = TRUE, ylim = c(0, 50))
+```
+
+![](Felix_EDA_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+
+``` r
+fviz_pca_var(res_pca_sign, col.var = "black")
+```
+
+![](Felix_EDA_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
