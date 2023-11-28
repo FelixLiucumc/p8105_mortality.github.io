@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse)
 library(data.table)
+library(survival)
 ```
 
 ```{r}
@@ -144,3 +145,81 @@ It shows a wide range of BMI values for both genders, with no clear pattern indi
 
 The density plot for heart rate shows that the distribution of heart rates for patients who did not survive is slightly shifted towards the higher end compared to those who survived. This could suggest that a higher heart rate is associated with a higher risk of mortality.
 
+
+# Comorbidities Analysis
+```{r, fig.width = 12, fig.height = 6}
+# Analyzing the presence of comorbidities by outcome
+comorbidities <- c("hypertensive", "diabetes", "deficiencyanemias", "depression", "renal_failure", "copd")
+
+# Melt the data for easier plotting
+mortality_long <- melt(mortality_data, id.vars = "outcome", measure.vars = comorbidities)
+
+# Plotting comorbidities by outcome
+ggplot(mortality_long, aes(x = variable, fill = as.factor(value))) +
+  geom_bar(position = "fill") +
+  facet_wrap(~outcome) +
+  labs(x = "Comorbidity", y = "Count", fill = "Presence") +
+  ggtitle("Distribution of Comorbidities by Outcome") +
+  scale_y_continuous(labels = scales::percent)
+
+```
+
+**Distribution of Comorbidities by Outcome:**
+
+The stacked bar plot shows the distribution of comorbidities by outcome. It appears that the proportion of patients with certain comorbidities like renal failure and COPD is higher among non-survivors. 
+
+
+# Lab Results Analysis
+```{r}
+# Creatinine levels by outcome
+ggplot(mortality_data %>% drop_na(creatinine), aes(x = creatinine, fill = as.factor(outcome))) +
+  geom_density(alpha = 0.5) +
+  ggtitle("Creatinine Levels by Outcome")
+
+# Lactic acid levels by outcome
+ggplot(mortality_data %>% drop_na(lactic_acid), aes(x = lactic_acid, fill = as.factor(outcome))) +
+  geom_density(alpha = 0.5) +
+  ggtitle("Lactic Acid Levels by Outcome")
+
+# Urea nitrogen levels by outcome
+ggplot(mortality_data %>% drop_na(urea_nitrogen), aes(x = urea_nitrogen, fill = as.factor(outcome))) +
+  geom_density(alpha = 0.5) +
+  ggtitle("Blood Urea nitrogen Levels by Outcome")
+
+# Hematocrit levels by outcome
+ggplot(mortality_data %>% drop_na(hematocrit), aes(x = hematocrit, fill = as.factor(outcome))) +
+  geom_density(alpha = 0.5) +
+  ggtitle("Hematocrit Levels by Outcome")
+
+# Leucocyte count by outcome
+ggplot(mortality_data %>% drop_na(leucocyte), aes(x = leucocyte, fill = as.factor(outcome))) +
+  geom_density(alpha = 0.5) +
+  ggtitle("Leucocyte Count by Outcome")
+
+# Glucose levels by outcome
+ggplot(mortality_data %>% drop_na(glucose), aes(x = glucose, fill = as.factor(outcome))) +
+  geom_density(alpha = 0.5) +
+  ggtitle("Glucose Levels by Outcome")
+
+```
+
+**Blood Urea Nitrogen Levels by Outcome:**
+
+Patients with higher levels seem to have a poorer outcome, as indicated by the longer tail in the distribution for non-survivors. High blood urea nitrogen levels can be indicative of renal insufficiency or failure, which is a known risk factor for mortality.
+
+**Leucocyte Count by Outcome:**
+
+The density plot shows a higher peak for leucocyte count among survivors (outcome 0) compared to non-survivors (outcome 1). However, there is a long tail in the distribution for non-survivors, suggesting that some patients who did not survive had very high leucocyte counts, which could indicate severe infection or systemic stress.
+
+# Logistic Regression for Outcome Prediction
+```{r}
+# Logistic regression to assess the impact of various factors on outcome
+# Select relevant variables for the logistic regression model
+logistic_model <- glm(outcome ~ age + gender + bmi + hypertensive + diabetes + renal_failure + leucocyte +
+                        urea_nitrogen + heart_rate, 
+                      data = mortality_data, family = binomial())
+
+# Summary of the model to check for significant variables
+summary(logistic_model)
+
+```

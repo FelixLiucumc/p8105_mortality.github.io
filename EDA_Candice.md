@@ -266,3 +266,154 @@ The density plot for heart rate shows that the distribution of heart
 rates for patients who did not survive is slightly shifted towards the
 higher end compared to those who survived. This could suggest that a
 higher heart rate is associated with a higher risk of mortality.
+
+# Comorbidities Analysis
+
+``` r
+# Analyzing the presence of comorbidities by outcome
+comorbidities <- c("hypertensive", "diabetes", "deficiencyanemias", "depression", "renal_failure", "copd")
+
+# Melt the data for easier plotting
+mortality_long <- melt(mortality_data, id.vars = "outcome", measure.vars = comorbidities)
+```
+
+    ## Warning in melt(mortality_data, id.vars = "outcome", measure.vars =
+    ## comorbidities): The melt generic in data.table has been passed a tbl_df and
+    ## will attempt to redirect to the relevant reshape2 method; please note that
+    ## reshape2 is deprecated, and this redirection is now deprecated as well. To
+    ## continue using melt methods from reshape2 while both libraries are attached,
+    ## e.g. melt.list, you can prepend the namespace like
+    ## reshape2::melt(mortality_data). In the next version, this warning will become
+    ## an error.
+
+``` r
+# Plotting comorbidities by outcome
+ggplot(mortality_long, aes(x = variable, fill = as.factor(value))) +
+  geom_bar(position = "fill") +
+  facet_wrap(~outcome) +
+  labs(x = "Comorbidity", y = "Count", fill = "Presence") +
+  ggtitle("Distribution of Comorbidities by Outcome") +
+  scale_y_continuous(labels = scales::percent)
+```
+
+![](EDA_Candice_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+
+**Distribution of Comorbidities by Outcome:**
+
+The stacked bar plot shows the distribution of comorbidities by outcome.
+It appears that the proportion of patients with certain comorbidities
+like renal failure and COPD is higher among non-survivors.
+
+# Lab Results Analysis
+
+``` r
+# Creatinine levels by outcome
+ggplot(mortality_data %>% drop_na(creatinine), aes(x = creatinine, fill = as.factor(outcome))) +
+  geom_density(alpha = 0.5) +
+  ggtitle("Creatinine Levels by Outcome")
+```
+
+![](EDA_Candice_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+
+``` r
+# Lactic acid levels by outcome
+ggplot(mortality_data %>% drop_na(lactic_acid), aes(x = lactic_acid, fill = as.factor(outcome))) +
+  geom_density(alpha = 0.5) +
+  ggtitle("Lactic Acid Levels by Outcome")
+```
+
+![](EDA_Candice_files/figure-gfm/unnamed-chunk-9-2.png)<!-- -->
+
+``` r
+# Urea nitrogen levels by outcome
+ggplot(mortality_data %>% drop_na(urea_nitrogen), aes(x = urea_nitrogen, fill = as.factor(outcome))) +
+  geom_density(alpha = 0.5) +
+  ggtitle("Blood Urea nitrogen Levels by Outcome")
+```
+
+![](EDA_Candice_files/figure-gfm/unnamed-chunk-9-3.png)<!-- -->
+
+``` r
+# Hematocrit levels by outcome
+ggplot(mortality_data %>% drop_na(hematocrit), aes(x = hematocrit, fill = as.factor(outcome))) +
+  geom_density(alpha = 0.5) +
+  ggtitle("Hematocrit Levels by Outcome")
+```
+
+![](EDA_Candice_files/figure-gfm/unnamed-chunk-9-4.png)<!-- -->
+
+``` r
+# Leucocyte count by outcome
+ggplot(mortality_data %>% drop_na(leucocyte), aes(x = leucocyte, fill = as.factor(outcome))) +
+  geom_density(alpha = 0.5) +
+  ggtitle("Leucocyte Count by Outcome")
+```
+
+![](EDA_Candice_files/figure-gfm/unnamed-chunk-9-5.png)<!-- -->
+
+``` r
+# Glucose levels by outcome
+ggplot(mortality_data %>% drop_na(glucose), aes(x = glucose, fill = as.factor(outcome))) +
+  geom_density(alpha = 0.5) +
+  ggtitle("Glucose Levels by Outcome")
+```
+
+![](EDA_Candice_files/figure-gfm/unnamed-chunk-9-6.png)<!-- -->
+
+**Blood Urea Nitrogen Levels by Outcome:**
+
+Patients with higher levels seem to have a poorer outcome, as indicated
+by the longer tail in the distribution for non-survivors. High blood
+urea nitrogen levels can be indicative of renal insufficiency or
+failure, which is a known risk factor for mortality.
+
+**Leucocyte Count by Outcome:**
+
+The density plot shows a higher peak for leucocyte count among survivors
+(outcome 0) compared to non-survivors (outcome 1). However, there is a
+long tail in the distribution for non-survivors, suggesting that some
+patients who did not survive had very high leucocyte counts, which could
+indicate severe infection or systemic stress.
+
+# Logistic Regression for Outcome Prediction
+
+``` r
+# Logistic regression to assess the impact of various factors on outcome
+# Select relevant variables for the logistic regression model
+logistic_model <- glm(outcome ~ age + gender + bmi + hypertensive + diabetes + renal_failure + leucocyte +
+                        urea_nitrogen + heart_rate, 
+                      data = mortality_data, family = binomial())
+
+# Summary of the model to check for significant variables
+summary(logistic_model)
+```
+
+    ## 
+    ## Call:
+    ## glm(formula = outcome ~ age + gender + bmi + hypertensive + diabetes + 
+    ##     renal_failure + leucocyte + urea_nitrogen + heart_rate, family = binomial(), 
+    ##     data = mortality_data)
+    ## 
+    ## Coefficients:
+    ##                 Estimate Std. Error z value Pr(>|z|)    
+    ## (Intercept)    -8.081278   1.303571  -6.199 5.67e-10 ***
+    ## age             0.026872   0.009893   2.716  0.00660 ** 
+    ## gender2        -0.039559   0.222199  -0.178  0.85870    
+    ## bmi            -0.010542   0.014900  -0.707  0.47926    
+    ## hypertensive1  -0.376104   0.243693  -1.543  0.12275    
+    ## diabetes1      -0.025713   0.241974  -0.106  0.91537    
+    ## renal_failure1 -1.357588   0.289691  -4.686 2.78e-06 ***
+    ## leucocyte       0.054783   0.017853   3.069  0.00215 ** 
+    ## urea_nitrogen   0.040027   0.005281   7.580 3.47e-14 ***
+    ## heart_rate      0.032391   0.007260   4.462 8.14e-06 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## (Dispersion parameter for binomial family taken to be 1)
+    ## 
+    ##     Null deviance: 694.68  on 955  degrees of freedom
+    ## Residual deviance: 568.48  on 946  degrees of freedom
+    ##   (220 observations deleted due to missingness)
+    ## AIC: 588.48
+    ## 
+    ## Number of Fisher Scoring iterations: 6
