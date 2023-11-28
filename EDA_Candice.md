@@ -3,23 +3,24 @@ EDA_Candice
 Candice Yu
 2023-11-16
 
+# Data Cleaning
+
 ``` r
-# Load the data
+# Define a function to convert multiple columns to factors
+convert_to_factor <- function(df, columns) {
+  df[columns] <- lapply(df[columns], factor)
+  return(df)
+}
+
+# Load the data and preprocess it
 mortality_data <- read_csv("mortality_data.csv") %>%
   janitor::clean_names() %>%
   drop_na(outcome) %>%
-  mutate(group = as.factor(group), 
-         gender = as.factor(gendera),
-         outcome = as.factor(outcome),
-         hypertensive = as.factor(hypertensive),
-         atrialfibrillation = as.factor(atrialfibrillation),
-         chd_with_no_mi = as.factor(chd_with_no_mi),
-         diabetes = as.factor(diabetes),
-         deficiencyanemias = as.factor(deficiencyanemias),
-         depression = as.factor(depression),
-         hyperlipemia = as.factor(hyperlipemia),
-         renal_failure = as.factor(renal_failure),
-         copd = as.factor(copd))
+  convert_to_factor(., c("group", "gendera", "outcome", "hypertensive", 
+                         "atrialfibrillation", "chd_with_no_mi", "diabetes", 
+                         "deficiencyanemias", "depression", "hyperlipemia", 
+                         "renal_failure", "copd")) %>%
+  rename(gender = gendera)  # Rename gendera to gender after conversion
 ```
 
     ## Rows: 1177 Columns: 51
@@ -40,6 +41,8 @@ mortality_data[numerical_columns] <- lapply(mortality_data[numerical_columns], f
 write_csv(mortality_data, "mortality_data_cleaned.csv")
 ```
 
+# Overview of the data
+
 ``` r
 skimr::skim(mortality_data)
 ```
@@ -48,11 +51,11 @@ skimr::skim(mortality_data)
 |:-------------------------------------------------|:---------------|
 | Name                                             | mortality_data |
 | Number of rows                                   | 1176           |
-| Number of columns                                | 52             |
+| Number of columns                                | 51             |
 | \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_   |                |
 | Column type frequency:                           |                |
 | factor                                           | 12             |
-| numeric                                          | 40             |
+| numeric                                          | 39             |
 | \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ |                |
 | Group variables                                  | None           |
 
@@ -64,6 +67,7 @@ Data summary
 |:-------------------|----------:|--------------:|:--------|---------:|:----------------|
 | group              |         0 |             1 | FALSE   |        2 | 1: 825, 2: 351  |
 | outcome            |         0 |             1 | FALSE   |        2 | 0: 1017, 1: 159 |
+| gender             |         0 |             1 | FALSE   |        2 | 2: 618, 1: 558  |
 | hypertensive       |         0 |             1 | FALSE   |        2 | 1: 844, 0: 332  |
 | atrialfibrillation |         0 |             1 | FALSE   |        2 | 0: 645, 1: 531  |
 | chd_with_no_mi     |         0 |             1 | FALSE   |        2 | 0: 1075, 1: 101 |
@@ -73,7 +77,6 @@ Data summary
 | hyperlipemia       |         0 |             1 | FALSE   |        2 | 0: 729, 1: 447  |
 | renal_failure      |         0 |             1 | FALSE   |        2 | 0: 747, 1: 429  |
 | copd               |         0 |             1 | FALSE   |        2 | 0: 1087, 1: 89  |
-| gender             |         0 |             1 | FALSE   |        2 | 2: 618, 1: 558  |
 
 **Variable type: numeric**
 
@@ -81,7 +84,6 @@ Data summary
 |:-------------------------|----------:|--------------:|----------:|---------:|----------:|----------:|----------:|----------:|----------:|:------|
 | id                       |         0 |             1 | 150768.29 | 29045.06 | 100213.00 | 125573.00 | 151899.00 | 176121.50 | 199952.00 | ▇▇▇▇▇ |
 | age                      |         0 |             1 |     74.05 |    13.44 |     19.00 |     65.00 |     77.00 |     85.00 |     99.00 | ▁▁▅▇▆ |
-| gendera                  |         0 |             1 |      1.53 |     0.50 |      1.00 |      1.00 |      2.00 |      2.00 |      2.00 | ▇▁▁▁▇ |
 | bmi                      |         0 |             1 |     30.19 |     8.43 |     13.35 |     25.27 |     30.19 |     32.10 |    104.97 | ▇▂▁▁▁ |
 | heart_rate               |         0 |             1 |     84.58 |    15.94 |     36.00 |     72.54 |     83.78 |     95.61 |    135.71 | ▁▆▇▅▁ |
 | systolic_blood_pressure  |         0 |             1 |    118.00 |    17.26 |     75.00 |    105.49 |    116.37 |    128.49 |    203.00 | ▂▇▃▁▁ |

@@ -13,23 +13,24 @@ library(data.table)
 library(survival)
 ```
 
+# Data Cleaning 
 ```{r}
-# Load the data
+# Define a function to convert multiple columns to factors
+convert_to_factor <- function(df, columns) {
+  df[columns] <- lapply(df[columns], factor)
+  return(df)
+}
+
+# Load the data and preprocess it
 mortality_data <- read_csv("mortality_data.csv") %>%
   janitor::clean_names() %>%
   drop_na(outcome) %>%
-  mutate(group = as.factor(group), 
-         gender = as.factor(gendera),
-         outcome = as.factor(outcome),
-         hypertensive = as.factor(hypertensive),
-         atrialfibrillation = as.factor(atrialfibrillation),
-         chd_with_no_mi = as.factor(chd_with_no_mi),
-         diabetes = as.factor(diabetes),
-         deficiencyanemias = as.factor(deficiencyanemias),
-         depression = as.factor(depression),
-         hyperlipemia = as.factor(hyperlipemia),
-         renal_failure = as.factor(renal_failure),
-         copd = as.factor(copd))
+  convert_to_factor(., c("group", "gendera", "outcome", "hypertensive", 
+                         "atrialfibrillation", "chd_with_no_mi", "diabetes", 
+                         "deficiencyanemias", "depression", "hyperlipemia", 
+                         "renal_failure", "copd")) %>%
+  rename(gender = gendera)  # Rename gendera to gender after conversion
+
 
 # Imputing numerical columns with mean value 
 numerical_columns <- sapply(mortality_data, is.numeric)
@@ -39,7 +40,7 @@ mortality_data[numerical_columns] <- lapply(mortality_data[numerical_columns], f
 
 write_csv(mortality_data, "mortality_data_cleaned.csv")
 ```
-
+# Overview of the data 
 ```{r}
 skimr::skim(mortality_data)
 ```
