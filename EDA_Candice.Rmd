@@ -1,0 +1,74 @@
+---
+title: "EDA_Candice"
+author: "Candice Yu"
+date: "2023-11-16"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+```
+
+```{r}
+mortality_data <- read_csv("mortality_data.csv") %>%
+  janitor::clean_names() %>%
+  drop_na(outcome) %>%
+  mutate(group = as.factor(group), 
+         gender = as.factor(gendera),
+         outcome = as.factor(outcome),
+         hypertensive = as.factor(hypertensive),
+         atrialfibrillation = as.factor(atrialfibrillation),
+         chd_with_no_mi = as.factor(chd_with_no_mi),
+         diabetes = as.factor(diabetes),
+         deficiencyanemias = as.factor(deficiencyanemias),
+         depression = as.factor(depression),
+         hyperlipemia = as.factor(hyperlipemia),
+         renal_failure = as.factor(renal_failure),
+         copd = as.factor(copd))
+
+
+```
+
+```{r}
+skimr::skim(mortality_data)
+```
+Target Variable - Outcome
+* 0 - Alive
+* 1 - Death
+
+
+# Gender & Outcome
+```{r}
+mortality_data %>%
+  group_by(gender) %>%
+  summarise(
+    count = n(), # total number of entries for each gender
+    outcome_0 = sum(outcome == 0), # number of outcomes with value 0
+    outcome_1 = sum(outcome == 1), # number of outcomes with value 1
+    percentage = outcome_1/count
+  ) %>%
+  knitr::kable(digits = 3)  
+```
+
+
+# Age & Outcome
+```{r}
+# Define age intervals
+age_breaks <- c(-Inf, 20, 40, 60, 80, Inf)
+age_labels <- c('Under 20', '20-40', '40-60', '60-80', 'Over 80')
+
+# Create age groups and summarize outcomes
+mortality_data %>%
+  mutate(age_group = cut(age, breaks = age_breaks, labels = age_labels, right = FALSE)) %>%
+  group_by(age_group) %>%
+  summarise(count = n(),
+            outcome_0 = sum(outcome == 0, na.rm = TRUE),
+            outcome_1 = sum(outcome == 1, na.rm = TRUE),
+            percentage = outcome_1/(outcome_0 + outcome_1)) %>%
+  knitr::kable(digits = 3)  
+
+```
+
+
