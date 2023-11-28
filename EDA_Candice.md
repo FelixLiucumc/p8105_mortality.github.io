@@ -181,11 +181,19 @@ ggplot(mortality_data %>% drop_na(bmi), aes(x = bmi)) +
 ``` r
 # Bivariate Analysis
 ggplot(mortality_data, aes(x = gender, y = age, fill = outcome)) +
-  geom_boxplot()
+  geom_boxplot() +
+  ggtitle("Age Distribution by Gender and Outcome")
 ```
 
-![](EDA_Candice_files/figure-gfm/unnamed-chunk-6-1.png)<!-- --> \#
-Exploring Outcomes
+![](EDA_Candice_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
+**Age Distribution by Gender and Outcome:** The boxplots show the age
+distribution for different genders and outcomes. We see that for both
+genders, the age distribution for patients who did not survive
+(outcome 1) is slightly higher. This could indicate that older age is a
+risk factor for mortality in this patient group.
+
+# Exploring Outcomes
 
 ``` r
 # Age distribution by Outcome
@@ -227,3 +235,34 @@ ggplot(mortality_data, aes(x = heart_rate, fill = as.factor(outcome))) +
     ## Warning: Removed 12 rows containing non-finite values (`stat_density()`).
 
 ![](EDA_Candice_files/figure-gfm/unnamed-chunk-7-4.png)<!-- -->
+
+**Age Distribution by Outcome:**
+
+The histogram shows the age distribution for the two outcomes. We
+observe that the majority of patients are between 60 and 80 years old.
+There is a noticeable overlap in the age distribution of patients who
+survived and those who did not, suggesting that while age may be a
+factor, it’s not the sole determinant of mortality.
+
+**Blood Pressure by Outcome:**
+
+This scatterplot shows systolic vs. diastolic blood pressure colored by
+outcome. The points are widely spread, indicating variability in blood
+pressure readings across the patient population. There doesn’t seem to
+be a clear separation between the two outcomes based on blood pressure
+alone.
+
+**BMI by Gender and Outcome:**
+
+It shows a wide range of BMI values for both genders, with no clear
+pattern indicating that BMI is distinctly associated with the outcome.
+However, there are more data points for BMI for outcome 0, which may
+suggest a higher survival rate for patients with a lower BMI, although
+further statistical analysis is needed.
+
+**Heart Rate Distribution by Outcome:**
+
+The density plot for heart rate shows that the distribution of heart
+rates for patients who did not survive is slightly shifted towards the
+higher end compared to those who survived. This could suggest that a
+higher heart rate is associated with a higher risk of mortality.
