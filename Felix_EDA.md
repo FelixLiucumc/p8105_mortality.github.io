@@ -268,10 +268,16 @@ fviz_eig(res_pca_com, addlabels = TRUE, ylim = c(0, 50))
 ![](Felix_EDA_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
 ``` r
-fviz_pca_var(res_pca_com, col.var = "black")
+fviz_pca_var(res_pca_com, col.var = "contrib", gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"))
 ```
 
 ![](Felix_EDA_files/figure-gfm/unnamed-chunk-7-2.png)<!-- -->
+
+``` r
+fviz_contrib(res_pca_com, choice = "var", axes = 1, top = 10) 
+```
+
+![](Felix_EDA_files/figure-gfm/unnamed-chunk-7-3.png)<!-- -->
 
 ``` r
 #pca_sign
@@ -319,7 +325,13 @@ fviz_eig(res_pca_sign, addlabels = TRUE, ylim = c(0, 50))
 ![](Felix_EDA_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 ``` r
-fviz_pca_var(res_pca_sign, col.var = "black")
+fviz_pca_var(res_pca_sign, col.var = "contrib", gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"))
 ```
 
 ![](Felix_EDA_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
+
+``` r
+fviz_contrib(res_pca_sign, choice = "var", axes = 1, top = 10)
+```
+
+![](Felix_EDA_files/figure-gfm/unnamed-chunk-8-3.png)<!-- -->

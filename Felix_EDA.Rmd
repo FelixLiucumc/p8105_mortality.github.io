@@ -101,7 +101,8 @@ summary(pca_res_com)
 
 res_pca_com = PCA(com_data, graph = FALSE)
 fviz_eig(res_pca_com, addlabels = TRUE, ylim = c(0, 50))
-fviz_pca_var(res_pca_com, col.var = "black")
+fviz_pca_var(res_pca_com, col.var = "contrib", gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"))
+fviz_contrib(res_pca_com, choice = "var", axes = 1, top = 10) 
 ```
 
 
@@ -118,7 +119,8 @@ summary(pca_res_sign)
 
 res_pca_sign = PCA(sign_data, graph = FALSE)
 fviz_eig(res_pca_sign, addlabels = TRUE, ylim = c(0, 50))
-fviz_pca_var(res_pca_sign, col.var = "black")
+fviz_pca_var(res_pca_sign, col.var = "contrib", gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"))
+fviz_contrib(res_pca_sign, choice = "var", axes = 1, top = 10)
 ```
 
 
