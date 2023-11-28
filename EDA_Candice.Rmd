@@ -14,6 +14,7 @@ library(survival)
 ```
 
 ```{r}
+# Load the data
 mortality_data <- read_csv("mortality_data.csv") %>%
   janitor::clean_names() %>%
   drop_na(outcome) %>%
@@ -30,7 +31,13 @@ mortality_data <- read_csv("mortality_data.csv") %>%
          renal_failure = as.factor(renal_failure),
          copd = as.factor(copd))
 
+# Imputing numerical columns with mean value 
+numerical_columns <- sapply(mortality_data, is.numeric)
+mortality_data[numerical_columns] <- lapply(mortality_data[numerical_columns], function(x) {
+   ifelse(is.na(x), mean(x, na.rm = TRUE), x)
+})
 
+write_csv(mortality_data, "mortality_data_cleaned.csv")
 ```
 
 ```{r}
