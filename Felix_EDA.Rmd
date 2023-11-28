@@ -1,0 +1,128 @@
+---
+title: "Felix_EDA"
+author: "Yifei Liu"
+date: 2023/11/25
+output: github_document
+---
+
+```{r setup, message = FALSE}
+library(tidyverse)
+library(corrplot)
+```
+
+
+```{r}
+mort_data = 
+  read_csv("./data/data01.csv") |> 
+  janitor::clean_names() |> 
+  drop_na() |>
+  rename(gender = gendera) |>
+  select(-group, everything())
+```
+
+
+```{r}
+com_data =
+  mort_data |>
+  select(outcome, hypertensive:copd)
+corrplot(cor(com_data), type = "upper", diag = FALSE)
+```
+
+
+```{r fig.width = 12, fig.height = 6}
+sign_data =
+  mort_data |>
+  select(outcome, heart_rate:ef)
+corrplot(cor(sign_data), type = "upper", diag = FALSE)
+```
+
+
+```{r}
+#linear model
+model_com = lm(outcome ~ ., data = com_data)
+summary(model_com)
+
+com_names = 
+  com_data |>
+  select(hypertensive:copd) |>
+  colnames()
+
+fit1_com_res = tibble()
+
+fit1_lm = function(v, com_data){
+  model = lm(outcome ~ v, data = com_data)
+  result = summary(res) |>
+    broom::tidy() |>
+    slice(1)
+  bind_rows(fit1_com_res, result)
+}
+
+#fit1_com = map_dfr(renal_failure, ~ fit1_lm(.x, com_data), .id = "model")
+
+fit1_com = lm(outcome ~ renal_failure, data = com_data)
+
+summary(fit1_com) |>
+  broom::tidy()
+
+```
+
+
+```{r}
+#generalized linear model
+model_com_glm = glm(outcome ~ ., data = com_data)
+summary(model_com_glm)
+
+fit1_com_glm = glm(outcome ~ renal_failure, data = com_data, family = binomial(link = "logit"))
+
+summary(fit1_com_glm)
+```
+
+
+```{r}
+model_sign = lm(outcome ~ ., data = sign_data)
+summary(model_sign)
+```
+
+
+
+
+```{r}
+#pca
+com_names = 
+  com_data |>
+  select(hypertensive:copd) |>
+  colnames()
+
+sign_names = 
+  sign_data |>
+  select(heart_rate:ef) |>
+  colnames()
+
+vars_com = com_data[, com_names]
+pca_res_com = prcomp(vars_com, scale. = TRUE)
+summary(pca_res_com)
+
+vars_sign = sign_data[, sign_names]
+pca_res_sign = prcomp(vars_sign, scale. = TRUE)
+summary(pca_res_sign)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
