@@ -124,24 +124,54 @@ Data summary
 
 Target Variable - Outcome \* 0 - Alive \* 1 - Death
 
+# Change the factor variables for EDA
+
+``` r
+# Assuming 'mortality_data' is already loaded and cleaned up as per your previous steps
+
+# Manually recoding factors to their meaningful character values
+mortality_data_EDA <- mortality_data %>%
+  mutate(
+    group = recode(group, `1` = "Group 1", `2` = "Group 2"),
+    gender = recode(gender, `1` = "Male", `2` = "Female"),
+    outcome = recode(outcome, `0` = "Alive", `1` = "Death")
+  ) %>%
+  mutate_if(is.factor, as.character) # Converts all remaining factors to characters
+
+# Function to recode factor variables to 'Yes' or 'No'
+convert_factors_to_yes_no <- function(df, comorbidity_columns) {
+  df <- df %>%
+    mutate(across(all_of(comorbidity_columns), ~ ifelse(as.character(.) == "1", "Yes", "No")))
+  return(df)
+}
+
+# List of comorbidity columns to convert
+comorbidity_columns <- c("hypertensive", "atrialfibrillation", "chd_with_no_mi", 
+                         "diabetes", "deficiencyanemias", "depression", 
+                         "hyperlipemia", "renal_failure", "copd")
+
+# Apply the function to the mortality_data_EDA dataframe
+mortality_data_EDA <- convert_factors_to_yes_no(mortality_data_EDA, comorbidity_columns)
+```
+
 # Gender & Outcome
 
 ``` r
-mortality_data %>%
+mortality_data_EDA %>%
   group_by(gender) %>%
   summarise(
-    count = n(), # total number of entries for each gender
-    outcome_0 = sum(outcome == 0), # number of outcomes with value 0
-    outcome_1 = sum(outcome == 1), # number of outcomes with value 1
-    percentage = outcome_1/count
+    Count = n(), # total number of entries for each gender
+    Alive = sum(outcome == "Alive"), # number of outcomes with value 0
+    Death = sum(outcome == "Death"), # number of outcomes with value 1
+    Percentage = Death/Count
   ) %>%
   knitr::kable(digits = 3)  
 ```
 
-| gender | count | outcome_0 | outcome_1 | percentage |
-|:-------|------:|----------:|----------:|-----------:|
-| 1      |   558 |       478 |        80 |      0.143 |
-| 2      |   618 |       539 |        79 |      0.128 |
+| gender | Count | Alive | Death | Percentage |
+|:-------|------:|------:|------:|-----------:|
+| Female |   618 |   539 |    79 |      0.128 |
+| Male   |   558 |   478 |    80 |      0.143 |
 
 # Age & Outcome
 
@@ -151,54 +181,54 @@ age_breaks <- c(-Inf, 20, 40, 60, 80, Inf)
 age_labels <- c('Under 20', '20-40', '40-60', '60-80', 'Over 80')
 
 # Create age groups and summarize outcomes
-mortality_data %>%
-  mutate(age_group = cut(age, breaks = age_breaks, labels = age_labels, right = FALSE)) %>%
-  group_by(age_group) %>%
-  summarise(count = n(),
-            outcome_0 = sum(outcome == 0, na.rm = TRUE),
-            outcome_1 = sum(outcome == 1, na.rm = TRUE),
-            percentage = outcome_1/(outcome_0 + outcome_1)) %>%
+mortality_data_EDA %>%
+  mutate(Age_group = cut(age, breaks = age_breaks, labels = age_labels, right = FALSE)) %>%
+  group_by(Age_group) %>%
+  summarise(Count = n(),
+            Alive = sum(outcome == "Alive", na.rm = TRUE),
+            Death = sum(outcome == "Death", na.rm = TRUE),
+            Percentage = Death/(Alive + Death)) %>%
   knitr::kable(digits = 3)  
 ```
 
-| age_group | count | outcome_0 | outcome_1 | percentage |
-|:----------|------:|----------:|----------:|-----------:|
-| Under 20  |     2 |         2 |         0 |      0.000 |
-| 20-40     |    16 |        15 |         1 |      0.062 |
-| 40-60     |   158 |       138 |        20 |      0.127 |
-| 60-80     |   492 |       435 |        57 |      0.116 |
-| Over 80   |   508 |       427 |        81 |      0.159 |
+| Age_group | Count | Alive | Death | Percentage |
+|:----------|------:|------:|------:|-----------:|
+| Under 20  |     2 |     2 |     0 |      0.000 |
+| 20-40     |    16 |    15 |     1 |      0.062 |
+| 40-60     |   158 |   138 |    20 |      0.127 |
+| 60-80     |   492 |   435 |    57 |      0.116 |
+| Over 80   |   508 |   427 |    81 |      0.159 |
 
 # Univariate Analysis
 
 ``` r
 # Distribution of Age
-ggplot(mortality_data, aes(x = age)) +
+ggplot(mortality_data_EDA, aes(x = age)) +
   geom_histogram(binwidth = 1, fill = "steelblue", color = "black") +
   ggtitle("Age Distribution")
 ```
 
-![](EDA_Candice_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](EDA_Candice_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
 ``` r
 # Distribution of BMI (handling missing values)
-ggplot(mortality_data %>% drop_na(bmi), aes(x = bmi)) +
+ggplot(mortality_data_EDA %>% drop_na(bmi), aes(x = bmi)) +
   geom_histogram(binwidth = 1, fill = "darkgreen", color = "black") +
   ggtitle("BMI Distribution")
 ```
 
-![](EDA_Candice_files/figure-gfm/unnamed-chunk-5-2.png)<!-- -->
+![](EDA_Candice_files/figure-gfm/unnamed-chunk-6-2.png)<!-- -->
 
 # Bivariate Analysis
 
 ``` r
 # Bivariate Analysis
-ggplot(mortality_data, aes(x = gender, y = age, fill = outcome)) +
+ggplot(mortality_data_EDA, aes(x = gender, y = age, fill = outcome)) +
   geom_boxplot() +
   ggtitle("Age Distribution by Gender and Outcome")
 ```
 
-![](EDA_Candice_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](EDA_Candice_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
 **Age Distribution by Gender and Outcome:** The boxplots show the age
 distribution for different genders and outcomes. We see that for both
@@ -210,40 +240,40 @@ risk factor for mortality in this patient group.
 
 ``` r
 # Age distribution by Outcome
-ggplot(mortality_data, aes(x = age, fill = as.factor(outcome))) +
+ggplot(mortality_data_EDA, aes(x = age, fill = as.factor(outcome))) +
   geom_histogram(binwidth = 5, position = "dodge") +
   ggtitle("Age Distribution by Outcome")
 ```
 
-![](EDA_Candice_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](EDA_Candice_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 ``` r
 # Blood Pressure by Outcome
-ggplot(mortality_data, aes(x = systolic_blood_pressure, y = diastolic_blood_pressure, color = as.factor(outcome))) +
+ggplot(mortality_data_EDA, aes(x = systolic_blood_pressure, y = diastolic_blood_pressure, color = as.factor(outcome))) +
   geom_point(alpha = 0.5) +
   ggtitle("Blood Pressure by Outcome")
 ```
 
-![](EDA_Candice_files/figure-gfm/unnamed-chunk-7-2.png)<!-- -->
+![](EDA_Candice_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
 
 ``` r
 # BMI by Gender and Outcome
-ggplot(mortality_data %>% drop_na(bmi), aes(x = bmi, fill = as.factor(outcome))) +
+ggplot(mortality_data_EDA %>% drop_na(bmi), aes(x = bmi, fill = as.factor(outcome))) +
   geom_histogram(binwidth = 1, position = "dodge") +
   facet_wrap(~gender) +
   ggtitle("BMI by Gender and Outcome")
 ```
 
-![](EDA_Candice_files/figure-gfm/unnamed-chunk-7-3.png)<!-- -->
+![](EDA_Candice_files/figure-gfm/unnamed-chunk-8-3.png)<!-- -->
 
 ``` r
 # Heart Rate by Outcome
-ggplot(mortality_data, aes(x = heart_rate, fill = as.factor(outcome))) +
+ggplot(mortality_data_EDA, aes(x = heart_rate, fill = as.factor(outcome))) +
   geom_density(alpha = 0.7) +
   ggtitle("Heart Rate Distribution by Outcome")
 ```
 
-![](EDA_Candice_files/figure-gfm/unnamed-chunk-7-4.png)<!-- -->
+![](EDA_Candice_files/figure-gfm/unnamed-chunk-8-4.png)<!-- -->
 
 **Age Distribution by Outcome:**
 
@@ -280,20 +310,20 @@ higher heart rate is associated with a higher risk of mortality.
 
 ``` r
 # Analyzing the presence of comorbidities by outcome
-comorbidities <- c("hypertensive", "diabetes", "deficiencyanemias", "depression", "renal_failure", "copd")
+comorbidities <- c("hypertensive", "diabetes", "deficiencyanemias", "depression", "renal_failure", "copd", "hyperlipemia")
 
 # Melt the data for easier plotting
-mortality_long <- melt(mortality_data, id.vars = "outcome", measure.vars = comorbidities)
+mortality_long <- melt(mortality_data_EDA, id.vars = "outcome", measure.vars = comorbidities)
 ```
 
-    ## Warning in melt(mortality_data, id.vars = "outcome", measure.vars =
+    ## Warning in melt(mortality_data_EDA, id.vars = "outcome", measure.vars =
     ## comorbidities): The melt generic in data.table has been passed a tbl_df and
     ## will attempt to redirect to the relevant reshape2 method; please note that
     ## reshape2 is deprecated, and this redirection is now deprecated as well. To
     ## continue using melt methods from reshape2 while both libraries are attached,
     ## e.g. melt.list, you can prepend the namespace like
-    ## reshape2::melt(mortality_data). In the next version, this warning will become
-    ## an error.
+    ## reshape2::melt(mortality_data_EDA). In the next version, this warning will
+    ## become an error.
 
 ``` r
 # Plotting comorbidities by outcome
@@ -305,7 +335,7 @@ ggplot(mortality_long, aes(x = variable, fill = as.factor(value))) +
   scale_y_continuous(labels = scales::percent)
 ```
 
-![](EDA_Candice_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](EDA_Candice_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
 **Distribution of Comorbidities by Outcome:**
 
@@ -317,57 +347,64 @@ like renal failure and COPD is higher among non-survivors.
 
 ``` r
 # Creatinine levels by outcome
-ggplot(mortality_data %>% drop_na(creatinine), aes(x = creatinine, fill = as.factor(outcome))) +
+ggplot(mortality_data_EDA %>% drop_na(creatinine), aes(x = creatinine, fill = as.factor(outcome))) +
   geom_density(alpha = 0.5) +
   ggtitle("Creatinine Levels by Outcome")
 ```
 
-![](EDA_Candice_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](EDA_Candice_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
 ``` r
 # Lactic acid levels by outcome
-ggplot(mortality_data %>% drop_na(lactic_acid), aes(x = lactic_acid, fill = as.factor(outcome))) +
+ggplot(mortality_data_EDA %>% drop_na(lactic_acid), aes(x = lactic_acid, fill = as.factor(outcome))) +
   geom_density(alpha = 0.5) +
   ggtitle("Lactic Acid Levels by Outcome")
 ```
 
-![](EDA_Candice_files/figure-gfm/unnamed-chunk-9-2.png)<!-- -->
+![](EDA_Candice_files/figure-gfm/unnamed-chunk-10-2.png)<!-- -->
 
 ``` r
 # Urea nitrogen levels by outcome
-ggplot(mortality_data %>% drop_na(urea_nitrogen), aes(x = urea_nitrogen, fill = as.factor(outcome))) +
+ggplot(mortality_data_EDA %>% drop_na(urea_nitrogen), aes(x = urea_nitrogen, fill = as.factor(outcome))) +
   geom_density(alpha = 0.5) +
   ggtitle("Blood Urea nitrogen Levels by Outcome")
 ```
 
-![](EDA_Candice_files/figure-gfm/unnamed-chunk-9-3.png)<!-- -->
-
-``` r
-# Hematocrit levels by outcome
-ggplot(mortality_data %>% drop_na(hematocrit), aes(x = hematocrit, fill = as.factor(outcome))) +
-  geom_density(alpha = 0.5) +
-  ggtitle("Hematocrit Levels by Outcome")
-```
-
-![](EDA_Candice_files/figure-gfm/unnamed-chunk-9-4.png)<!-- -->
+![](EDA_Candice_files/figure-gfm/unnamed-chunk-10-3.png)<!-- -->
 
 ``` r
 # Leucocyte count by outcome
-ggplot(mortality_data %>% drop_na(leucocyte), aes(x = leucocyte, fill = as.factor(outcome))) +
+ggplot(mortality_data_EDA %>% drop_na(leucocyte), aes(x = leucocyte, fill = as.factor(outcome))) +
   geom_density(alpha = 0.5) +
   ggtitle("Leucocyte Count by Outcome")
 ```
 
-![](EDA_Candice_files/figure-gfm/unnamed-chunk-9-5.png)<!-- -->
+![](EDA_Candice_files/figure-gfm/unnamed-chunk-10-4.png)<!-- -->
 
 ``` r
 # Glucose levels by outcome
-ggplot(mortality_data %>% drop_na(glucose), aes(x = glucose, fill = as.factor(outcome))) +
+ggplot(mortality_data_EDA %>% drop_na(glucose), aes(x = glucose, fill = as.factor(outcome))) +
   geom_density(alpha = 0.5) +
   ggtitle("Glucose Levels by Outcome")
 ```
 
-![](EDA_Candice_files/figure-gfm/unnamed-chunk-9-6.png)<!-- -->
+![](EDA_Candice_files/figure-gfm/unnamed-chunk-10-5.png)<!-- -->
+
+``` r
+ggplot(mortality_data_EDA %>% drop_na(anion_gap), aes(x = anion_gap, fill = as.factor(outcome))) +
+  geom_density(alpha = 0.5) +
+  ggtitle("Anion Gap Levels by Outcome")
+```
+
+![](EDA_Candice_files/figure-gfm/unnamed-chunk-10-6.png)<!-- -->
+
+``` r
+ggplot(mortality_data_EDA %>% drop_na(pco2), aes(x = pco2, fill = as.factor(outcome))) +
+  geom_density(alpha = 0.5) +
+  ggtitle("Pco2 Levels by Outcome")
+```
+
+![](EDA_Candice_files/figure-gfm/unnamed-chunk-10-7.png)<!-- -->
 
 **Blood Urea Nitrogen Levels by Outcome:**
 
