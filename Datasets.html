@@ -1640,6 +1640,70 @@ blood; Continuous variable.</p>
 Continuous variable.</p>
 <p><br> <br></p>
 </div>
+<div id="imputation" class="section level1">
+<h1>Imputation</h1>
+<p><strong>Data cleaning problems:</strong></p>
+<ul>
+<li><p>Too many NA values;</p></li>
+<li><p>Too many categorical variables/ binary variables;</p></li>
+<li><p>High demensionality;</p></li>
+</ul>
+<p><strong>Our solutions:</strong></p>
+<ul>
+<li><p>Change NA values to the mean value of each variables;</p></li>
+<li><p>Binarization;</p></li>
+<li><p>Dimensionality Reduction using Principle Component Analysis
+(PCA);</p></li>
+</ul>
+<pre class="r"><code># Define a function to convert multiple columns to factors
+convert_to_factor &lt;- function(df, columns) {
+  df[columns] &lt;- lapply(df[columns], factor)
+  return(df)
+}
+
+# Load the data and preprocess it
+mortality_data &lt;- read_csv(&quot;mortality_data.csv&quot;) %&gt;%
+  janitor::clean_names() %&gt;%
+  drop_na(outcome) %&gt;%
+  convert_to_factor(., c(&quot;group&quot;, &quot;gendera&quot;, &quot;outcome&quot;, &quot;hypertensive&quot;, 
+                         &quot;atrialfibrillation&quot;, &quot;chd_with_no_mi&quot;, &quot;diabetes&quot;, 
+                         &quot;deficiencyanemias&quot;, &quot;depression&quot;, &quot;hyperlipemia&quot;, 
+                         &quot;renal_failure&quot;, &quot;copd&quot;)) %&gt;%
+  rename(gender = gendera)  # Rename gendera to gender after conversion</code></pre>
+<pre><code>## Rows: 1177 Columns: 51
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## dbl (51): group, ID, outcome, age, gendera, BMI, hypertensive, atrialfibrill...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<p>Algorithms that find association patterns require that the data be in
+the form of binary attributes. Thus, it is often necessary to transform
+a continuous attribute into a categorical attribute (discretization),
+and both continuous and discrete attributes may need to be transformed
+into one or more binary attributes (binarization).</p>
+<p>Additionally, if a categorical attribute has a large number of values
+(categories), or some values occur infrequently, then it can be
+beneficial for certain data mining tasks to reduce the number of
+categories by combining some of the values.</p>
+<pre class="r"><code># Imputing numerical columns with mean value 
+
+numerical_columns &lt;- sapply(mortality_data, is.numeric)
+mortality_data[numerical_columns] &lt;- lapply(mortality_data[numerical_columns], function(x) {
+   ifelse(is.na(x), mean(x, na.rm = TRUE), x)
+})
+
+
+write_csv(mortality_data, &quot;mortality_data_cleaned.csv&quot;)</code></pre>
+<p>After data cleaning, our dataset change into high quality data,
+with:</p>
+<ul>
+<li><p>No duplicates;</p></li>
+<li><p>No missing values;</p></li>
+<li><p>No noise and outliers;</p></li>
+<li><p>Inconsistency;</p></li>
+</ul>
+</div>
 
 
 

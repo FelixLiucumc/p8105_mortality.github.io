@@ -75,39 +75,46 @@ Our main datasets is Zhou, Jingmin et al. (2021), Prediction model of in-hospita
  
 The selection of variables for studying hospital mortality is a crucial step in research and analysis. Researchers typically consider a combination of patient-specific factors, clinical indicators, and system-level variables to develop comprehensive models that help understand and predict hospital mortality. Here are some common variables that researchers often consider when studying hospital mortality:
 
-*Demographic Variables:*
+**1. Demographic Variables:**
 
-*Age: *Advanced age is often associated with increased mortality risk.
-*Gender:* Some studies consider gender differences in mortality rates.
+**Age: **Advanced age is often associated with increased mortality risk.
 
-*Clinical Indicators and Severity of Illness:*
+**Gender:** Some studies consider gender differences in mortality rates.
 
-*Diagnosis and Comorbidities:* The primary diagnosis and the presence of comorbid conditions can significantly impact mortality.
-*Severity of Illness Scores:* Scores like the Acute Physiology and Chronic Health Evaluation (APACHE) or Sequential Organ Failure Assessment (SOFA) help assess the severity of a patient's condition.
+**2. Clinical Indicators and Severity of Illness:**
 
-*Physiological and Laboratory Parameters:*
+**Diagnosis and Comorbidities:**The primary diagnosis and the presence of comorbid conditions can significantly impact mortality.
 
-*Vital Signs: *Abnormalities in vital signs such as heart rate, blood pressure, respiratory rate, and temperature are often included.
-*Laboratory Results: *Abnormalities in blood tests, including organ function markers, electrolytes, and blood gases, can be important indicators.
+**Severity of Illness Scores:** Scores like the Acute Physiology and Chronic Health Evaluation (APACHE) or Sequential Organ Failure Assessment (SOFA) help assess the severity of a patient's condition.
 
-*Treatment and Interventions:*
+**3. Physiological and Laboratory Parameters:**
 
-*Type of Treatment: *The specific medical or surgical interventions a patient undergoes.
-*Adherence to Protocols:* Whether the patient receives recommended treatments and interventions.
+**Vital Signs:** Abnormalities in vital signs such as heart rate, blood pressure, respiratory rate, and temperature are often included.
 
-*Health Information Technology (HIT) and EHR Data:*
+**Laboratory Results:** Abnormalities in blood tests, including organ function markers, electrolytes, and blood gases, can be important indicators.
 
-*Electronic Health Record (EHR) Data:* Information from EHRs, including medication history, previous hospitalizations, and patient history.
-*Health Information Exchange (HIE) Data:* Exchange of patient information between different healthcare entities.
+**4. Treatment and Interventions:**
 
-*Time-Related Variables:*
+**Type of Treatment: **The specific medical or surgical interventions a patient undergoes.
 
-*Length of Stay:* The duration of the hospitalization can impact mortality rates.
-*Time of Admission:* Some studies consider whether admissions occur during weekends or nighttime, which might influence outcomes.
+**Adherence to Protocols:** Whether the patient receives recommended treatments and interventions.
 
-*Patient-Specific Factors:*
+**5. Health Information Technology (HIT) and EHR Data:**
 
-*Functional Status: *The patient's ability to perform daily activities independently.
-*Nutritional Status: *Malnutrition can contribute to increased mortality risk.
+**Electronic Health Record (EHR) Data:** Information from EHRs, including medication history, previous hospitalizations, and patient history.
+
+**Health Information Exchange (HIE) Data:** Exchange of patient information between different healthcare entities.
+
+**6. Time-Related Variables:**
+
+**Length of Stay:** The duration of the hospitalization can impact mortality rates.
+
+**Time of Admission:** Some studies consider whether admissions occur during weekends or nighttime, which might influence outcomes.
+
+**7. Patient-Specific Factors:**
+
+**Functional Status: **The patient's ability to perform daily activities independently.
+
+**Nutritional Status: **Malnutrition can contribute to increased mortality risk.
 
 It's important to note that the selection of variables may vary based on the specific research question, the dataset available, and the population under study. Additionally, advanced statistical methods, including machine learning techniques, may be employed to identify relevant variables and patterns that contribute to hospital mortality. Researchers often conduct thorough literature reviews and engage in expert consultations to inform their variable selection process.
