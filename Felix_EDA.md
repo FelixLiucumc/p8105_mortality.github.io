@@ -26,18 +26,16 @@ library(factoextra)
 
 ``` r
 #load mortality dataset
-mort_data = 
-  read_csv("mortality_data.csv") |> 
-  janitor::clean_names() |> 
-  drop_na() |>
-  rename(gender = gendera) |>
+mort_data =
+  read_csv("mortality_data_cleaned.csv") |> 
+  janitor::clean_names() |>
   select(-group, everything())
 ```
 
-    ## Rows: 1177 Columns: 51
+    ## Rows: 1176 Columns: 51
     ## ── Column specification ────────────────────────────────────────────────────────
     ## Delimiter: ","
-    ## dbl (51): group, ID, outcome, age, gendera, BMI, hypertensive, atrialfibrill...
+    ## dbl (51): group, id, outcome, age, gender, bmi, hypertensive, atrialfibrilla...
     ## 
     ## ℹ Use `spec()` to retrieve the full column specification for this data.
     ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
@@ -73,36 +71,36 @@ corrplot(cor(sign_data), type = "upper", diag = FALSE)
 
 ``` r
 #linear model for complications
-model_com = lm(outcome ~ ., data = com_data)
+model_com = glm(outcome ~ ., data = com_data)
 summary(model_com)
 ```
 
     ## 
     ## Call:
-    ## lm(formula = outcome ~ ., data = com_data)
-    ## 
-    ## Residuals:
-    ##      Min       1Q   Median       3Q      Max 
-    ## -0.32830 -0.20466 -0.12136 -0.02148  1.01752 
+    ## glm(formula = outcome ~ ., data = com_data)
     ## 
     ## Coefficients:
-    ##                      Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept)         0.2198379  0.0392355   5.603 3.83e-08 ***
-    ## hypertensive        0.0001215  0.0393247   0.003  0.99754    
-    ## atrialfibrillation  0.0456107  0.0347481   1.313  0.19003    
-    ## chd_with_no_mi      0.0147951  0.0675368   0.219  0.82671    
-    ## diabetes           -0.0212910  0.0352963  -0.603  0.54670    
-    ## deficiencyanemias  -0.0984749  0.0367507  -2.680  0.00766 ** 
-    ## depression         -0.0999789  0.0506174  -1.975  0.04890 *  
-    ## hyperlipemia        0.0627292  0.0372621   1.683  0.09303 .  
-    ## renal_failure      -0.1177161  0.0373055  -3.155  0.00172 ** 
-    ## copd               -0.1243063  0.0613849  -2.025  0.04350 *  
+    ##                    Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept)         0.19967    0.02384   8.375  < 2e-16 ***
+    ## hypertensive       -0.03630    0.02288  -1.586  0.11295    
+    ## atrialfibrillation  0.06474    0.01995   3.245  0.00121 ** 
+    ## chd_with_no_mi     -0.00497    0.03515  -0.141  0.88759    
+    ## diabetes           -0.01438    0.02051  -0.701  0.48351    
+    ## deficiencyanemias  -0.05271    0.02118  -2.488  0.01298 *  
+    ## depression         -0.05380    0.03053  -1.762  0.07829 .  
+    ## hyperlipemia       -0.02237    0.02099  -1.066  0.28672    
+    ## renal_failure      -0.06352    0.02142  -2.965  0.00308 ** 
+    ## copd               -0.06873    0.03738  -1.839  0.06621 .  
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## Residual standard error: 0.35 on 418 degrees of freedom
-    ## Multiple R-squared:  0.07095,    Adjusted R-squared:  0.05094 
-    ## F-statistic: 3.547 on 9 and 418 DF,  p-value: 0.0002942
+    ## (Dispersion parameter for gaussian family taken to be 0.1134037)
+    ## 
+    ##     Null deviance: 137.50  on 1175  degrees of freedom
+    ## Residual deviance: 132.23  on 1166  degrees of freedom
+    ## AIC: 789.38
+    ## 
+    ## Number of Fisher Scoring iterations: 2
 
 ``` r
 model_com_se = lm(outcome ~ ., data = com_data) |>
@@ -112,27 +110,28 @@ summary(model_com_se)
 
     ## 
     ## Call:
-    ## lm(formula = outcome ~ deficiencyanemias + depression + hyperlipemia + 
-    ##     renal_failure + copd, data = com_data)
+    ## lm(formula = outcome ~ hypertensive + atrialfibrillation + deficiencyanemias + 
+    ##     depression + renal_failure + copd, data = com_data)
     ## 
     ## Residuals:
     ##      Min       1Q   Median       3Q      Max 
-    ## -0.29650 -0.23169 -0.12110 -0.01051  0.98949 
+    ## -0.25569 -0.15866 -0.12482 -0.06886  0.97537 
     ## 
     ## Coefficients:
-    ##                   Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept)        0.23169    0.02720   8.519 2.88e-16 ***
-    ## deficiencyanemias -0.10439    0.03641  -2.867  0.00435 ** 
-    ## depression        -0.10263    0.05023  -2.043  0.04164 *  
-    ## hyperlipemia       0.06481    0.03602   1.799  0.07274 .  
-    ## renal_failure     -0.11679    0.03593  -3.251  0.00124 ** 
-    ## copd              -0.12366    0.06089  -2.031  0.04289 *  
+    ##                    Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept)         0.19180    0.02285   8.394  < 2e-16 ***
+    ## hypertensive       -0.04319    0.02227  -1.939  0.05269 .  
+    ## atrialfibrillation  0.06390    0.01991   3.210  0.00136 ** 
+    ## deficiencyanemias  -0.05385    0.02114  -2.547  0.01099 *  
+    ## depression         -0.05589    0.03044  -1.836  0.06662 .  
+    ## renal_failure      -0.06704    0.02113  -3.172  0.00155 ** 
+    ## copd               -0.06698    0.03728  -1.797  0.07264 .  
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## Residual standard error: 0.3493 on 422 degrees of freedom
-    ## Multiple R-squared:  0.06612,    Adjusted R-squared:  0.05505 
-    ## F-statistic: 5.975 on 5 and 422 DF,  p-value: 2.352e-05
+    ## Residual standard error: 0.3366 on 1169 degrees of freedom
+    ## Multiple R-squared:  0.03684,    Adjusted R-squared:  0.0319 
+    ## F-statistic: 7.453 on 6 and 1169 DF,  p-value: 7.536e-08
 
 ``` r
 #generalized linear model for complications
@@ -145,25 +144,25 @@ summary(model_com_glm)
     ## glm(formula = outcome ~ ., data = com_data)
     ## 
     ## Coefficients:
-    ##                      Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept)         0.2198379  0.0392355   5.603 3.83e-08 ***
-    ## hypertensive        0.0001215  0.0393247   0.003  0.99754    
-    ## atrialfibrillation  0.0456107  0.0347481   1.313  0.19003    
-    ## chd_with_no_mi      0.0147951  0.0675368   0.219  0.82671    
-    ## diabetes           -0.0212910  0.0352963  -0.603  0.54670    
-    ## deficiencyanemias  -0.0984749  0.0367507  -2.680  0.00766 ** 
-    ## depression         -0.0999789  0.0506174  -1.975  0.04890 *  
-    ## hyperlipemia        0.0627292  0.0372621   1.683  0.09303 .  
-    ## renal_failure      -0.1177161  0.0373055  -3.155  0.00172 ** 
-    ## copd               -0.1243063  0.0613849  -2.025  0.04350 *  
+    ##                    Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept)         0.19967    0.02384   8.375  < 2e-16 ***
+    ## hypertensive       -0.03630    0.02288  -1.586  0.11295    
+    ## atrialfibrillation  0.06474    0.01995   3.245  0.00121 ** 
+    ## chd_with_no_mi     -0.00497    0.03515  -0.141  0.88759    
+    ## diabetes           -0.01438    0.02051  -0.701  0.48351    
+    ## deficiencyanemias  -0.05271    0.02118  -2.488  0.01298 *  
+    ## depression         -0.05380    0.03053  -1.762  0.07829 .  
+    ## hyperlipemia       -0.02237    0.02099  -1.066  0.28672    
+    ## renal_failure      -0.06352    0.02142  -2.965  0.00308 ** 
+    ## copd               -0.06873    0.03738  -1.839  0.06621 .  
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## (Dispersion parameter for gaussian family taken to be 0.1225295)
+    ## (Dispersion parameter for gaussian family taken to be 0.1134037)
     ## 
-    ##     Null deviance: 55.129  on 427  degrees of freedom
-    ## Residual deviance: 51.217  on 418  degrees of freedom
-    ## AIC: 327.95
+    ##     Null deviance: 137.50  on 1175  degrees of freedom
+    ## Residual deviance: 132.23  on 1166  degrees of freedom
+    ## AIC: 789.38
     ## 
     ## Number of Fisher Scoring iterations: 2
 
@@ -175,25 +174,26 @@ summary(model_com_glm_se)
 
     ## 
     ## Call:
-    ## glm(formula = outcome ~ deficiencyanemias + depression + hyperlipemia + 
-    ##     renal_failure + copd, data = com_data)
+    ## glm(formula = outcome ~ hypertensive + atrialfibrillation + deficiencyanemias + 
+    ##     depression + renal_failure + copd, data = com_data)
     ## 
     ## Coefficients:
-    ##                   Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept)        0.23169    0.02720   8.519 2.88e-16 ***
-    ## deficiencyanemias -0.10439    0.03641  -2.867  0.00435 ** 
-    ## depression        -0.10263    0.05023  -2.043  0.04164 *  
-    ## hyperlipemia       0.06481    0.03602   1.799  0.07274 .  
-    ## renal_failure     -0.11679    0.03593  -3.251  0.00124 ** 
-    ## copd              -0.12366    0.06089  -2.031  0.04289 *  
+    ##                    Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept)         0.19180    0.02285   8.394  < 2e-16 ***
+    ## hypertensive       -0.04319    0.02227  -1.939  0.05269 .  
+    ## atrialfibrillation  0.06390    0.01991   3.210  0.00136 ** 
+    ## deficiencyanemias  -0.05385    0.02114  -2.547  0.01099 *  
+    ## depression         -0.05589    0.03044  -1.836  0.06662 .  
+    ## renal_failure      -0.06704    0.02113  -3.172  0.00155 ** 
+    ## copd               -0.06698    0.03728  -1.797  0.07264 .  
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## (Dispersion parameter for gaussian family taken to be 0.1219991)
+    ## (Dispersion parameter for gaussian family taken to be 0.1132904)
     ## 
-    ##     Null deviance: 55.129  on 427  degrees of freedom
-    ## Residual deviance: 51.484  on 422  degrees of freedom
-    ## AIC: 322.17
+    ##     Null deviance: 137.50  on 1175  degrees of freedom
+    ## Residual deviance: 132.44  on 1169  degrees of freedom
+    ## AIC: 785.23
     ## 
     ## Number of Fisher Scoring iterations: 2
 
@@ -209,53 +209,53 @@ summary(model_sign)
     ## 
     ## Residuals:
     ##      Min       1Q   Median       3Q      Max 
-    ## -0.81157 -0.15819 -0.05615  0.06137  1.00206 
+    ## -0.72774 -0.16758 -0.07108  0.03559  1.10825 
     ## 
     ## Coefficients:
     ##                            Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept)              -6.908e-01  5.418e+00  -0.128 0.898603    
-    ## heart_rate                2.568e-03  1.163e-03   2.207 0.027860 *  
-    ## systolic_blood_pressure   1.089e-03  1.148e-03   0.948 0.343461    
-    ## diastolic_blood_pressure -3.865e-03  2.104e-03  -1.837 0.066993 .  
-    ## respiratory_rate          5.500e-03  4.045e-03   1.360 0.174699    
-    ## temperature              -6.320e-02  2.651e-02  -2.384 0.017602 *  
-    ## sp_o2                     3.261e-03  6.738e-03   0.484 0.628683    
-    ## urine_output             -9.946e-06  1.324e-05  -0.751 0.453092    
-    ## hematocrit               -1.539e-02  2.538e-02  -0.606 0.544692    
-    ## rbc                       1.692e-01  2.260e-01   0.749 0.454550    
-    ## mch                       5.313e-03  1.427e-01   0.037 0.970320    
-    ## mchc                     -2.529e-03  1.260e-01  -0.020 0.983991    
-    ## mcv                       6.175e-03  4.926e-02   0.125 0.900312    
-    ## rdw                      -4.786e-04  8.610e-03  -0.056 0.955703    
-    ## leucocyte                 8.019e-03  3.519e-03   2.279 0.023230 *  
-    ## platelets                -5.278e-04  1.614e-04  -3.271 0.001166 ** 
-    ## neutrophils              -5.184e-03  4.022e-03  -1.289 0.198183    
-    ## basophils                 6.996e-03  5.776e-02   0.121 0.903645    
-    ## lymphocyte               -7.457e-03  4.839e-03  -1.541 0.124108    
-    ## pt                       -1.264e-03  1.838e-02  -0.069 0.945224    
-    ## inr                       5.143e-02  1.593e-01   0.323 0.746974    
-    ## nt_pro_bnp                1.307e-06  1.273e-06   1.027 0.305065    
-    ## creatine_kinase           4.476e-06  6.928e-06   0.646 0.518580    
-    ## creatinine               -7.039e-02  1.794e-02  -3.925 0.000103 ***
-    ## urea_nitrogen             2.379e-03  1.097e-03   2.168 0.030795 *  
-    ## glucose                   2.724e-04  2.977e-04   0.915 0.360746    
-    ## blood_potassium          -2.574e-02  6.656e-02  -0.387 0.699194    
-    ## blood_sodium             -4.253e-02  4.549e-02  -0.935 0.350384    
-    ## blood_calcium            -8.357e-02  3.169e-02  -2.637 0.008700 ** 
-    ## chloride                  4.087e-02  4.514e-02   0.905 0.365866    
-    ## anion_gap                 7.424e-02  4.651e-02   1.596 0.111264    
-    ## magnesium_ion             3.969e-02  6.898e-02   0.575 0.565333    
-    ## ph                        3.394e-01  3.990e-01   0.851 0.395469    
-    ## bicarbonate               2.763e-02  4.595e-02   0.601 0.548016    
-    ## lactic_acid               3.396e-02  2.029e-02   1.674 0.094969 .  
-    ## pco2                      9.115e-03  3.158e-03   2.886 0.004119 ** 
-    ## ef                        9.935e-04  1.279e-03   0.777 0.437756    
+    ## (Intercept)               1.784e+00  3.248e+00   0.549 0.583009    
+    ## heart_rate                2.421e-03  7.026e-04   3.446 0.000590 ***
+    ## systolic_blood_pressure   5.076e-04  6.658e-04   0.762 0.445982    
+    ## diastolic_blood_pressure -2.362e-03  1.145e-03  -2.064 0.039261 *  
+    ## respiratory_rate          4.120e-03  2.543e-03   1.620 0.105529    
+    ## temperature              -2.948e-02  1.652e-02  -1.785 0.074510 .  
+    ## sp_o2                    -8.904e-03  4.284e-03  -2.079 0.037880 *  
+    ## urine_output             -1.819e-05  7.982e-06  -2.279 0.022844 *  
+    ## hematocrit               -4.421e-03  1.582e-02  -0.279 0.779964    
+    ## rbc                       5.951e-02  1.394e-01   0.427 0.669481    
+    ## mch                       3.190e-02  8.619e-02   0.370 0.711394    
+    ## mchc                     -3.267e-02  7.635e-02  -0.428 0.668774    
+    ## mcv                      -6.003e-03  2.970e-02  -0.202 0.839830    
+    ## rdw                       8.326e-03  5.259e-03   1.583 0.113678    
+    ## leucocyte                 6.360e-03  2.056e-03   3.094 0.002025 ** 
+    ## platelets                -3.026e-04  9.226e-05  -3.280 0.001071 ** 
+    ## neutrophils              -8.144e-04  1.772e-03  -0.460 0.645832    
+    ## basophils                 1.029e-02  2.437e-02   0.422 0.672868    
+    ## lymphocyte               -2.538e-03  2.294e-03  -1.107 0.268647    
+    ## pt                       -5.108e-03  7.679e-03  -0.665 0.506085    
+    ## inr                       6.917e-02  6.772e-02   1.021 0.307250    
+    ## nt_pro_bnp                2.848e-07  8.145e-07   0.350 0.726660    
+    ## creatine_kinase           6.313e-06  6.663e-06   0.948 0.343577    
+    ## creatinine               -4.355e-02  1.062e-02  -4.099 4.44e-05 ***
+    ## urea_nitrogen             2.134e-03  6.452e-04   3.308 0.000971 ***
+    ## glucose                  -1.654e-04  1.854e-04  -0.892 0.372605    
+    ## blood_potassium           5.361e-02  4.051e-02   1.323 0.186024    
+    ## blood_sodium              1.541e-02  3.033e-02   0.508 0.611576    
+    ## blood_calcium            -8.210e-02  1.838e-02  -4.466 8.74e-06 ***
+    ## chloride                 -1.646e-02  3.050e-02  -0.540 0.589599    
+    ## anion_gap                 3.552e-03  3.076e-02   0.115 0.908095    
+    ## magnesium_ion             2.258e-02  4.012e-02   0.563 0.573606    
+    ## ph                        1.272e-01  2.255e-01   0.564 0.572975    
+    ## bicarbonate              -2.469e-02  3.060e-02  -0.807 0.420081    
+    ## lactic_acid               3.660e-02  1.223e-02   2.992 0.002833 ** 
+    ## pco2                      4.588e-03  1.589e-03   2.888 0.003948 ** 
+    ## ef                        8.004e-04  7.797e-04   1.027 0.304871    
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## Residual standard error: 0.3021 on 391 degrees of freedom
-    ## Multiple R-squared:  0.3525, Adjusted R-squared:  0.2929 
-    ## F-statistic: 5.913 on 36 and 391 DF,  p-value: < 2.2e-16
+    ## Residual standard error: 0.3056 on 1139 degrees of freedom
+    ## Multiple R-squared:  0.2264, Adjusted R-squared:  0.202 
+    ## F-statistic: 9.261 on 36 and 1139 DF,  p-value: < 2.2e-16
 
 ``` r
 model_sign_se = lm(outcome ~ ., data = sign_data) |>
@@ -266,38 +266,44 @@ summary(model_sign_se)
     ## 
     ## Call:
     ## lm(formula = outcome ~ heart_rate + diastolic_blood_pressure + 
-    ##     respiratory_rate + temperature + leucocyte + platelets + 
-    ##     inr + creatinine + urea_nitrogen + blood_sodium + blood_calcium + 
-    ##     chloride + anion_gap + lactic_acid + pco2, data = sign_data)
+    ##     respiratory_rate + temperature + sp_o2 + urine_output + rdw + 
+    ##     leucocyte + platelets + inr + creatinine + urea_nitrogen + 
+    ##     blood_potassium + blood_sodium + blood_calcium + chloride + 
+    ##     bicarbonate + lactic_acid + pco2 + mcv, data = sign_data)
     ## 
     ## Residuals:
     ##      Min       1Q   Median       3Q      Max 
-    ## -0.85366 -0.15736 -0.06141  0.04871  1.02380 
+    ## -0.77023 -0.16761 -0.07124  0.03252  1.09832 
     ## 
     ## Coefficients:
     ##                            Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept)               2.1376783  1.0411223   2.053 0.040680 *  
-    ## heart_rate                0.0022264  0.0010715   2.078 0.038336 *  
-    ## diastolic_blood_pressure -0.0028936  0.0016250  -1.781 0.075709 .  
-    ## respiratory_rate          0.0054613  0.0037631   1.451 0.147460    
-    ## temperature              -0.0559585  0.0238255  -2.349 0.019312 *  
-    ## leucocyte                 0.0087638  0.0031969   2.741 0.006385 ** 
-    ## platelets                -0.0005186  0.0001469  -3.531 0.000461 ***
-    ## inr                       0.0406297  0.0175170   2.319 0.020859 *  
-    ## creatinine               -0.0674949  0.0165290  -4.083 5.33e-05 ***
-    ## urea_nitrogen             0.0028203  0.0009104   3.098 0.002083 ** 
-    ## blood_sodium             -0.0108947  0.0062164  -1.753 0.080420 .  
-    ## blood_calcium            -0.0864605  0.0297873  -2.903 0.003900 ** 
-    ## chloride                  0.0108460  0.0050743   2.137 0.033149 *  
-    ## anion_gap                 0.0444803  0.0090945   4.891 1.44e-06 ***
-    ## lactic_acid               0.0395861  0.0183734   2.155 0.031777 *  
-    ## pco2                      0.0074937  0.0018422   4.068 5.69e-05 ***
+    ## (Intercept)               1.894e+00  8.098e-01   2.339 0.019510 *  
+    ## heart_rate                2.254e-03  6.606e-04   3.412 0.000666 ***
+    ## diastolic_blood_pressure -1.954e-03  9.410e-04  -2.076 0.038114 *  
+    ## respiratory_rate          4.167e-03  2.520e-03   1.653 0.098520 .  
+    ## temperature              -2.916e-02  1.606e-02  -1.816 0.069706 .  
+    ## sp_o2                    -1.030e-02  4.167e-03  -2.471 0.013603 *  
+    ## urine_output             -1.819e-05  7.780e-06  -2.338 0.019556 *  
+    ## rdw                       8.575e-03  4.506e-03   1.903 0.057290 .  
+    ## leucocyte                 7.475e-03  1.909e-03   3.916 9.54e-05 ***
+    ## platelets                -2.872e-04  8.724e-05  -3.293 0.001022 ** 
+    ## inr                       2.609e-02  1.118e-02   2.334 0.019745 *  
+    ## creatinine               -4.261e-02  1.015e-02  -4.199 2.89e-05 ***
+    ## urea_nitrogen             2.159e-03  5.812e-04   3.715 0.000213 ***
+    ## blood_potassium           5.712e-02  2.518e-02   2.268 0.023500 *  
+    ## blood_sodium              1.994e-02  6.383e-03   3.123 0.001833 ** 
+    ## blood_calcium            -8.049e-02  1.791e-02  -4.494 7.71e-06 ***
+    ## chloride                 -2.022e-02  5.913e-03  -3.420 0.000647 ***
+    ## bicarbonate              -2.714e-02  5.267e-03  -5.154 3.00e-07 ***
+    ## lactic_acid               3.424e-02  1.175e-02   2.915 0.003626 ** 
+    ## pco2                      4.156e-03  1.180e-03   3.522 0.000444 ***
+    ## mcv                       2.225e-03  1.423e-03   1.564 0.118149    
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## Residual standard error: 0.2983 on 412 degrees of freedom
-    ## Multiple R-squared:  0.3349, Adjusted R-squared:  0.3106 
-    ## F-statistic: 13.83 on 15 and 412 DF,  p-value: < 2.2e-16
+    ## Residual standard error: 0.3047 on 1155 degrees of freedom
+    ## Multiple R-squared:  0.2203, Adjusted R-squared:  0.2068 
+    ## F-statistic: 16.32 on 20 and 1155 DF,  p-value: < 2.2e-16
 
 ``` r
 #cross-validation for complications
@@ -312,20 +318,28 @@ cv_com_rmse =
                            step(direction = "both", trace = FALSE)),
     glm_cv_com = map(cv_com$train, 
                          \(df) glm(outcome ~ ., data = (df)) |>
-                           step(direction = "both", trace = FALSE))
+                           step(direction = "both", trace = FALSE)),
+    lm_cv_pca1 = map(cv_com$train, 
+                         \(df) glm(outcome ~ renal_failure + hypertensive + diabetes + hyperlipemia, data = (df))),
+    lm_cv_pca2 = map(cv_com$train, 
+                         \(df) glm(outcome ~ chd_with_no_mi + depression + copd + atrialfibrillation, data = (df)))
   ) |>
   mutate(
     errs_lm_com = purrr::map2_dbl(lm_cv_com, cv_com$test, rmse),
-    errs_glm_com = purrr::map2_dbl(glm_cv_com, cv_com$test, rmse)
+    errs_glm_com = purrr::map2_dbl(glm_cv_com, cv_com$test, rmse),
+    errs_pca1 = purrr::map2_dbl(lm_cv_pca1, cv_com$test, rmse),
+    errs_pca2 = purrr::map2_dbl(lm_cv_pca2, cv_com$test, rmse)
   )
 
 cv_com_rmse |>
   select(lm_com = errs_lm_com,
-         glm_com = errs_glm_com) |>
+         glm_com = errs_glm_com,
+         lm_pca1 = errs_pca1,
+         lm_pca2 = errs_pca2) |>
   pivot_longer(everything(), 
                names_to = "models",
                values_to = "rmse") |>
-  mutate(model = factor(models, levels = c("lm_com", "glm_com"))) |>
+  mutate(model = factor(models, levels = c("lm_com", "glm_com", "lm_pca1", "lm_pca2"))) |>
   ggplot(aes(x = model, y = rmse)) +
   geom_violin() +
   labs(x = "Models", y = "rmse", title = "Cross-Validated Prediction Error") +
@@ -348,18 +362,19 @@ summary(pca_res_com)
 ```
 
     ## Importance of components:
-    ##                          PC1    PC2    PC3    PC4    PC5     PC6     PC7
-    ## Standard deviation     1.283 1.0892 1.0317 1.0105 0.9860 0.91947 0.89345
-    ## Proportion of Variance 0.183 0.1318 0.1183 0.1135 0.1080 0.09394 0.08869
-    ## Cumulative Proportion  0.183 0.3148 0.4331 0.5465 0.6546 0.74849 0.83719
+    ##                           PC1    PC2    PC3    PC4    PC5    PC6     PC7
+    ## Standard deviation     1.2376 1.0842 1.0339 1.0087 0.9773 0.9503 0.92110
+    ## Proportion of Variance 0.1702 0.1306 0.1188 0.1130 0.1061 0.1003 0.09427
+    ## Cumulative Proportion  0.1702 0.3008 0.4196 0.5326 0.6387 0.7391 0.83333
     ##                            PC8     PC9
-    ## Standard deviation     0.88552 0.82534
-    ## Proportion of Variance 0.08713 0.07569
-    ## Cumulative Proportion  0.92431 1.00000
+    ## Standard deviation     0.90240 0.82808
+    ## Proportion of Variance 0.09048 0.07619
+    ## Cumulative Proportion  0.92381 1.00000
 
 ``` r
 #pca using packages `FactoMineR`, `factoextra`
-res_pca_com = PCA(com_data, scale.unit = TRUE, graph = TRUE)
+com = com_data |> select(-outcome)
+res_pca_com = PCA(com, scale.unit = TRUE, graph = TRUE)
 ```
 
 ![](Felix_EDA_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->![](Felix_EDA_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
@@ -371,17 +386,16 @@ res_pca_com = PCA(com_data, scale.unit = TRUE, graph = TRUE)
 get_eigenvalue(res_pca_com)
 ```
 
-    ##        eigenvalue variance.percent cumulative.variance.percent
-    ## Dim.1   1.6709905        16.709905                    16.70990
-    ## Dim.2   1.2786815        12.786815                    29.49672
-    ## Dim.3   1.1155250        11.155250                    40.65197
-    ## Dim.4   1.0407460        10.407460                    51.05943
-    ## Dim.5   0.9739427         9.739427                    60.79886
-    ## Dim.6   0.9249179         9.249179                    70.04803
-    ## Dim.7   0.8372281         8.372281                    78.42032
-    ## Dim.8   0.7893650         7.893650                    86.31397
-    ## Dim.9   0.6933137         6.933137                    93.24710
-    ## Dim.10  0.6752898         6.752898                   100.00000
+    ##       eigenvalue variance.percent cumulative.variance.percent
+    ## Dim.1  1.5316254        17.018060                    17.01806
+    ## Dim.2  1.1753995        13.059995                    30.07806
+    ## Dim.3  1.0690383        11.878203                    41.95626
+    ## Dim.4  1.0174731        11.305256                    53.26151
+    ## Dim.5  0.9550191        10.611323                    63.87284
+    ## Dim.6  0.9029764        10.033071                    73.90591
+    ## Dim.7  0.8484242         9.426936                    83.33285
+    ## Dim.8  0.8143218         9.048020                    92.38087
+    ## Dim.9  0.6857221         7.619135                   100.00000
 
 ``` r
 #`variance.percent` explains the percentage of change. 70% would be adequate.
@@ -400,17 +414,16 @@ var_com <- get_pca_var(res_pca_com)
 var_com$coord
 ```
 
-    ##                          Dim.1       Dim.2       Dim.3       Dim.4       Dim.5
-    ## outcome            -0.25783005  0.60080510 -0.34069987  0.15037819 -0.08036646
-    ## hypertensive        0.59483374  0.28592806  0.16502440 -0.18150167 -0.26703419
-    ## atrialfibrillation  0.14209031  0.51476215 -0.05485570 -0.06376598  0.68275901
-    ## chd_with_no_mi      0.06707659  0.11102265  0.00589259  0.81407706 -0.20221709
-    ## diabetes            0.55211925  0.01323242 -0.22216159  0.13759880 -0.28196303
-    ## deficiencyanemias   0.41346957 -0.48180259 -0.23759109 -0.05871588 -0.04896707
-    ## depression          0.09698265 -0.37202974  0.38680307  0.47245831  0.44269305
-    ## hyperlipemia        0.47873206  0.41529120  0.32718783  0.14149924 -0.04767970
-    ## renal_failure       0.67776379 -0.06185586  0.03832322 -0.15248066  0.23103794
-    ## copd               -0.22858585  0.10791595  0.77796480 -0.17184803 -0.23578612
+    ##                          Dim.1       Dim.2      Dim.3       Dim.4        Dim.5
+    ## hypertensive        0.59708519 -0.28721816  0.3238048 -0.17560570 -0.002410033
+    ## atrialfibrillation  0.06085441 -0.57034997 -0.2552078  0.49189450  0.059405646
+    ## chd_with_no_mi      0.12773038  0.25188788  0.2687708  0.65633947  0.558824069
+    ## diabetes            0.57008318  0.03205436 -0.1663287 -0.13044836 -0.125516848
+    ## deficiencyanemias   0.28454746  0.62833937 -0.1657905 -0.16370330  0.274195018
+    ## depression          0.04763546  0.52069722  0.1793478  0.38977049 -0.633452415
+    ## hyperlipemia        0.55345158 -0.17725683  0.3788382  0.18157445 -0.254981439
+    ## renal_failure       0.63863988  0.07111536 -0.2441543 -0.08964874  0.200730205
+    ## copd               -0.18081936 -0.02679237  0.7323749 -0.27776116  0.204187209
 
 ``` r
 #shown by correlation
@@ -438,28 +451,27 @@ corrplot(var_com$cos2, is.corr=FALSE)
 var_com$contrib
 ```
 
-    ##                         Dim.1       Dim.2       Dim.3      Dim.4      Dim.5
-    ## outcome             3.9782595 28.22960842 10.40554010  2.1728261  0.6631569
-    ## hypertensive       21.1746981  6.39368414  2.44127679  3.1653120  7.3215047
-    ## atrialfibrillation  1.2082448 20.72291504  0.26975173  0.3906909 47.8631720
-    ## chd_with_no_mi      0.2692576  0.96396405  0.00311267 63.6775412  4.1985790
-    ## diabetes           18.2428129  0.01369356  4.42444325  1.8192171  8.1630215
-    ## deficiencyanemias  10.2308833 18.15414877  5.06035514  0.3312580  0.2461925
-    ## depression          0.5628778 10.82412848 13.41221521 21.4477749 20.1220402
-    ## hyperlipemia       13.7154813 13.48786106  9.59654618  1.9238157  0.2334176
-    ## renal_failure      27.4905074  0.29922605  0.13165722  2.2340084  5.4806642
-    ## copd                3.1269772  0.91077042 54.25510171  2.8375557  5.7082513
+    ##                         Dim.1       Dim.2     Dim.3      Dim.4        Dim.5
+    ## hypertensive       23.2766257  7.01840267  9.807839  3.0307791 6.081824e-04
+    ## atrialfibrillation  0.2417862 27.67561860  6.092487 23.7805013 3.695246e-01
+    ## chd_with_no_mi      1.0652115  5.39795229  6.757264 42.3383683 3.269928e+01
+    ## diabetes           21.2189500  0.08741558  2.587861  1.6724546 1.649651e+00
+    ## deficiencyanemias   5.2863614 33.58946121  2.571143  2.6338556 7.872398e+00
+    ## depression          0.1481522 23.06667586  3.008837 14.9312093 4.201612e+01
+    ## hyperlipemia       19.9989268  2.67313235 13.424999  3.2403099 6.807773e+00
+    ## renal_failure      26.6292841  0.43027019  5.576162  0.7898878 4.219038e+00
+    ## copd                2.1347020  0.06107125 50.173408  7.5826341 4.365611e+00
 
 ``` r
 #shown by contribution
 
-fviz_contrib(res_pca_com, choice = "var", axes = 1, top = 10) 
+fviz_contrib(res_pca_com, choice = "var", axes = 1, top = 10)
 ```
 
 ![](Felix_EDA_files/figure-gfm/unnamed-chunk-8-6.png)<!-- -->
 
 ``` r
-fviz_contrib(res_pca_com, choice = "var", axes = 1:5, top = 10) 
+fviz_contrib(res_pca_com, choice = "var", axes = 1:5, top = 10)
 ```
 
 ![](Felix_EDA_files/figure-gfm/unnamed-chunk-8-7.png)<!-- -->
@@ -478,39 +490,40 @@ summary(pca_res_sign)
 ```
 
     ## Importance of components:
-    ##                           PC1    PC2     PC3    PC4     PC5     PC6     PC7
-    ## Standard deviation     2.0755 1.7544 1.65941 1.5954 1.44825 1.41361 1.28211
-    ## Proportion of Variance 0.1197 0.0855 0.07649 0.0707 0.05826 0.05551 0.04566
-    ## Cumulative Proportion  0.1197 0.2052 0.28165 0.3524 0.41062 0.46613 0.51179
-    ##                            PC8     PC9    PC10   PC11    PC12    PC13    PC14
-    ## Standard deviation     1.26893 1.20539 1.13669 1.0732 1.06219 1.01594 0.97637
-    ## Proportion of Variance 0.04473 0.04036 0.03589 0.0320 0.03134 0.02867 0.02648
-    ## Cumulative Proportion  0.55652 0.59688 0.63277 0.6648 0.69610 0.72477 0.75125
-    ##                          PC15    PC16    PC17    PC18    PC19    PC20    PC21
-    ## Standard deviation     0.9411 0.93071 0.91478 0.88614 0.81928 0.78031 0.77131
-    ## Proportion of Variance 0.0246 0.02406 0.02325 0.02181 0.01864 0.01691 0.01653
-    ## Cumulative Proportion  0.7759 0.79992 0.82316 0.84498 0.86362 0.88053 0.89706
-    ##                           PC22    PC23   PC24    PC25    PC26    PC27    PC28
-    ## Standard deviation     0.74955 0.72039 0.7024 0.66146 0.64995 0.60204 0.52594
-    ## Proportion of Variance 0.01561 0.01442 0.0137 0.01215 0.01173 0.01007 0.00768
-    ## Cumulative Proportion  0.91267 0.92708 0.9408 0.95294 0.96467 0.97474 0.98242
+    ##                           PC1     PC2     PC3     PC4     PC5     PC6     PC7
+    ## Standard deviation     1.9704 1.75519 1.58788 1.53481 1.48901 1.40515 1.30262
+    ## Proportion of Variance 0.1078 0.08557 0.07004 0.06543 0.06159 0.05485 0.04713
+    ## Cumulative Proportion  0.1078 0.19342 0.26346 0.32889 0.39048 0.44532 0.49246
+    ##                            PC8     PC9    PC10    PC11    PC12    PC13    PC14
+    ## Standard deviation     1.25500 1.18055 1.12159 1.08514 1.06435 1.01906 0.98288
+    ## Proportion of Variance 0.04375 0.03871 0.03494 0.03271 0.03147 0.02885 0.02683
+    ## Cumulative Proportion  0.53621 0.57492 0.60986 0.64257 0.67404 0.70289 0.72972
+    ##                           PC15    PC16   PC17    PC18   PC19    PC20    PC21
+    ## Standard deviation     0.94975 0.93029 0.9059 0.87727 0.8633 0.83018 0.81972
+    ## Proportion of Variance 0.02506 0.02404 0.0228 0.02138 0.0207 0.01914 0.01867
+    ## Cumulative Proportion  0.75478 0.77882 0.8016 0.82299 0.8437 0.86284 0.88151
+    ##                           PC22    PC23    PC24    PC25    PC26    PC27   PC28
+    ## Standard deviation     0.78710 0.77189 0.73835 0.71059 0.69022 0.63136 0.5500
+    ## Proportion of Variance 0.01721 0.01655 0.01514 0.01403 0.01323 0.01107 0.0084
+    ## Cumulative Proportion  0.89871 0.91527 0.93041 0.94443 0.95767 0.96874 0.9771
     ##                           PC29    PC30    PC31    PC32    PC33    PC34    PC35
-    ## Standard deviation     0.51135 0.46246 0.27123 0.26514 0.07778 0.07365 0.03573
-    ## Proportion of Variance 0.00726 0.00594 0.00204 0.00195 0.00017 0.00015 0.00004
-    ## Cumulative Proportion  0.98969 0.99563 0.99767 0.99962 0.99979 0.99994 0.99998
+    ## Standard deviation     0.53262 0.49727 0.38231 0.35390 0.11283 0.07647 0.03288
+    ## Proportion of Variance 0.00788 0.00687 0.00406 0.00348 0.00035 0.00016 0.00003
+    ## Cumulative Proportion  0.98502 0.99189 0.99595 0.99943 0.99979 0.99995 0.99998
     ##                           PC36
-    ## Standard deviation     0.02754
+    ## Standard deviation     0.02807
     ## Proportion of Variance 0.00002
     ## Cumulative Proportion  1.00000
 
 ``` r
 #pca using packages `FactoMineR`, `factoextra`
-res_pca_sign = PCA(sign_data, scale.unit = TRUE, graph = TRUE)
+sign = sign_data |> select(-outcome)
+res_pca_sign = PCA(sign, scale.unit = TRUE, graph = TRUE)
 ```
 
 ![](Felix_EDA_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
-    ## Warning: ggrepel: 2 unlabeled data points (too many overlaps). Consider
+    ## Warning: ggrepel: 11 unlabeled data points (too many overlaps). Consider
     ## increasing max.overlaps
 
 ![](Felix_EDA_files/figure-gfm/unnamed-chunk-9-2.png)<!-- -->
@@ -522,44 +535,43 @@ res_pca_sign = PCA(sign_data, scale.unit = TRUE, graph = TRUE)
 get_eigenvalue(res_pca_sign)
 ```
 
-    ##         eigenvalue variance.percent cumulative.variance.percent
-    ## Dim.1  4.486554762     12.125823680                    12.12582
-    ## Dim.2  3.124558299      8.444752160                    20.57058
-    ## Dim.3  2.754341576      7.444166421                    28.01474
-    ## Dim.4  2.545338553      6.879293386                    34.89404
-    ## Dim.5  2.167347085      5.857694824                    40.75173
-    ## Dim.6  2.000577249      5.406965537                    46.15870
-    ## Dim.7  1.643947209      4.443100565                    50.60180
-    ## Dim.8  1.625781372      4.394003708                    54.99580
-    ## Dim.9  1.457615819      3.939502214                    58.93530
-    ## Dim.10 1.293181774      3.495085875                    62.43039
-    ## Dim.11 1.152053351      3.113657706                    65.54405
-    ## Dim.12 1.140232846      3.081710396                    68.62576
-    ## Dim.13 1.032137271      2.789560193                    71.41532
-    ## Dim.14 0.984959896      2.662053774                    74.07737
-    ## Dim.15 0.939588449      2.539428240                    76.61680
-    ## Dim.16 0.867945766      2.345799369                    78.96260
-    ## Dim.17 0.837340648      2.263082832                    81.22568
-    ## Dim.18 0.785724642      2.123580113                    83.34926
-    ## Dim.19 0.688799473      1.861620196                    85.21088
-    ## Dim.20 0.660627094      1.785478633                    86.99636
-    ## Dim.21 0.607900214      1.642973552                    88.63933
-    ## Dim.22 0.565506741      1.528396597                    90.16773
-    ## Dim.23 0.542955354      1.467446904                    91.63518
-    ## Dim.24 0.499994632      1.351336844                    92.98651
-    ## Dim.25 0.493276693      1.333180250                    94.31969
-    ## Dim.26 0.437271691      1.181815381                    95.50151
-    ## Dim.27 0.421672417      1.139655181                    96.64116
-    ## Dim.28 0.355470244      0.960730390                    97.60189
-    ## Dim.29 0.265574370      0.717768568                    98.31966
-    ## Dim.30 0.260431388      0.703868615                    99.02353
-    ## Dim.31 0.205460121      0.555297623                    99.57883
-    ## Dim.32 0.072365989      0.195583753                    99.77441
-    ## Dim.33 0.069970192      0.189108628                    99.96352
-    ## Dim.34 0.006041475      0.016328311                    99.97985
-    ## Dim.35 0.005422769      0.014656132                    99.99451
-    ## Dim.36 0.001274172      0.003443708                    99.99795
-    ## Dim.37 0.000758404      0.002049740                   100.00000
+    ##          eigenvalue variance.percent cumulative.variance.percent
+    ## Dim.1  3.8823383058     10.784273072                    10.78427
+    ## Dim.2  3.0806929385      8.557480385                    19.34175
+    ## Dim.3  2.5213605846      7.003779402                    26.34553
+    ## Dim.4  2.3556330047      6.543425013                    32.88896
+    ## Dim.5  2.2171588093      6.158774470                    39.04773
+    ## Dim.6  1.9744560329      5.484600091                    44.53233
+    ## Dim.7  1.6968202108      4.713389474                    49.24572
+    ## Dim.8  1.5750125846      4.375034957                    53.62076
+    ## Dim.9  1.3937018264      3.871393962                    57.49215
+    ## Dim.10 1.2579643101      3.494345306                    60.98650
+    ## Dim.11 1.1775311390      3.270919831                    64.25742
+    ## Dim.12 1.1328467937      3.146796649                    67.40421
+    ## Dim.13 1.0384849030      2.884680286                    70.28889
+    ## Dim.14 0.9660455818      2.683459950                    72.97235
+    ## Dim.15 0.9020277951      2.505632764                    75.47799
+    ## Dim.16 0.8654315803      2.403976612                    77.88196
+    ## Dim.17 0.8207039312      2.279733142                    80.16170
+    ## Dim.18 0.7696050551      2.137791820                    82.29949
+    ## Dim.19 0.7452352298      2.070097860                    84.36959
+    ## Dim.20 0.6892066565      1.914462935                    86.28405
+    ## Dim.21 0.6719476581      1.866521273                    88.15057
+    ## Dim.22 0.6195214896      1.720893027                    89.87146
+    ## Dim.23 0.5958147476      1.655040966                    91.52650
+    ## Dim.24 0.5451543521      1.514317645                    93.04082
+    ## Dim.25 0.5049433524      1.402620423                    94.44344
+    ## Dim.26 0.4763982493      1.323328470                    95.76677
+    ## Dim.27 0.3986187827      1.107274396                    96.87404
+    ## Dim.28 0.3025340700      0.840372417                    97.71442
+    ## Dim.29 0.2836820804      0.788005779                    98.50242
+    ## Dim.30 0.2472778493      0.686882915                    99.18931
+    ## Dim.31 0.1461572492      0.405992359                    99.59530
+    ## Dim.32 0.1252456966      0.347904713                    99.94320
+    ## Dim.33 0.0127299486      0.035360968                    99.97856
+    ## Dim.34 0.0058484104      0.016245584                    99.99481
+    ## Dim.35 0.0010810096      0.003002805                    99.99781
+    ## Dim.36 0.0007877808      0.002188280                   100.00000
 
 ``` r
 #`variance.percent` explains the percentage of change. 70% would be adequate.
@@ -578,82 +590,80 @@ var_sign <- get_pca_var(res_pca_sign)
 var_sign$coord
 ```
 
-    ##                                 Dim.1         Dim.2       Dim.3         Dim.4
-    ## outcome                   0.476615774  0.2384592028 -0.02885000  0.0032038834
-    ## heart_rate                0.106836586  0.2872528467  0.41739635  0.0900546938
-    ## systolic_blood_pressure  -0.206550183 -0.1680294067  0.02456931  0.0613322078
-    ## diastolic_blood_pressure -0.238262540  0.2151985656  0.26010128  0.3558984320
-    ## respiratory_rate          0.041117513  0.3932669748  0.33166439  0.0479843882
-    ## temperature              -0.168570306 -0.0790603519  0.46066515 -0.0698784025
-    ## sp_o2                     0.262745239 -0.3860500783  0.07449164  0.0084513171
-    ## urine_output             -0.467949250  0.0952373929  0.18390603  0.1040510743
-    ## hematocrit               -0.381351278  0.5336291955  0.08784134  0.1984060048
-    ## rbc                      -0.355532191  0.6976729627  0.01333505  0.2001303846
-    ## mch                       0.038365969 -0.5746304274  0.39209359 -0.0006217516
-    ## mchc                      0.071076525 -0.3886235328  0.55601483  0.0505959090
-    ## mcv                       0.009700413 -0.4802922369  0.16156528 -0.0307115969
-    ## rdw                       0.199415629  0.0485106757 -0.36559619  0.1192067530
-    ## leucocyte                 0.424406488  0.3621198806  0.23899398 -0.1844723537
-    ## platelets                -0.098538321  0.2136041099  0.16933643 -0.1071270999
-    ## neutrophils               0.297006547  0.3216492952  0.07305974 -0.7296998481
-    ## basophils                -0.269147756 -0.0743529567 -0.05422580  0.5822482894
-    ## lymphocyte               -0.357214967 -0.3161136631 -0.07134289  0.7009691586
-    ## pt                        0.251317183  0.4521528392 -0.06064512  0.0270531589
-    ## inr                       0.244824206  0.4502600775 -0.06729796  0.0301049100
-    ## nt_pro_bnp                0.491448471 -0.0469477763 -0.20758823  0.0526628973
-    ## creatine_kinase           0.125540041  0.1632430863  0.16624951  0.0207383906
-    ## creatinine                0.458169939 -0.1769007988 -0.38865952  0.3067058273
-    ## urea_nitrogen             0.562069937 -0.0546878952 -0.48328910  0.0898283799
-    ## glucose                   0.172681934  0.1230131587  0.13636553 -0.0097649955
-    ## blood_potassium           0.239476792  0.0912177378 -0.34938870  0.2690716108
-    ## blood_sodium             -0.170291633 -0.0358199916 -0.14460830 -0.3840835503
-    ## blood_calcium            -0.451696681  0.0332454338 -0.14035639  0.1611860483
-    ## chloride                  0.407564471 -0.2196432141  0.13739892 -0.2437860301
-    ## anion_gap                 0.684253780  0.1146877636  0.02595635  0.4152753656
-    ## magnesium_ion             0.093261489  0.0003682741 -0.23828815 -0.1039840619
-    ## ph                       -0.192171714 -0.0041834239  0.47588843 -0.0091267263
-    ## bicarbonate              -0.796414736  0.1251275966 -0.25609348 -0.2210588224
-    ## lactic_acid               0.404578048  0.2792404705  0.35084559  0.2876576552
-    ## pco2                     -0.555380763  0.1047247717 -0.52658698 -0.2243388307
-    ## ef                       -0.146139703 -0.2408581011 -0.07825737 -0.3248713183
-    ##                                 Dim.5
-    ## outcome                   0.310229133
-    ## heart_rate               -0.016935468
-    ## systolic_blood_pressure  -0.300383049
-    ## diastolic_blood_pressure -0.104202521
-    ## respiratory_rate         -0.024514112
-    ## temperature              -0.156446373
-    ## sp_o2                    -0.233415421
-    ## urine_output             -0.149763946
-    ## hematocrit                0.369778583
-    ## rbc                       0.083699926
-    ## mch                       0.577654272
-    ## mchc                      0.135599751
-    ## mcv                       0.627995020
-    ## rdw                      -0.141473721
-    ## leucocyte                -0.071887906
-    ## platelets                -0.413735400
-    ## neutrophils              -0.103853518
-    ## basophils                 0.111167086
-    ## lymphocyte                0.075717356
-    ## pt                        0.389923644
-    ## inr                       0.393600819
-    ## nt_pro_bnp               -0.065458986
-    ## creatine_kinase           0.168275116
-    ## creatinine               -0.150785189
-    ## urea_nitrogen            -0.109214122
-    ## glucose                  -0.090105948
-    ## blood_potassium           0.079749470
-    ## blood_sodium              0.259617752
-    ## blood_calcium            -0.124509663
-    ## chloride                  0.172261041
-    ## anion_gap                -0.121760477
-    ## magnesium_ion             0.001638978
-    ## ph                       -0.340392532
-    ## bicarbonate               0.081177178
-    ## lactic_acid               0.179129466
-    ## pco2                      0.285568453
-    ## ef                       -0.010375779
+    ##                                Dim.1       Dim.2        Dim.3         Dim.4
+    ## heart_rate               -0.02246391  0.06090055 -0.392530078  0.3260299099
+    ## systolic_blood_pressure  -0.25558121 -0.05105447  0.190220573  0.0339117783
+    ## diastolic_blood_pressure -0.27807267  0.21786491  0.015124638  0.4552871695
+    ## respiratory_rate         -0.02763299  0.17948997 -0.335546928  0.2666654389
+    ## temperature              -0.18072057 -0.27190713 -0.205912393  0.1346234947
+    ## sp_o2                     0.24003019 -0.29155170  0.031909909 -0.0507796416
+    ## urine_output             -0.43725294  0.08103086  0.035063741  0.2143190027
+    ## hematocrit               -0.42569719  0.41664045 -0.026923947  0.3389792493
+    ## rbc                      -0.41236767  0.62385055 -0.112910279  0.3028089891
+    ## mch                       0.05403986 -0.69027140  0.087386790  0.1799180887
+    ## mchc                      0.02280423 -0.55392227 -0.141009442  0.3404398098
+    ## mcv                       0.05441586 -0.53454171  0.191828591  0.0233207116
+    ## rdw                       0.33744043  0.24411938  0.119197478 -0.1538592625
+    ## leucocyte                 0.23464198  0.20181966 -0.461443491 -0.0004189803
+    ## platelets                -0.10757415  0.22695636 -0.279416696 -0.0867225624
+    ## neutrophils               0.14259222  0.13892791 -0.528725108 -0.5006385025
+    ## basophils                -0.11938196 -0.04007822  0.320882887  0.3481866648
+    ## lymphocyte               -0.22076603 -0.12632259  0.550206151  0.4794449340
+    ## pt                        0.28056540  0.37190432 -0.164753737 -0.0620408227
+    ## inr                       0.27891688  0.36767643 -0.155407858 -0.0650790475
+    ## nt_pro_bnp                0.55398080  0.09778268  0.116276389 -0.0076213419
+    ## creatine_kinase           0.06682307  0.03142546 -0.141177532  0.1100149869
+    ## creatinine                0.56966024  0.12568562  0.447903822  0.0368800105
+    ## urea_nitrogen             0.65085503  0.19179569  0.341940637 -0.1333378983
+    ## glucose                   0.04827023  0.16247097 -0.047026877  0.0240938819
+    ## blood_potassium           0.33166568  0.25633318  0.378786579  0.0297641095
+    ## blood_sodium             -0.20887997 -0.12909590 -0.008583072 -0.2970508521
+    ## blood_calcium            -0.23599460  0.25204149  0.318971662  0.0788230726
+    ## chloride                  0.20849506 -0.41635980 -0.251276306 -0.0627482140
+    ## anion_gap                 0.68628769  0.20587355  0.097193294  0.3828988134
+    ## magnesium_ion             0.20783582  0.13658310  0.207283011 -0.0803755041
+    ## ph                       -0.18913475 -0.13867178 -0.293603511  0.1718440184
+    ## bicarbonate              -0.70503334  0.23884302  0.230432292 -0.3656182777
+    ## lactic_acid               0.30401696  0.22495752 -0.195277022  0.3926850463
+    ## pco2                     -0.43693715  0.25760703  0.403227259 -0.4653029646
+    ## ef                       -0.18434007 -0.26854157 -0.002609225 -0.2976239513
+    ##                                Dim.5
+    ## heart_rate               -0.06151389
+    ## systolic_blood_pressure   0.21980664
+    ## diastolic_blood_pressure  0.13005109
+    ## respiratory_rate          0.08044240
+    ## temperature              -0.05361588
+    ## sp_o2                    -0.22650341
+    ## urine_output              0.02413758
+    ## hematocrit                0.37489667
+    ## rbc                       0.19312196
+    ## mch                       0.41806200
+    ## mchc                      0.29269240
+    ## mcv                       0.34986837
+    ## rdw                      -0.46462126
+    ## leucocyte                 0.19151879
+    ## platelets                 0.01502668
+    ## neutrophils               0.47035110
+    ## basophils                -0.30728196
+    ## lymphocyte               -0.45040607
+    ## pt                       -0.32997374
+    ## inr                      -0.32622521
+    ## nt_pro_bnp                0.06356329
+    ## creatine_kinase           0.02918418
+    ## creatinine                0.22161390
+    ## urea_nitrogen             0.28447024
+    ## glucose                   0.17806024
+    ## blood_potassium           0.15109416
+    ## blood_sodium             -0.04736755
+    ## blood_calcium             0.33244064
+    ## chloride                 -0.21326311
+    ## anion_gap                 0.26003168
+    ## magnesium_ion             0.32314412
+    ## ph                       -0.01637378
+    ## bicarbonate               0.06212000
+    ## lactic_acid              -0.08203611
+    ## pco2                      0.06452242
+    ## ef                        0.06966678
 
 ``` r
 #shown by correlation
@@ -677,82 +687,80 @@ corrplot(var_sign$cos2, is.corr=FALSE)
 var_sign$contrib
 ```
 
-    ##                                 Dim.1        Dim.2        Dim.3        Dim.4
-    ## outcome                   5.063185642 1.819867e+00  0.030218562 4.032811e-04
-    ## heart_rate                0.254405812 2.640828e+00  6.325276246 3.186157e-01
-    ## systolic_blood_pressure   0.950907326 9.036119e-01  0.021916337 1.477854e-01
-    ## diastolic_blood_pressure  1.265314722 1.482143e+00  2.456219534 4.976300e+00
-    ## respiratory_rate          0.037682587 4.949785e+00  3.993740996 9.045954e-02
-    ## temperature               0.633357876 2.000455e-01  7.704650224 1.918405e-01
-    ## sp_o2                     1.538709868 4.769783e+00  0.201463940 2.806101e-03
-    ## urine_output              4.880727236 2.902862e-01  1.227931478 4.253511e-01
-    ## hematocrit                3.241435906 9.113612e+00  0.280143231 1.546550e+00
-    ## rbc                       2.817376492 1.557812e+01  0.006456118 1.573550e+00
-    ## mch                       0.032807971 1.056790e+01  5.581638311 1.518757e-05
-    ## mchc                      0.112600262 4.833587e+00 11.224188545 1.005739e-01
-    ## mcv                       0.002097333 7.382824e+00  0.947716164 3.705606e-02
-    ## rdw                       0.886350335 7.531579e-02  4.852723196 5.582853e-01
-    ## leucocyte                 4.014681124 4.196779e+00  2.073748752 1.336956e+00
-    ## platelets                 0.216419976 1.460261e+00  1.041077299 4.508719e-01
-    ## neutrophils               1.966160975 3.311133e+00  0.193793165 2.091910e+01
-    ## basophils                 1.614613404 1.769326e-01  0.106756453 1.331898e+01
-    ## lymphocyte                2.844109561 3.198143e+00  0.184792198 1.930422e+01
-    ## pt                        1.407768981 6.543075e+00  0.133528494 2.875348e-02
-    ## inr                       1.335967018 6.488409e+00  0.164431854 3.560649e-02
-    ## nt_pro_bnp                5.383230837 7.054097e-02  1.564543472 1.089592e-01
-    ## creatine_kinase           0.351278491 8.528663e-01  1.003466651 1.689680e-02
-    ## creatinine                4.678861716 1.001546e+00  5.484295231 3.695715e+00
-    ## urea_nitrogen             7.041541466 9.571804e-02  8.480006733 3.170163e-01
-    ## glucose                   0.664631370 4.843000e-01  0.675136204 3.746265e-03
-    ## blood_potassium           1.278244373 2.662993e-01  4.432001755 2.844397e+00
-    ## blood_sodium              0.646358775 4.106410e-02  0.759221702 5.795699e+00
-    ## blood_calcium             4.547584997 3.537328e-02  0.715231462 1.020726e+00
-    ## chloride                  3.702368677 1.543999e+00  0.685407516 2.334920e+00
-    ## anion_gap                10.435696438 4.209646e-01  0.024460739 6.775273e+00
-    ## magnesium_ion             0.193861567 4.340639e-06  2.061517842 4.248034e-01
-    ## ph                        0.823125310 5.601123e-04  8.222284258 3.272537e-03
-    ## bicarbonate              14.137271597 5.010921e-01  2.381108910 1.919863e+00
-    ## lactic_acid               3.648309358 2.495560e+00  4.469040105 3.250920e+00
-    ## pco2                      6.874936519 3.510025e-01 10.067518569 1.977258e+00
-    ## ef                        0.476018103 1.856666e+00  0.222347755 4.146457e+00
-    ##                                 Dim.5
-    ## outcome                  4.440549e+00
-    ## heart_rate               1.323323e-02
-    ## systolic_blood_pressure  4.163153e+00
-    ## diastolic_blood_pressure 5.009888e-01
-    ## respiratory_rate         2.772706e-02
-    ## temperature              1.129282e+00
-    ## sp_o2                    2.513799e+00
-    ## urine_output             1.034871e+00
-    ## hematocrit               6.308920e+00
-    ## rbc                      3.232375e-01
-    ## mch                      1.539599e+01
-    ## mchc                     8.483778e-01
-    ## mcv                      1.819634e+01
-    ## rdw                      9.234706e-01
-    ## leucocyte                2.384422e-01
-    ## platelets                7.897996e+00
-    ## neutrophils              4.976385e-01
-    ## basophils                5.701957e-01
-    ## lymphocyte               2.645224e-01
-    ## pt                       7.015048e+00
-    ## inr                      7.147983e+00
-    ## nt_pro_bnp               1.977016e-01
-    ## creatine_kinase          1.306506e+00
-    ## creatinine               1.049032e+00
-    ## urea_nitrogen            5.503375e-01
-    ## glucose                  3.746092e-01
-    ## blood_potassium          2.934453e-01
-    ## blood_sodium             3.109856e+00
-    ## blood_calcium            7.152826e-01
-    ## chloride                 1.369133e+00
-    ## anion_gap                6.840443e-01
-    ## magnesium_ion            1.239418e-04
-    ## ph                       5.346032e+00
-    ## bicarbonate              3.040461e-01
-    ## lactic_acid              1.480490e+00
-    ## pco2                     3.762634e+00
-    ## ef                       4.967215e-03
+    ##                                Dim.1       Dim.2        Dim.3        Dim.4
+    ## heart_rate                0.01299803  0.12039099 6.110981e+00 4.512397e+00
+    ## systolic_blood_pressure   1.68253645  0.08460949 1.435093e+00 4.881952e-02
+    ## diastolic_blood_pressure  1.99169679  1.54072860 9.072668e-03 8.799605e+00
+    ## respiratory_rate          0.01966810  1.04575985 4.465515e+00 3.018741e+00
+    ## temperature               0.84124369  2.39989801 1.681628e+00 7.693679e-01
+    ## sp_o2                     1.48401526  2.75919724 4.038464e-02 1.094641e-01
+    ## urine_output              4.92461280  0.21313387 4.876200e-02 1.949906e+00
+    ## hematocrit                4.66775651  5.63474745 2.875031e-02 4.877964e+00
+    ## rbc                       4.38001753 12.63318090 5.056290e-01 3.892511e+00
+    ## mch                       0.07522028 15.46647523 3.028703e-01 1.374175e+00
+    ## mchc                      0.01339484  9.95976830 7.886085e-01 4.920090e+00
+    ## mcv                       0.07627069  9.27501865 1.459458e+00 2.308745e-02
+    ## rdw                       2.93292427  1.93444382 5.635068e-01 1.004939e+00
+    ## leucocyte                 1.41813655  1.32214332 8.445047e+00 7.452117e-06
+    ## platelets                 0.29807289  1.67200015 3.096490e+00 3.192689e-01
+    ## neutrophils               0.52371892  0.62651377 1.108728e+01 1.063998e+01
+    ## basophils                 0.36709973  0.05213969 4.083741e+00 5.146555e+00
+    ## lymphocyte                1.25536822  0.51798077 1.200649e+01 9.758203e+00
+    ## pt                        2.02756531  4.48966606 1.076553e+00 1.633983e-01
+    ## inr                       2.00380848  4.38816721 9.578797e-01 1.797938e-01
+    ## nt_pro_bnp                7.90489403  0.31036692 5.362263e-01 2.465785e-03
+    ## creatine_kinase           0.11501632  0.03205641 7.904897e-01 5.138023e-01
+    ## creatinine                8.35869422  0.51277016 7.956729e+00 5.773969e-02
+    ## urea_nitrogen            10.91126617  1.19406862 4.637314e+00 7.547438e-01
+    ## glucose                   0.06001578  0.85684670 8.771166e-02 2.464370e-02
+    ## blood_potassium           2.83339862  2.13285457 5.690550e+00 3.760782e-02
+    ## blood_sodium              1.12382896  0.54097415 2.921800e-03 3.745881e+00
+    ## blood_calcium             1.43453365  2.06203324 4.035239e+00 2.637540e-01
+    ## chloride                  1.11969093  5.62715885 2.504195e+00 1.671457e-01
+    ## anion_gap                12.13162687  1.37579167 3.746603e-01 6.223869e+00
+    ## magnesium_ion             1.11262140  0.60554376 1.704090e+00 2.742457e-01
+    ## ph                        0.92140227  0.62420577 3.418909e+00 1.253606e+00
+    ## bicarbonate              12.80341830  1.85172583 2.105968e+00 5.674769e+00
+    ## lactic_acid               2.38068678  1.64267871 1.512402e+00 6.546077e+00
+    ## pco2                      4.91750215  2.15410570 6.448591e+00 9.191026e+00
+    ## ef                        0.87527820  2.34085559 2.700151e-04 3.760349e+00
+    ##                               Dim.5
+    ## heart_rate               0.17066703
+    ## systolic_blood_pressure  2.17913834
+    ## diastolic_blood_pressure 0.76283607
+    ## respiratory_rate         0.29185910
+    ## temperature              0.12965523
+    ## sp_o2                    2.31394315
+    ## urine_output             0.02627790
+    ## hematocrit               6.33908203
+    ## rbc                      1.68215703
+    ## mch                      7.88287412
+    ## mchc                     3.86390193
+    ## mcv                      5.52093412
+    ## rdw                      9.73646602
+    ## leucocyte                1.65434465
+    ## platelets                0.01018426
+    ## neutrophils              9.97809244
+    ## basophils                4.25870286
+    ## lymphocyte               9.14980122
+    ## pt                       4.91090979
+    ## inr                      4.79996681
+    ## nt_pro_bnp               0.18222836
+    ## creatine_kinase          0.03841478
+    ## creatinine               2.21511971
+    ## urea_nitrogen            3.64986569
+    ## glucose                  1.43000360
+    ## blood_potassium          1.02967113
+    ## blood_sodium             0.10119640
+    ## blood_calcium            4.98461255
+    ## chloride                 2.05132600
+    ## anion_gap                3.04969011
+    ## magnesium_ion            4.70972675
+    ## ph                       0.01209208
+    ## bicarbonate              0.17404682
+    ## lactic_acid              0.30353817
+    ## pco2                     0.18776925
+    ## ef                       0.21890447
 
 ``` r
 #shown by contribution
