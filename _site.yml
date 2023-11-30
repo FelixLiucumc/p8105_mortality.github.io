@@ -1,0 +1,28 @@
+name: "Yay internet!"
+output_dir: "."
+navbar:
+  title: "Home"
+  right:
+    - text: "Introduction"
+      href: introduction.html
+    - text: "Data"
+      href: data.html
+    - text: "Prelimary Analysis"
+      href: analysis.html
+    - text: "EDA"
+      href: EDA.html
+    - text: "Regression"
+      href: regression_model.html
+    - text: "Conclusion"
+      href: conclusion.html
+    - text: "Shiny App"
+      href: https://7lx8uo-txbrook.shinyapps.io/map_dashboard/#section-life-expectancy
+    - text: "Report"
+      href: project_report.html
+    - icon: fa-envelope fa-lg
+      href: mailto:<jy3360@cumc.columbia.edu>
+    - icon: fa-github fa-lg
+      href: https://github.com/candicejiaruiyu/p8105_mortality.github.io
+output:
+  html_document:
+    theme: cosmo
