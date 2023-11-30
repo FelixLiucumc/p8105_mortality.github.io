@@ -148,5 +148,64 @@ Hospital mortality datasets contains a total of ```r length(unique(mortality_dat
 <br>
 <br>
 
+# Imputation 
+
+**Data cleaning problems:**
+
+* Too many NA values;
+
+* Too many categorical variables/ binary variables;
+
+* High demensionality;
+
+**Our solutions:**
+
+* Change NA values to the mean value of each variables;
+
+* Binarization;
+
+* Dimensionality Reduction using Principle Component Analysis (PCA);
+
+```{r}
+# Define a function to convert multiple columns to factors
+convert_to_factor <- function(df, columns) {
+  df[columns] <- lapply(df[columns], factor)
+  return(df)
+}
+
+# Load the data and preprocess it
+mortality_data <- read_csv("mortality_data.csv") %>%
+  janitor::clean_names() %>%
+  drop_na(outcome) %>%
+  convert_to_factor(., c("group", "gendera", "outcome", "hypertensive", 
+                         "atrialfibrillation", "chd_with_no_mi", "diabetes", 
+                         "deficiencyanemias", "depression", "hyperlipemia", 
+                         "renal_failure", "copd")) %>%
+  rename(gender = gendera)  # Rename gendera to gender after conversion
+```
+
+Algorithms that find association patterns require that the data be in the form of binary attributes. Thus, it is often necessary to transform a continuous attribute into a categorical attribute (discretization), and both continuous and discrete attributes may need to be transformed into one or more binary attributes (binarization). 
+
+Additionally, if a categorical attribute has a large number of values (categories), or some values occur infrequently, then it can be beneficial for certain data mining tasks to reduce the number of categories by combining some of the values. 
+
+```{r}
+# Imputing numerical columns with mean value 
+
+numerical_columns <- sapply(mortality_data, is.numeric)
+mortality_data[numerical_columns] <- lapply(mortality_data[numerical_columns], function(x) {
+   ifelse(is.na(x), mean(x, na.rm = TRUE), x)
+})
 
 
+write_csv(mortality_data, "mortality_data_cleaned.csv")
+```
+
+After data cleaning, our dataset change into high quality data, with:
+
+* No duplicates;
+
+* No missing values;
+
+* No noise and outliers;
+
+* Inconsistency;
