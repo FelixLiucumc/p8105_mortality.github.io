@@ -1,11 +1,16 @@
 ---
-title: "EDA_Candice"
-author: "Candice Yu"
-date: "2023-11-16"
-output: github_document
+title: "Exploratory Data Analysis"
+
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: cosmo
+    code_folding: hide
 ---
 
-```{r setup, include=FALSE}
+
+```{r defaults, echo = FALSE, message = FALSE, warning = FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse)
