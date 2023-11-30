@@ -169,6 +169,14 @@ var_com$contrib
 
 fviz_contrib(res_pca_com, choice = "var", axes = 1, top = 10)
 fviz_contrib(res_pca_com, choice = "var", axes = 1:5, top = 10)
+
+#colored individuals
+fviz_pca_ind(res_pca_com,
+             geom.ind = "point",
+             col.ind = as.character(com_data$outcome),
+             palette = c("#00AFBB", "#FC4E07"),
+             addEllipses = TRUE,
+             legend.title = "Groups")
 ```
 
 
@@ -213,6 +221,14 @@ var_sign$contrib
 
 fviz_contrib(res_pca_sign, choice = "var", axes = 1, top = 10)
 fviz_contrib(res_pca_sign, choice = "var", axes = 1:5, top = 10)
+
+#colored individuals
+fviz_pca_ind(res_pca_sign,
+             geom.ind = "point",
+             col.ind = as.character(sign_data$outcome),
+             palette = c("#00AFBB", "#FC4E07"),
+             addEllipses = TRUE,
+             legend.title = "Groups")
 ```
 
 
