@@ -177,40 +177,21 @@ Observations based on the chart include:
 
 
 ## Lab Results Analysis
-```{r}
-# Visualize Creatinine Levels by Outcome with a boxplot
-ggplot(mortality_data_EDA, aes(x = outcome, y = creatinine, color = outcome)) +
-  geom_boxplot() +
-  labs(title = "Creatinine Levels by Outcome", x = "Outcome", y = "Creatinine (mg/dL)") +
-  theme_minimal()
 
+This section offers a quantitative glimpse into potential biological markers that could contribute to our predictive model, thus enhancing our ability to conduct further analysis and understand mortality more deeply. 
+
+### Hematocrit Levels by Outcome
+
+```{r}
 # Visualize Hematocrit Levels by Outcome with a violin plot
 ggplot(mortality_data_EDA, aes(x = outcome, y = hematocrit, color = outcome)) +
   geom_violin() +
   labs(title = "Hematocrit Levels by Outcome", x = "Outcome", y = "Hematocrit (%)") +
   theme_minimal()
 
-# Visualize Sodium Levels by Outcome with a histogram
-ggplot(mortality_data_EDA, aes(x = blood_sodium, fill = outcome)) +
-  geom_histogram(binwidth = 1, position = "dodge") +
-  facet_wrap(~outcome) +
-  labs(title = "Sodium Levels by Outcome", x = "Sodium (mmol/L)", y = "Count") +
-  theme_minimal()
-
-# Visualize Potassium Levels by Outcome with a density plot
-ggplot(mortality_data_EDA, aes(x = blood_potassium, fill = outcome)) +
-  geom_density(alpha = 0.5) +
-  facet_wrap(~outcome) +
-  labs(title = "Potassium Levels by Outcome", x = "Potassium (mmol/L)", y = "Density") +
-  theme_minimal()
-
-# Visualize Glucose Levels by Outcome with a scatter plot, comparing with Creatinine
-ggplot(mortality_data_EDA, aes(x = glucose, y = creatinine, color = outcome)) +
-  geom_point(alpha = 0.6) +
-  labs(title = "Glucose vs. Creatinine Levels by Outcome", x = "Glucose (mg/dL)", y = "Creatinine (mg/dL)") +
-  theme_minimal()
-
 ```
+The plot illustrates a comparison of hematocrit levels in patients who were admitted to the ICU with heart failure and subsequently either survived (Alive) or did not (Death). There doesn't seem to be a clear separation between the two outcomes based on hematocrit levels alone. The peak of the distribution for the deceased patients appears to be slightly lower than that of the survivors. 
+
 ### Heart Rate Distribution by Outcome
 
 The density plot below illustrates the distribution of heart rate among patients with heart failure, categorized by the outcome of either survival (Alive) or death (Death). 
