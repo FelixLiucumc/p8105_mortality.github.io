@@ -6,7 +6,7 @@ navbar:
     - text: "Introduction"
       href: introduction.html
     - text: "Data"
-      href: data.html
+      href: Datasets.html
     - text: "Prelimary Analysis"
       href: analysis.html
     - text: "EDA"
