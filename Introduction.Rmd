@@ -1,0 +1,120 @@
+---
+title: "Introduction"
+
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: cosmo
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+\ \par
+# Motivation
+
+Predictors of in-hospital mortality in patients with heart failure admitted to the intensive care unit (ICU) remain unclear. Aimed to lay a solid foundation for Survival Analysis, deepen our understanding of Mortality, we conducted a comprehensive research based on the patient's Mortality factors dataset. Although this dataset belongs to cross-sectional study, we still can dig out some key patterns that affect Mortality and detect abnormal characteristics that indicate the death sign at the early stage. 
+
+
+\ \par
+\ \par
+# Initial Question
+
+Initial questions:
+
+What factors have a significant impact on mortality?
+
+What factors account for independent risk factors of in-hospital mortality?
+
+What potential clinical implications are the top three biomedical indices that make the most significant contributions to the specific disease? 
+
+
+\ \par
+\ \par
+# Introduction
+
+
+Hospital mortality refers to the rate at which patients die during their hospital stay. It is a critical metric that healthcare providers and institutions use to assess the effectiveness of medical care and patient outcomes within a hospital setting. The hospital mortality rate is typically expressed as a percentage and is calculated by dividing the number of deaths that occur in a hospital by the total number of patients admitted during a specific period.
+
+\ \par
+\ \par
+## Related work
+ 
+Here are some key areas and examples of related published work:
+
+ 1. "Trends in Hospital Mortality Between 1999 and 2017": Studies analyzing long-term trends in hospital mortality rates can provide insights into improvements or challenges in healthcare outcomes over time. Such research often involves large-scale data analysis to identify patterns and changes.
+
+ 2. "Risk Factors for Hospital Mortality in Critically Ill Patients": Research that focuses on identifying and understanding specific risk factors associated with increased hospital mortality can inform targeted interventions. This may involve studying critically ill populations and factors such as comorbidities, severity of illness, and response to treatment.
+
+ 3. "Effectiveness of Early Warning Systems in Reducing Hospital Mortality": Investigating the impact of early warning systems and rapid response teams on hospital mortality is a common area of interest. This research often assesses the effectiveness of these systems in identifying deteriorating patients and facilitating timely interventions.
+
+ 4. "Quality Improvement Initiatives and Their Impact on Hospital Mortality": Published work on quality improvement initiatives explores how hospitals implement changes to improve patient outcomes. This may involve the introduction of new protocols, guidelines, or patient safety measures.
+
+ 5. "Role of Health Information Technology in Predicting and Preventing Hospital Mortality": Research examining the integration of health information technology, predictive modeling, and artificial intelligence in predicting and preventing hospital mortality is an evolving field. These studies often assess the accuracy and clinical utility of predictive models.
+
+ 6. "Ethical Considerations in End-of-Life Decision-Making and Hospital Mortality": Ethical considerations surrounding end-of-life care, decision-making processes, and their impact on hospital mortality are important topics. Studies in this area may explore the perspectives of healthcare professionals, patients, and families.
+
+ 7. "Interdisciplinary Collaboration and its Influence on Hospital Mortality": Research that investigates the role of effective communication and collaboration among healthcare teams in reducing hospital mortality is essential. This may include studies on teamwork, communication strategies, and interdisciplinary approaches to patient care.
+
+ 8. "Comparative Effectiveness Research in Hospital Mortality": Comparative effectiveness research aims to compare different treatment modalities and strategies to determine their impact on patient outcomes. Published work in this area may assess the effectiveness of various medical interventions and healthcare delivery models.
+ 
+ 
+\ \par
+\ \par
+## Sources
+
+
+Our main datasets is Zhou, Jingmin et al. (2021), Prediction model of in-hospital mortality in intensive care unit patients with heart failure: machine learning-based, retrospective analysis of the MIMIC-III database, Dryad, Dataset, https://doi.org/10.5061/dryad.0p2ngf1zd, which covers the patients' various indexes comprehensively, including 51 variables such as Blood Pressure and BMI. 
+
+
+\ \par
+\ \par
+## Variable Selection
+ 
+The selection of variables for studying hospital mortality is a crucial step in research and analysis. Researchers typically consider a combination of patient-specific factors, clinical indicators, and system-level variables to develop comprehensive models that help understand and predict hospital mortality. Here are some common variables that researchers often consider when studying hospital mortality:
+
+**1. Demographic Variables:**
+
+**Age: **Advanced age is often associated with increased mortality risk.
+
+**Gender:** Some studies consider gender differences in mortality rates.
+
+**2. Clinical Indicators and Severity of Illness:**
+
+**Diagnosis and Comorbidities:**The primary diagnosis and the presence of comorbid conditions can significantly impact mortality.
+
+**Severity of Illness Scores:** Scores like the Acute Physiology and Chronic Health Evaluation (APACHE) or Sequential Organ Failure Assessment (SOFA) help assess the severity of a patient's condition.
+
+**3. Physiological and Laboratory Parameters:**
+
+**Vital Signs:** Abnormalities in vital signs such as heart rate, blood pressure, respiratory rate, and temperature are often included.
+
+**Laboratory Results:** Abnormalities in blood tests, including organ function markers, electrolytes, and blood gases, can be important indicators.
+
+**4. Treatment and Interventions:**
+
+**Type of Treatment: **The specific medical or surgical interventions a patient undergoes.
+
+**Adherence to Protocols:** Whether the patient receives recommended treatments and interventions.
+
+**5. Health Information Technology (HIT) and EHR Data:**
+
+**Electronic Health Record (EHR) Data:** Information from EHRs, including medication history, previous hospitalizations, and patient history.
+
+**Health Information Exchange (HIE) Data:** Exchange of patient information between different healthcare entities.
+
+**6. Time-Related Variables:**
+
+**Length of Stay:** The duration of the hospitalization can impact mortality rates.
+
+**Time of Admission:** Some studies consider whether admissions occur during weekends or nighttime, which might influence outcomes.
+
+**7. Patient-Specific Factors:**
+
+**Functional Status: **The patient's ability to perform daily activities independently.
+
+**Nutritional Status: **Malnutrition can contribute to increased mortality risk.
+
+It's important to note that the selection of variables may vary based on the specific research question, the dataset available, and the population under study. Additionally, advanced statistical methods, including machine learning techniques, may be employed to identify relevant variables and patterns that contribute to hospital mortality. Researchers often conduct thorough literature reviews and engage in expert consultations to inform their variable selection process.

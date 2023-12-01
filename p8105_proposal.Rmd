@@ -37,7 +37,7 @@ MIMIC-III (‘Medical Information Mart for Intensive Care’) is a large, single
 
 
 ### i.	Data Analyses:
-a.	 Most frequent mortality factor in Hospital
+a.	Most frequent mortality factor in Hospital
 b.	Investigating independent risk factors of in-hospital mortality
 c.	Obtain the top three biomedical indices that make the most significant contributions to the specific disease from the dimension-reduction factors mentioned in (b)
 d.	for the specific disease, construct a linear model to predict the prognosis based on the factors described in (c)

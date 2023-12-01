@@ -1,0 +1,211 @@
+---
+title: "Datasets"
+
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: cosmo
+---
+
+
+# Background Information of the datasets
+
+We extracted the following data: 
+
+* **Demographic characteristics:** age at the time of hospital admission, sex, ethnicity, weight, and height; 
+
+* **Vital signs:** heart rate, HR, systolic blood pressure SBP, diastolic blood pressure DBP, mean blood pressure, respiratory rate, body temperature, saturation pulse oxygen SPO2, urine output in first 24 h; 
+
+* **Comorbidities:** hypertension, atrial fibrillation, ischemic heart disease, diabetes mellitus, depression, hypoferric anemia, hyperlipidemia, chronic kidney disease CKD, and chronic obstructive pulmonary disease COPD; 
+
+* **Laboratory variables:** hematocrit, red blood cells, mean corpuscular hemoglobin MCH, mean corpuscular hemoglobin concentration MCHC, mean corpuscular volume MCV, red blood cell distribution width RDW, platelet count, white blood cells, neutrophils, basophils, lymphocytes, prothrombin time PT, international normalized ratio INR, NT-proBNP, creatine kinase, creatinine, blood urea nitrogen BUN glucose, potassium, sodium, calcium, chloride, magnesium, the anion gap, bicarbonate, lactate, hydrogen ion concentration pH, partial pressure of CO2 in arterial blood, and LVEF
+
+\ \par
+\ \par
+
+# Data Dictionary
+
+We choose Hospital Mortality Dataset as our dataset in our study. The data can be accessed [here](https://www.kaggle.com/datasets/saurabhshahane/in-hospital-mortality-prediction/data). The code is read as following:
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+```{r,message=FALSE, warning=FALSE}
+# Load the data and preprocess it
+mortality_data <- read_csv("data/mortality_data.csv") %>%
+  janitor::clean_names() %>%
+  drop_na(outcome) 
+
+```
+
+Hospital mortality datasets contains a total of ```r length(unique(mortality_data))``` patients with age ranging from ```r min(unique(mortality_data$age))``` to ```r max(unique(mortality_data$age))```. There are a total of ```r length(mortality_data)``` variables. Out of which, we consider the variables and description is listed below:
+
+
+*```r colnames(mortality_data)[1]```: Patient's group (group_1=1, group_2 = 2); Binary Variable.
+
+*```r colnames(mortality_data)[2]```: Patient's id; Continuoues Variable.
+
+*```r colnames(mortality_data)[3]```: Patient's outcome (death=1, alive = 0); Binary Variable.
+
+*```r colnames(mortality_data)[4]```: Patient's age; Continuoues Variable.
+
+*```r colnames(mortality_data)[5]```: Patient's gender (male=1, female = 2); Binary Variable.
+
+*```r colnames(mortality_data)[6]```: Patient's BMI; Continuoues Variable.
+
+*```r colnames(mortality_data)[7]```: Whather patient had high blood pressure (yes=1, no = 0); Binary Variable.
+
+*```r colnames(mortality_data)[8]```: Whather patient had heart rhythm disorder (yes=1, no = 0); Binary Variable.
+
+*```r colnames(mortality_data)[9]```: Whather patient had ischemic heart disease (yes=1, no = 0); Binary Variable.
+
+*```r colnames(mortality_data)[10]```: Whather patient had diabetes mellitus (yes=1, no = 0); Binary Variable.
+*```r colnames(mortality_data)[11]```: Whather patient had deficiency of anemias (yes=1, no = 0); Binary Variable.
+
+*```r colnames(mortality_data)[12]```:  Whather patient had depression (yes=1, no = 0); Binary Variable.
+
+*```r colnames(mortality_data)[13]```: Whather patient had hyperlipidemia (yes=1, no = 0); Binary Variable.
+
+*```r colnames(mortality_data)[14]```: Whather patient had renal failure (yes=1, no = 0); Binary Variable.
+
+*```r colnames(mortality_data)[15]```: Whather patient had chronic obstructive pulmonary disease (yes=1, no = 0); Binary Variable.
+
+*```r colnames(mortality_data)[16]```: Patient's heart rate; Continuous variable.
+
+*```r colnames(mortality_data)[17]```: Patient's systolic blood pressure; Continuous variable.
+
+*```r colnames(mortality_data)[18]```: Patient's diasystolic blood pressure; Continuous variable.
+
+*```r colnames(mortality_data)[19]```: Patient's respiratory rate; Continuous variable.
+
+*```r colnames(mortality_data)[20]```: Patient's temperature; Continuous variable.
+
+*```r colnames(mortality_data)[21]```: Patient's saturation pulse oxygen; Continuous variable.
+
+*```r colnames(mortality_data)[22]```: Patient's urine output - first 24 h; Continuous variable.
+
+*```r colnames(mortality_data)[23]```: Patient's hematocrit; Continuous variable.
+
+*```r colnames(mortality_data)[24]```: Patient's volume percentage of red blood cells (RBCs) in blood; Continuous variable.
+
+*```r colnames(mortality_data)[25]```: Patient's mean corpuscular hemoglobin; Continuous variable.
+
+*```r colnames(mortality_data)[26]```: Patient's mean corpuscular hemoglobin concentration; Continuous variable.
+
+*```r colnames(mortality_data)[27]```: Patient's mean corpuscular volume; Continuous variable.
+
+*```r colnames(mortality_data)[28]```: Patient's red blood cell distribution width; Continuous variable.
+
+*```r colnames(mortality_data)[29]```: Patient's leucocyte; Continuous variable.
+
+*```r colnames(mortality_data)[30]```: Patient's platelet count; Continuous variable.
+
+*```r colnames(mortality_data)[31]```: Patient's neutrophils; Continuous variable.
+
+*```r colnames(mortality_data)[321]```: Patient's basophils; Continuous variable.
+
+*```r colnames(mortality_data)[33]```: Patient's lymphocyte; Continuous variable.
+
+*```r colnames(mortality_data)[34]```: Patient's prothrombin time; Continuous variable.
+
+*```r colnames(mortality_data)[35]```: Patient's international normalized ratio; Continuous variable.
+
+*```r colnames(mortality_data)[36]```: Patient's NT-proBNP; Continuous variable.
+
+*```r colnames(mortality_data)[37]```: Patient's creatine kinase; Continuous variable.
+
+*```r colnames(mortality_data)[38]```: Patient's creatinine; Continuous variable.
+
+*```r colnames(mortality_data)[39]```: Patient's blood urea nitrogen ; Continuous variable.
+
+*```r colnames(mortality_data)[40]```: Patient's glucose contents; Continuous variable.
+
+*```r colnames(mortality_data)[41]```: Patient's potassium contents; Continuous variable.
+
+*```r colnames(mortality_data)[42]```: Patient's sodium contents; Continuous variable.
+
+*```r colnames(mortality_data)[43]```: Patient's calcium contents; Continuous variable.
+
+*```r colnames(mortality_data)[44]```: Patient's chloride contents; Continuous variable.
+
+*```r colnames(mortality_data)[45]```: Patient's anion gap; Continuous variable.
+
+*```r colnames(mortality_data)[46]```: Patient's magnesium (ion) contents; Continuous variable.
+
+*```r colnames(mortality_data)[47]```: Patient's hydrogen ion concentration; Continuous variable.
+
+*```r colnames(mortality_data)[48]```: Patient's bicarbonate contents; Continuous variable.
+
+*```r colnames(mortality_data)[49]```: Patient's lactic acid  contents; Continuous variable.
+
+*```r colnames(mortality_data)[50]```: Patient's partial pressure of CO2 in arterial blood; Continuous variable.
+
+*```r colnames(mortality_data)[51]```: Patient's Left Ventricular Ejection Fraction; Continuous variable.
+
+<br>
+<br>
+
+# Imputation 
+
+**Data cleaning problems:**
+
+* Too many NA values;
+
+* Too many categorical variables/ binary variables;
+
+* High demensionality;
+
+**Our solutions:**
+
+* Change NA values to the mean value of each variables;
+
+* Binarization;
+
+* Dimensionality Reduction using Principle Component Analysis (PCA);
+
+```{r}
+# Define a function to convert multiple columns to factors
+convert_to_factor <- function(df, columns) {
+  df[columns] <- lapply(df[columns], factor)
+  return(df)
+}
+
+# Load the data and preprocess it
+mortality_data <- read_csv("mortality_data.csv") %>%
+  janitor::clean_names() %>%
+  drop_na(outcome) %>%
+  convert_to_factor(., c("group", "gendera", "outcome", "hypertensive", 
+                         "atrialfibrillation", "chd_with_no_mi", "diabetes", 
+                         "deficiencyanemias", "depression", "hyperlipemia", 
+                         "renal_failure", "copd")) %>%
+  rename(gender = gendera)  # Rename gendera to gender after conversion
+```
+
+Algorithms that find association patterns require that the data be in the form of binary attributes. Thus, it is often necessary to transform a continuous attribute into a categorical attribute (discretization), and both continuous and discrete attributes may need to be transformed into one or more binary attributes (binarization). 
+
+Additionally, if a categorical attribute has a large number of values (categories), or some values occur infrequently, then it can be beneficial for certain data mining tasks to reduce the number of categories by combining some of the values. 
+
+```{r}
+# Imputing numerical columns with mean value 
+
+numerical_columns <- sapply(mortality_data, is.numeric)
+mortality_data[numerical_columns] <- lapply(mortality_data[numerical_columns], function(x) {
+   ifelse(is.na(x), mean(x, na.rm = TRUE), x)
+})
+
+
+write_csv(mortality_data, "mortality_data_cleaned.csv")
+```
+
+After data cleaning, our dataset change into high quality data, with:
+
+* No duplicates;
+
+* No missing values;
+
+* No noise and outliers;
+
+* Inconsistency;

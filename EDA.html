@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Exploratory Data Analysis</title>
+
+<script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Home</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="introduction.html">Introduction</a>
+</li>
+<li>
+  <a href="data.html">Data</a>
+</li>
+<li>
+  <a href="analysis.html">Prelimary Analysis</a>
+</li>
+<li>
+  <a href="EDA.html">EDA</a>
+</li>
+<li>
+  <a href="regression_model.html">Regression</a>
+</li>
+<li>
+  <a href="conclusion.html">Conclusion</a>
+</li>
+<li>
+  <a href="https://7lx8uo-txbrook.shinyapps.io/map_dashboard/#section-life-expectancy">Shiny App</a>
+</li>
+<li>
+  <a href="project_report.html">Report</a>
+</li>
+<li>
+  <a href="mailto:&lt;jy3360@cumc.columbia.edu&gt;">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://github.com/candicejiaruiyu/p8105_mortality.github.io">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Exploratory Data Analysis</h1>
+
+</div>
+
+
+<div id="data-cleaning" class="section level1">
+<h1>Data Cleaning</h1>
+<div
+id="demographic-characteristics-as-predictors-of-in-hospital-mortality"
+class="section level2">
+<h2>Demographic Characteristics as Predictors of In-Hospital
+Mortality</h2>
+<p>The exploration of demographic factors such as gender and age
+provides critical insights into their potential impact on the outcomes
+of heart failure patients admitted to the Intensive Care Unit (ICU).
+This report section presents an analysis of in-hospital mortality rates
+categorized by gender and age groups.</p>
+<div id="gender-based-mortality-analysis" class="section level4">
+<h4>Gender-Based Mortality Analysis</h4>
+<pre class="r"><code>mortality_data_EDA %&gt;%
+  group_by(gender) %&gt;%
+  summarise(
+    Count = n(), # total number of entries for each gender
+    Alive = sum(outcome == &quot;Alive&quot;), # number of outcomes with value 0
+    Death = sum(outcome == &quot;Death&quot;), # number of outcomes with value 1
+    Percentage = Death/Count
+  ) %&gt;%
+  knitr::kable(digits = 3)  </code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">gender</th>
+<th align="right">Count</th>
+<th align="right">Alive</th>
+<th align="right">Death</th>
+<th align="right">Percentage</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Female</td>
+<td align="right">618</td>
+<td align="right">539</td>
+<td align="right">79</td>
+<td align="right">0.128</td>
+</tr>
+<tr class="even">
+<td align="left">Male</td>
+<td align="right">558</td>
+<td align="right">478</td>
+<td align="right">80</td>
+<td align="right">0.143</td>
+</tr>
+</tbody>
+</table>
+<p>The dataset comprised 618 females and 558 males. The mortality rate
+among female patients was 12.8%, while the mortality rate for male
+patients was slightly higher at 14.3%.</p>
+</div>
+<div id="age-based-mortality-analysis" class="section level4">
+<h4>Age-Based Mortality Analysis</h4>
+<pre class="r"><code># Define age intervals
+age_breaks &lt;- c(-Inf, 20, 40, 60, 80, Inf)
+age_labels &lt;- c(&#39;Under 20&#39;, &#39;20-40&#39;, &#39;40-60&#39;, &#39;60-80&#39;, &#39;Over 80&#39;)
+
+# Create age groups and summarize outcomes
+mortality_data_EDA %&gt;%
+  mutate(Age_group = cut(age, breaks = age_breaks, labels = age_labels, right = FALSE)) %&gt;%
+  group_by(Age_group) %&gt;%
+  summarise(Count = n(),
+            Alive = sum(outcome == &quot;Alive&quot;, na.rm = TRUE),
+            Death = sum(outcome == &quot;Death&quot;, na.rm = TRUE),
+            Percentage = Death/(Alive + Death)) %&gt;%
+  knitr::kable(digits = 3)  </code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Age_group</th>
+<th align="right">Count</th>
+<th align="right">Alive</th>
+<th align="right">Death</th>
+<th align="right">Percentage</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Under 20</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">20-40</td>
+<td align="right">16</td>
+<td align="right">15</td>
+<td align="right">1</td>
+<td align="right">0.062</td>
+</tr>
+<tr class="odd">
+<td align="left">40-60</td>
+<td align="right">158</td>
+<td align="right">138</td>
+<td align="right">20</td>
+<td align="right">0.127</td>
+</tr>
+<tr class="even">
+<td align="left">60-80</td>
+<td align="right">492</td>
+<td align="right">435</td>
+<td align="right">57</td>
+<td align="right">0.116</td>
+</tr>
+<tr class="odd">
+<td align="left">Over 80</td>
+<td align="right">508</td>
+<td align="right">427</td>
+<td align="right">81</td>
+<td align="right">0.159</td>
+</tr>
+</tbody>
+</table>
+<p>It was observed that patients under 20 years had a 0% mortality rate.
+Patients aged 20-40 years had a mortality rate of 6.2%, which increased
+with age. The 40-60 and 60-80 age groups had mortality rates of 12.7%
+and 11.6%, respectively. Notably, the group over 80 years had the
+highest mortality rate at 15.9%, underscoring the increased
+vulnerability among the elderly population.</p>
+<pre class="r"><code># Distribution of Age
+ggplot(mortality_data_EDA, aes(x = age)) +
+  geom_histogram(binwidth = 3, fill = &quot;steelblue&quot;, color = &quot;black&quot;) +
+  ggtitle(&quot;Age Distribution&quot;)</code></pre>
+<p><img src="EDA_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>The histogram shows the age distribution of patients with heart
+failure admitted to the ICU, and it is highly left-skewed. It shows that
+the bulk of patients falls within the middle-aged to elderly category,
+with a significant concentration between ages 70 and 90. This suggests
+that heart failure is more prevalent or more severe, warranting ICU
+admission, in this age demographic.</p>
+</div>
+<div id="gender-age-bivariate-analysis" class="section level4">
+<h4>Gender &amp; Age Bivariate Analysis</h4>
+<pre class="r"><code># Bivariate Analysis
+ggplot(mortality_data_EDA, aes(x = gender, y = age, fill = outcome)) +
+  geom_boxplot() +
+  ggtitle(&quot;Age Distribution by Gender and Outcome&quot;)</code></pre>
+<p><img src="EDA_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>The boxplots show the age distribution for different genders and
+outcomes. We see that for both genders, the age distribution for
+patients who did not survive (outcome 1) is slightly higher. This could
+indicate that older age is a risk factor for mortality in this patient
+group.</p>
+</div>
+</div>
+</div>
+<div id="comorbidities" class="section level1">
+<h1>Comorbidities</h1>
+<pre class="r"><code># Blood Pressure by Outcome
+ggplot(mortality_data_EDA, aes(x = systolic_blood_pressure, y = diastolic_blood_pressure, color = as.factor(outcome))) +
+  geom_point(alpha = 0.5) +
+  ggtitle(&quot;Blood Pressure by Outcome&quot;)</code></pre>
+<p><img src="EDA_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<pre class="r"><code># BMI by Gender and Outcome
+ggplot(mortality_data_EDA %&gt;% drop_na(bmi), aes(x = bmi, fill = as.factor(outcome))) +
+  geom_histogram(binwidth = 1, position = &quot;dodge&quot;) +
+  facet_wrap(~gender) +
+  ggtitle(&quot;BMI by Gender and Outcome&quot;)</code></pre>
+<p><img src="EDA_files/figure-html/unnamed-chunk-7-2.png" width="672" /></p>
+<pre class="r"><code># Heart Rate by Outcome
+ggplot(mortality_data_EDA, aes(x = heart_rate, fill = as.factor(outcome))) +
+  geom_density(alpha = 0.7) +
+  ggtitle(&quot;Heart Rate Distribution by Outcome&quot;)</code></pre>
+<p><img src="EDA_files/figure-html/unnamed-chunk-7-3.png" width="672" /></p>
+<p><strong>Blood Pressure by Outcome:</strong></p>
+<p>This scatterplot shows systolic vs. diastolic blood pressure colored
+by outcome. The points are widely spread, indicating variability in
+blood pressure readings across the patient population. There doesn’t
+seem to be a clear separation between the two outcomes based on blood
+pressure alone.</p>
+<p><strong>BMI by Gender and Outcome:</strong></p>
+<p>It shows a wide range of BMI values for both genders, with no clear
+pattern indicating that BMI is distinctly associated with the outcome.
+However, there are more data points for BMI for outcome 0, which may
+suggest a higher survival rate for patients with a lower BMI, although
+further statistical analysis is needed.</p>
+<p><strong>Heart Rate Distribution by Outcome:</strong></p>
+<p>The density plot for heart rate shows that the distribution of heart
+rates for patients who did not survive is slightly shifted towards the
+higher end compared to those who survived. This could suggest that a
+higher heart rate is associated with a higher risk of mortality.</p>
+</div>
+<div id="comorbidities-analysis" class="section level1">
+<h1>Comorbidities Analysis</h1>
+<pre class="r"><code># Analyzing the presence of comorbidities by outcome
+comorbidities &lt;- c(&quot;hypertensive&quot;, &quot;diabetes&quot;, &quot;deficiencyanemias&quot;, &quot;depression&quot;, &quot;renal_failure&quot;, &quot;copd&quot;, &quot;hyperlipemia&quot;)
+
+# Melt the data for easier plotting
+mortality_long &lt;- melt(mortality_data_EDA, id.vars = &quot;outcome&quot;, measure.vars = comorbidities)</code></pre>
+<pre><code>## Warning in melt(mortality_data_EDA, id.vars = &quot;outcome&quot;, measure.vars =
+## comorbidities): The melt generic in data.table has been passed a tbl_df and
+## will attempt to redirect to the relevant reshape2 method; please note that
+## reshape2 is deprecated, and this redirection is now deprecated as well. To
+## continue using melt methods from reshape2 while both libraries are attached,
+## e.g. melt.list, you can prepend the namespace like
+## reshape2::melt(mortality_data_EDA). In the next version, this warning will
+## become an error.</code></pre>
+<pre class="r"><code># Plotting comorbidities by outcome
+ggplot(mortality_long, aes(x = variable, fill = as.factor(value))) +
+  geom_bar(position = &quot;fill&quot;) +
+  facet_wrap(~outcome) +
+  labs(x = &quot;Comorbidity&quot;, y = &quot;Count&quot;, fill = &quot;Presence&quot;) +
+  ggtitle(&quot;Distribution of Comorbidities by Outcome&quot;) +
+  scale_y_continuous(labels = scales::percent)</code></pre>
+<p><img src="EDA_files/figure-html/unnamed-chunk-8-1.png" width="1344" /></p>
+<p><strong>Distribution of Comorbidities by Outcome:</strong></p>
+<p>The stacked bar plot shows the distribution of comorbidities by
+outcome. It appears that the proportion of patients with certain
+comorbidities like renal failure and COPD is higher among
+non-survivors.</p>
+</div>
+<div id="lab-results-analysis" class="section level1">
+<h1>Lab Results Analysis</h1>
+<pre class="r"><code># Creatinine levels by outcome
+ggplot(mortality_data_EDA %&gt;% drop_na(creatinine), aes(x = creatinine, fill = as.factor(outcome))) +
+  geom_density(alpha = 0.5) +
+  ggtitle(&quot;Creatinine Levels by Outcome&quot;)</code></pre>
+<p><img src="EDA_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<pre class="r"><code># Lactic acid levels by outcome
+ggplot(mortality_data_EDA %&gt;% drop_na(lactic_acid), aes(x = lactic_acid, fill = as.factor(outcome))) +
+  geom_density(alpha = 0.5) +
+  ggtitle(&quot;Lactic Acid Levels by Outcome&quot;)</code></pre>
+<p><img src="EDA_files/figure-html/unnamed-chunk-9-2.png" width="672" /></p>
+<pre class="r"><code># Urea nitrogen levels by outcome
+ggplot(mortality_data_EDA %&gt;% drop_na(urea_nitrogen), aes(x = urea_nitrogen, fill = as.factor(outcome))) +
+  geom_density(alpha = 0.5) +
+  ggtitle(&quot;Blood Urea nitrogen Levels by Outcome&quot;)</code></pre>
+<p><img src="EDA_files/figure-html/unnamed-chunk-9-3.png" width="672" /></p>
+<pre class="r"><code># Leucocyte count by outcome
+ggplot(mortality_data_EDA %&gt;% drop_na(leucocyte), aes(x = leucocyte, fill = as.factor(outcome))) +
+  geom_density(alpha = 0.5) +
+  ggtitle(&quot;Leucocyte Count by Outcome&quot;)</code></pre>
+<p><img src="EDA_files/figure-html/unnamed-chunk-9-4.png" width="672" /></p>
+<pre class="r"><code># Glucose levels by outcome
+ggplot(mortality_data_EDA %&gt;% drop_na(glucose), aes(x = glucose, fill = as.factor(outcome))) +
+  geom_density(alpha = 0.5) +
+  ggtitle(&quot;Glucose Levels by Outcome&quot;)</code></pre>
+<p><img src="EDA_files/figure-html/unnamed-chunk-9-5.png" width="672" /></p>
+<pre class="r"><code>ggplot(mortality_data_EDA %&gt;% drop_na(anion_gap), aes(x = anion_gap, fill = as.factor(outcome))) +
+  geom_density(alpha = 0.5) +
+  ggtitle(&quot;Anion Gap Levels by Outcome&quot;)</code></pre>
+<p><img src="EDA_files/figure-html/unnamed-chunk-9-6.png" width="672" /></p>
+<pre class="r"><code>ggplot(mortality_data_EDA %&gt;% drop_na(pco2), aes(x = pco2, fill = as.factor(outcome))) +
+  geom_density(alpha = 0.5) +
+  ggtitle(&quot;Pco2 Levels by Outcome&quot;)</code></pre>
+<p><img src="EDA_files/figure-html/unnamed-chunk-9-7.png" width="672" /></p>
+<p><strong>Blood Urea Nitrogen Levels by Outcome:</strong></p>
+<p>Patients with higher levels seem to have a poorer outcome, as
+indicated by the longer tail in the distribution for non-survivors. High
+blood urea nitrogen levels can be indicative of renal insufficiency or
+failure, which is a known risk factor for mortality.</p>
+<p><strong>Leucocyte Count by Outcome:</strong></p>
+<p>The density plot shows a higher peak for leucocyte count among
+survivors (outcome 0) compared to non-survivors (outcome 1). However,
+there is a long tail in the distribution for non-survivors, suggesting
+that some patients who did not survive had very high leucocyte counts,
+which could indicate severe infection or systemic stress.</p>
+</div>
+<div id="logistic-regression-for-outcome-prediction"
+class="section level1">
+<h1>Logistic Regression for Outcome Prediction</h1>
+<pre class="r"><code># Logistic regression to assess the impact of various factors on outcome
+# Select relevant variables for the logistic regression model
+logistic_model &lt;- glm(outcome ~ age + gender + bmi + hypertensive + diabetes + renal_failure + leucocyte +
+                        urea_nitrogen + heart_rate, 
+                      data = mortality_data, family = binomial())
+
+# Summary of the model to check for significant variables
+summary(logistic_model)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = outcome ~ age + gender + bmi + hypertensive + diabetes + 
+##     renal_failure + leucocyte + urea_nitrogen + heart_rate, family = binomial(), 
+##     data = mortality_data)
+## 
+## Coefficients:
+##                 Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)    -6.721637   1.088666  -6.174 6.65e-10 ***
+## age             0.021188   0.008117   2.610  0.00905 ** 
+## gender2        -0.066186   0.188303  -0.351  0.72522    
+## bmi            -0.008810   0.013518  -0.652  0.51456    
+## hypertensive1  -0.454324   0.201458  -2.255  0.02412 *  
+## diabetes1      -0.174547   0.203969  -0.856  0.39214    
+## renal_failure1 -1.293431   0.250874  -5.156 2.53e-07 ***
+## leucocyte       0.066083   0.016067   4.113 3.91e-05 ***
+## urea_nitrogen   0.036593   0.004541   8.058 7.73e-16 ***
+## heart_rate      0.024365   0.006134   3.972 7.13e-05 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 931.77  on 1175  degrees of freedom
+## Residual deviance: 782.08  on 1166  degrees of freedom
+## AIC: 802.08
+## 
+## Number of Fisher Scoring iterations: 5</code></pre>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
