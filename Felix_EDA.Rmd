@@ -17,11 +17,9 @@ library(factoextra)
 
 ```{r}
 #load mortality dataset
-mort_data = 
-  read_csv("mortality_data.csv") |> 
-  janitor::clean_names() |> 
-  drop_na() |>
-  rename(gender = gendera) |>
+mort_data =
+  read_csv("mortality_data_cleaned.csv") |> 
+  janitor::clean_names() |>
   select(-group, everything())
 ```
 
@@ -53,7 +51,7 @@ corrplot(cor(sign_data), type = "upper", diag = FALSE)
 
 ```{r}
 #linear model for complications
-model_com = lm(outcome ~ ., data = com_data)
+model_com = glm(outcome ~ ., data = com_data)
 summary(model_com)
 
 model_com_se = lm(outcome ~ ., data = com_data) |>
@@ -97,20 +95,28 @@ cv_com_rmse =
                            step(direction = "both", trace = FALSE)),
     glm_cv_com = map(cv_com$train, 
                          \(df) glm(outcome ~ ., data = (df)) |>
-                           step(direction = "both", trace = FALSE))
+                           step(direction = "both", trace = FALSE)),
+    lm_cv_pca1 = map(cv_com$train, 
+                         \(df) glm(outcome ~ renal_failure + hypertensive + diabetes + hyperlipemia, data = (df))),
+    lm_cv_pca2 = map(cv_com$train, 
+                         \(df) glm(outcome ~ chd_with_no_mi + depression + copd + atrialfibrillation, data = (df)))
   ) |>
   mutate(
     errs_lm_com = purrr::map2_dbl(lm_cv_com, cv_com$test, rmse),
-    errs_glm_com = purrr::map2_dbl(glm_cv_com, cv_com$test, rmse)
+    errs_glm_com = purrr::map2_dbl(glm_cv_com, cv_com$test, rmse),
+    errs_pca1 = purrr::map2_dbl(lm_cv_pca1, cv_com$test, rmse),
+    errs_pca2 = purrr::map2_dbl(lm_cv_pca2, cv_com$test, rmse)
   )
 
 cv_com_rmse |>
   select(lm_com = errs_lm_com,
-         glm_com = errs_glm_com) |>
+         glm_com = errs_glm_com,
+         lm_pca1 = errs_pca1,
+         lm_pca2 = errs_pca2) |>
   pivot_longer(everything(), 
                names_to = "models",
                values_to = "rmse") |>
-  mutate(model = factor(models, levels = c("lm_com", "glm_com"))) |>
+  mutate(model = factor(models, levels = c("lm_com", "glm_com", "lm_pca1", "lm_pca2"))) |>
   ggplot(aes(x = model, y = rmse)) +
   geom_violin() +
   labs(x = "Models", y = "rmse", title = "Cross-Validated Prediction Error") +
@@ -131,7 +137,8 @@ pca_res_com = prcomp(vars_com, scale. = TRUE)
 summary(pca_res_com)
 
 #pca using packages `FactoMineR`, `factoextra`
-res_pca_com = PCA(com_data, scale.unit = TRUE, graph = TRUE)
+com = com_data |> select(-outcome)
+res_pca_com = PCA(com, scale.unit = TRUE, graph = TRUE)
 #PCA() function would do the data standardization automatically.
 #keep 5 dimensions as result.
 
@@ -160,8 +167,16 @@ corrplot(var_com$cos2, is.corr=FALSE)
 var_com$contrib
 #shown by contribution
 
-fviz_contrib(res_pca_com, choice = "var", axes = 1, top = 10) 
-fviz_contrib(res_pca_com, choice = "var", axes = 1:5, top = 10) 
+fviz_contrib(res_pca_com, choice = "var", axes = 1, top = 10)
+fviz_contrib(res_pca_com, choice = "var", axes = 1:5, top = 10)
+
+#colored individuals
+fviz_pca_ind(res_pca_com,
+             geom.ind = "point",
+             col.ind = as.character(com_data$outcome),
+             palette = c("#00AFBB", "#FC4E07"),
+             addEllipses = TRUE,
+             legend.title = "Groups")
 ```
 
 
@@ -178,7 +193,8 @@ pca_res_sign = prcomp(vars_sign, scale. = TRUE)
 summary(pca_res_sign)
 
 #pca using packages `FactoMineR`, `factoextra`
-res_pca_sign = PCA(sign_data, scale.unit = TRUE, graph = TRUE)
+sign = sign_data |> select(-outcome)
+res_pca_sign = PCA(sign, scale.unit = TRUE, graph = TRUE)
 #PCA() function would do the data standardization automatically.
 #keep 5 dimensions as result.
 
@@ -205,21 +221,14 @@ var_sign$contrib
 
 fviz_contrib(res_pca_sign, choice = "var", axes = 1, top = 10)
 fviz_contrib(res_pca_sign, choice = "var", axes = 1:5, top = 10)
+
+#colored individuals
+fviz_pca_ind(res_pca_sign,
+             geom.ind = "point",
+             col.ind = as.character(sign_data$outcome),
+             palette = c("#00AFBB", "#FC4E07"),
+             addEllipses = TRUE,
+             legend.title = "Groups")
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

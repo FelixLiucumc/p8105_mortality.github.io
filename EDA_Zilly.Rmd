@@ -2,21 +2,39 @@
 title: "EDA_Zilly"
 author: "lz2951"
 date: "2023-11-29"
-output: github_document
+output: 
+  github_document:
+    toc: true
+    toc_float: true
+    theme: cosmo
+    code_folding: hide
 ---
 
-```{r}
+```{r, message = FALSE}
 library(tidyverse)
 library(stargazer)
 library(ROCR)
 ```
 
-# Import data
+# About Regression
+
+In this section, we want to generate a generalized linear model to see the relationship between patients' mortality status and predictive variables.
+
+# Data Pre-processing
 
 ```{r}
+convert_to_factor <- function(df, columns) {
+  df[columns] <- lapply(df[columns], factor)
+  return(df)
+}
+
 mortality_cleaned = 
   read_csv("mortality_data_cleaned.csv") |>
-  janitor::clean_names()
+  janitor::clean_names()  |>
+  convert_to_factor(c("group", "gender", "outcome", "hypertensive", 
+                      "atrialfibrillation", "chd_with_no_mi", "diabetes", 
+                      "deficiencyanemias", "depression", "hyperlipemia", 
+                      "renal_failure", "copd"))
 ```
 
 # Generalized linear model

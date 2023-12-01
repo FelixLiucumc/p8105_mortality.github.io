@@ -7,7 +7,6 @@ output:
 runtime: shiny
 ---
 
-
 ```{r setup, include=FALSE}
 library(flexdashboard)
 library(tidyverse)
@@ -54,6 +53,295 @@ mortality_data_EDA <- mortality_data %>%
   
 ```
 
+```{r,include=FALSE}
+# Change the factor variables for EDA 
+# Manually recoding factors to their meaningful character values
+mortality_data_EDA <- mortality_data %>%
+  mutate(
+    group = recode(group, `1` = "Group 1", `2` = "Group 2"),
+    gender = recode(gender, `1` = "Male", `2` = "Female"),
+    outcome = recode(outcome, `0` = "Alive", `1` = "Death")
+  ) %>%
+  mutate_if(is.factor, as.character) # Converts all remaining factors to characters
+
+# Function to recode factor variables to 'Yes' or 'No'
+convert_factors_to_yes_no <- function(df, comorbidity_columns) {
+  df <- df %>%
+    mutate(across(all_of(comorbidity_columns), ~ ifelse(as.character(.) == "1", "Yes", "No")))
+  return(df)
+}
+
+# List of comorbidity columns to convert
+comorbidity_columns <- c("hypertensive", "atrialfibrillation", "chd_with_no_mi", 
+                         "diabetes", "deficiencyanemias", "depression", 
+                         "hyperlipemia", "renal_failure", "copd")
+
+# Apply the function to the mortality_data_EDA dataframe
+mortality_data_EDA <- convert_factors_to_yes_no(mortality_data_EDA, comorbidity_columns)
+
+```
+
+
+Demographic Characteristics
+===================================== 
+
+Column {.sidebar}
+-----------------------------------------------------------------------
+
+
+```{r}
+selectInput(
+    inputId = "char_index",
+    label = h3("Select Index"),
+    choices = c("age", "gender", "bmi"),
+    selected = "age"
+  )
+```
+
+
+
+
+Row{data-height=650}
+-----------------------------------------------------------------------
+
+### Demographic Characteristics
+
+```{r}
+renderPlotly({
+
+variable <- input$char_index
+    plot_ly(mortality_data_EDA %>% drop_na(.data[[variable]]), 
+            x = ~.data[[variable]], color = ~as.factor(outcome),
+            type = "scatter", mode = "lines", fill = "tozeroy") %>%
+      layout(title = paste(variable, "Levels by Outcome"),
+             xaxis = list(title = variable),
+             yaxis = list(title = "Density"))
+  
+})
+
+```
+
+Row {.tabset .tabset-fade}
+-------------------------------------
+
+
+### Description
+
+
+This is the world map showing the life expectancy (years) of each country from 2000 to 2016. 
+
+\ \par
+Take the year of 2015 as an example,
+
+\ \par
+  * North America, Western and Northern Europe, Japan, New Zealand and Australia show longer life expectancy compared with other regions.
+  
+\ \par
+  * Central and Southern Africa have relatively shorter life expectancy because the color is lighter,
+  
+### Boxplot
+
+```{r}
+renderPlotly({
+  variable <- input$char_index
+  
+  plot_ly(mortality_data_EDA %>% drop_na(.data[[variable]]), 
+          x = ~as.factor(outcome),
+          y = ~.data[[variable]],
+          type = "box") %>%
+    layout(title = paste(variable, "Levels by Outcome"),
+           xaxis = list(title = "Outcome"),
+           yaxis = list(title = variable))
+})
+
+```
+
+
+Vital Signs
+===================================== 
+
+Column {.sidebar}
+-----------------------------------------------------------------------
+
+
+```{r}
+selectInput(
+    inputId = "vital_sign_index_x",
+    label = h3("Select Index"),
+    choices = c("heart_rate", "systolic_blood_pressure", "diastolic_blood_pressure", "respiratory_rate", "temperature", "sp_o2", "urine_output"),
+    selected = "systolic_blood_pressure"
+  )
+
+
+```
+
+```{r}
+selectInput(
+    inputId = "vital_sign_index_y",
+    label = h3("Select Index"),
+    choices = c("heart_rate", "systolic_blood_pressure", "diastolic_blood_pressure", "respiratory_rate", "temperature", "sp_o2", "urine_output"),
+    selected = "diastolic_blood_pressure"
+  )
+
+
+```
+
+
+Row{data-height=650}
+-----------------------------------------------------------------------
+
+### Vital Signs
+
+```{r}
+renderPlotly({
+
+  vital_sign_index_x <- input$vital_sign_index_x
+  vital_sign_index_y <- input$vital_sign_index_y
+
+  
+  plot_ly(mortality_data_EDA %>% drop_na(.data[[vital_sign_index_x, vital_sign_index_y]]), 
+          x = ~.data[[vital_sign_index_x]], 
+          y = ~.data[[vital_sign_index_y]], 
+          color = ~as.factor(outcome),
+          type = "scatter",
+          mode = "markers",
+          marker = list(size = 8, opacity = 0.5)) %>%
+    layout(title = paste(vital_sign_index_x, "vs", vital_sign_index_y, "by Outcome"),
+           xaxis = list(title = vital_sign_index_x),
+           yaxis = list(title = vital_sign_index_y))
+  
+})
+
+```
+
+
+
+Row {.tabset .tabset-fade}
+-------------------------------------
+
+
+### Description
+
+
+This is the world map showing the life expectancy (years) of each country from 2000 to 2016. 
+
+\ \par
+Take the year of 2015 as an example,
+
+\ \par
+  * North America, Western and Northern Europe, Japan, New Zealand and Australia show longer life expectancy compared with other regions.
+  
+\ \par
+  * Central and Southern Africa have relatively shorter life expectancy because the color is lighter,
+  
+### Boxplot
+
+```{r}
+renderPlotly({
+  variable <- input$vital_sign_index
+  
+  plot_ly(mortality_data_EDA %>% drop_na(.data[[variable]]), 
+          x = ~as.factor(outcome),
+          y = ~.data[[variable]],
+          type = "box") %>%
+    layout(title = paste(variable, "Levels by Outcome"),
+           xaxis = list(title = "Outcome"),
+           yaxis = list(title = variable))
+})
+
+```
+
+Comorbidities
+===================================== 
+
+Column {.sidebar}
+-----------------------------------------------------------------------
+
+
+```{r}
+selectInput(
+    inputId = "como_index_x",
+    label = h3("Select Index"),
+    choices = c("hypertensive", "atrialfibrillation", "chd_with_no_mi", "diabetes", "depression", "hyperlipemia", "hyperlipemia", "copd"),
+    selected = "diabetes"
+  )
+```
+
+```{r}
+selectInput(
+    inputId = "como_index_y",
+    label = h3("Select Index"),
+    choices = c("hypertensive", "atrialfibrillation", "chd_with_no_mi", "diabetes", "depression", "hyperlipemia", "hyperlipemia", "copd"),
+    selected = "depression"
+  )
+
+
+```
+
+
+Row{data-height=650}
+-----------------------------------------------------------------------
+
+### Comorbidities
+
+```{r}
+renderPlotly({
+    como_index_x <- input$como_index_x
+  como_index_y <- input$como_index_y
+  
+  plot_ly() %>%
+    add_histogram(data = mortality_data_EDA, x = ~.data[[como_index_x]], 
+                  color = ~as.factor(outcome), 
+                  opacity = 0.5, 
+                  name = "Outcome 1") %>%
+    add_histogram(data = mortality_data_EDA, x = ~.data[[como_index_y]], 
+                  color = ~as.factor(outcome), 
+                  opacity = 0.5, 
+                  name = "Outcome 2") %>%
+    layout(barmode = "overlay",
+           title = paste("Histograms of", como_index_x, "and", como_index_y, "by Outcome"),
+           xaxis = list(title = "Values"),
+           yaxis = list(title = "Frequency"))
+})
+
+```
+
+Row {.tabset .tabset-fade}
+-------------------------------------
+
+
+### Description
+
+
+This is the world map showing the life expectancy (years) of each country from 2000 to 2016. 
+
+\ \par
+Take the year of 2015 as an example,
+
+\ \par
+  * North America, Western and Northern Europe, Japan, New Zealand and Australia show longer life expectancy compared with other regions.
+  
+\ \par
+  * Central and Southern Africa have relatively shorter life expectancy because the color is lighter,
+  
+### Boxplot
+
+```{r}
+renderPlotly({
+  como_index_x <- input$como_index_x
+ como_index_y <- input$como_index_y
+  
+  plot_ly() %>%
+    add_boxplot(data = mortality_data_EDA, x = ~as.factor(outcome), y = ~.data[[como_index_x]], 
+                name = como_index_x, boxpoints = "all", jitter = 0.3, pointpos = -1.8) %>%
+    add_boxplot(data = mortality_data_EDA, x = ~as.factor(outcome), y = ~.data[[como_index_y]], 
+                name = como_index_y, boxpoints = "all", jitter = 0.3, pointpos = -0.6) %>%
+    layout(title = paste("Box Plots of", como_index_x, "and", como_index_y, "by Outcome"),
+           xaxis = list(title = "Outcome"),
+           yaxis = list(title = "Values"))
+})
+
+```
 
 Lab Results Analysis
 ===================================== 
@@ -85,7 +373,7 @@ Row{data-height=650}
 renderPlotly({
 
 variable <- input$index
-    plot_ly(mortality_data_EDA %>% drop_na(.data[[variable]]), 
+    plot_ly(mortality_data_EDA %>% drop_na(all_of(variable)), 
             x = ~.data[[variable]], color = ~as.factor(outcome),
             type = "scatter", mode = "lines", fill = "tozeroy") %>%
       layout(title = paste(variable, "Levels by Outcome"),
@@ -96,3 +384,37 @@ variable <- input$index
 
 ```
 
+Row {.tabset .tabset-fade}
+-------------------------------------
+
+
+### Description
+
+
+This is the world map showing the life expectancy (years) of each country from 2000 to 2016. 
+
+\ \par
+Take the year of 2015 as an example,
+
+\ \par
+  * North America, Western and Northern Europe, Japan, New Zealand and Australia show longer life expectancy compared with other regions.
+  
+\ \par
+  * Central and Southern Africa have relatively shorter life expectancy because the color is lighter,
+  
+### Boxplot
+
+```{r}
+renderPlotly({
+  variable <- input$index
+  
+  plot_ly(mortality_data_EDA %>% drop_na(.data[[variable]]), 
+          x = ~as.factor(outcome),
+          y = ~.data[[variable]],
+          type = "box") %>%
+    layout(title = paste(variable, "Levels by Outcome"),
+           xaxis = list(title = "Outcome"),
+           yaxis = list(title = variable))
+})
+
+```

@@ -63,6 +63,7 @@ Hospital mortality datasets contains a total of ```r length(unique(mortality_dat
 *```r colnames(mortality_data)[9]```: Whather patient had ischemic heart disease (yes=1, no = 0); Binary Variable.
 
 *```r colnames(mortality_data)[10]```: Whather patient had diabetes mellitus (yes=1, no = 0); Binary Variable.
+
 *```r colnames(mortality_data)[11]```: Whather patient had deficiency of anemias (yes=1, no = 0); Binary Variable.
 
 *```r colnames(mortality_data)[12]```:  Whather patient had depression (yes=1, no = 0); Binary Variable.

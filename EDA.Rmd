@@ -19,7 +19,7 @@ library(survival)
 ```
 
 # Data Cleaning 
-```{r}
+```{r echo = FALSE, message = FALSE, warning = FALSE}
 # Define a function to convert multiple columns to factors
 convert_to_factor <- function(df, columns) {
   df[columns] <- lapply(df[columns], factor)
@@ -45,18 +45,10 @@ mortality_data[numerical_columns] <- lapply(mortality_data[numerical_columns], f
 
 write_csv(mortality_data, "mortality_data_cleaned.csv")
 ```
-# Overview of the data 
-```{r}
-skimr::skim(mortality_data)
-```
-Target Variable - Outcome
-* 0 - Alive
-* 1 - Death
 
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
 # Change the factor variables for EDA 
-```{r}
-# Assuming 'mortality_data' is already loaded and cleaned up as per your previous steps
-
 # Manually recoding factors to their meaningful character values
 mortality_data_EDA <- mortality_data %>%
   mutate(
@@ -84,7 +76,12 @@ mortality_data_EDA <- convert_factors_to_yes_no(mortality_data_EDA, comorbidity_
 ```
 
 
-# Gender & Outcome
+## Demographic Characteristics as Predictors of In-Hospital Mortality  
+
+The exploration of demographic factors such as gender and age provides critical insights into their potential impact on the outcomes of heart failure patients admitted to the Intensive Care Unit (ICU). This report section presents an analysis of in-hospital mortality rates categorized by gender and age groups. 
+
+#### Gender-Based Mortality Analysis
+
 ```{r}
 mortality_data_EDA %>%
   group_by(gender) %>%
@@ -97,8 +94,11 @@ mortality_data_EDA %>%
   knitr::kable(digits = 3)  
 ```
 
+The dataset comprised 618 females and 558 males. The mortality rate among female patients was 12.8%, while the mortality rate for male patients was slightly higher at 14.3%. 
 
-# Age & Outcome
+
+#### Age-Based Mortality Analysis
+
 ```{r}
 # Define age intervals
 age_breaks <- c(-Inf, 20, 40, 60, 80, Inf)
@@ -116,23 +116,21 @@ mortality_data_EDA %>%
 
 ```
 
-# Univariate Analysis
+It was observed that patients under 20 years had a 0% mortality rate. Patients aged 20-40 years had a mortality rate of 6.2%, which increased with age. The 40-60 and 60-80 age groups had mortality rates of 12.7% and 11.6%, respectively. Notably, the group over 80 years had the highest mortality rate at 15.9%, underscoring the increased vulnerability among the elderly population.
+
 ```{r}
 # Distribution of Age
 ggplot(mortality_data_EDA, aes(x = age)) +
-  geom_histogram(binwidth = 1, fill = "steelblue", color = "black") +
+  geom_histogram(binwidth = 3, fill = "steelblue", color = "black") +
   ggtitle("Age Distribution")
-
-# Distribution of BMI (handling missing values)
-ggplot(mortality_data_EDA %>% drop_na(bmi), aes(x = bmi)) +
-  geom_histogram(binwidth = 1, fill = "darkgreen", color = "black") +
-  ggtitle("BMI Distribution")
 
 ```
 
-# Bivariate Analysis
-```{r}
+The histogram shows the age distribution of patients with heart failure admitted to the ICU, and it is highly left-skewed. It shows that the bulk of patients falls within the middle-aged to elderly category, with a significant concentration between ages 70 and 90. This suggests that heart failure is more prevalent or more severe, warranting ICU admission, in this age demographic.
 
+#### Gender & Age Bivariate Analysis
+
+```{r}
 # Bivariate Analysis
 ggplot(mortality_data_EDA, aes(x = gender, y = age, fill = outcome)) +
   geom_boxplot() +
@@ -140,18 +138,11 @@ ggplot(mortality_data_EDA, aes(x = gender, y = age, fill = outcome)) +
 
 ```
 
-**Age Distribution by Gender and Outcome:**
 The boxplots show the age distribution for different genders and outcomes. We see that for both genders, the age distribution for patients who did not survive (outcome 1) is slightly higher. This could indicate that older age is a risk factor for mortality in this patient group.
 
 
-# Exploring Outcomes
+# Comorbidities
 ```{r}
-# Age distribution by Outcome
-ggplot(mortality_data_EDA, aes(x = age, fill = as.factor(outcome))) +
-  geom_histogram(binwidth = 5, position = "dodge") +
-  ggtitle("Age Distribution by Outcome")
-
-
 # Blood Pressure by Outcome
 ggplot(mortality_data_EDA, aes(x = systolic_blood_pressure, y = diastolic_blood_pressure, color = as.factor(outcome))) +
   geom_point(alpha = 0.5) +
@@ -168,10 +159,6 @@ ggplot(mortality_data_EDA, aes(x = heart_rate, fill = as.factor(outcome))) +
   geom_density(alpha = 0.7) +
   ggtitle("Heart Rate Distribution by Outcome")
 ```
-
-**Age Distribution by Outcome:**
-
-The histogram shows the age distribution for the two outcomes. We observe that the majority of patients are between 60 and 80 years old. There is a noticeable overlap in the age distribution of patients who survived and those who did not, suggesting that while age may be a factor, it's not the sole determinant of mortality.
 
 
 **Blood Pressure by Outcome:**
