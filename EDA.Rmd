@@ -17,39 +17,20 @@ library(tidyverse)
 library(data.table)
 library(survival)
 library(plotly)
-```
 
-## Data Cleaning 
-```{r echo = FALSE, message = FALSE, warning = FALSE}
-# Define a function to convert multiple columns to factors
-convert_to_factor <- function(df, columns) {
-  df[columns] <- lapply(df[columns], factor)
-  return(df)
-}
+# read the data
+mortality_data <- 
+  read_csv("mortality_data_cleaned.csv")
 
-# Load the data and preprocess it
-mortality_data <- read_csv("mortality_data.csv") %>%
-  janitor::clean_names() %>%
-  drop_na(outcome) %>%
-  convert_to_factor(., c("group", "gendera", "outcome", "hypertensive", 
+# Change the factor variables for EDA 
+
+col_names <- c("group", "outcome", "hypertensive", 
                          "atrialfibrillation", "chd_with_no_mi", "diabetes", 
                          "deficiencyanemias", "depression", "hyperlipemia", 
-                         "renal_failure", "copd")) %>%
-  rename(gender = gendera)  # Rename gendera to gender after conversion
+                         "renal_failure", "copd")
 
+mortality_data[,col_names] <- lapply(mortality_data[,col_names] , factor)
 
-# Imputing numerical columns with mean value 
-numerical_columns <- sapply(mortality_data, is.numeric)
-mortality_data[numerical_columns] <- lapply(mortality_data[numerical_columns], function(x) {
-   ifelse(is.na(x), mean(x, na.rm = TRUE), x)
-})
-
-write_csv(mortality_data, "mortality_data_cleaned.csv")
-```
-
-
-```{r echo = FALSE, message = FALSE, warning = FALSE}
-# Change the factor variables for EDA 
 # Manually recoding factors to their meaningful character values
 mortality_data_EDA <- mortality_data %>%
   mutate(
@@ -190,6 +171,7 @@ ggplot(mortality_data_EDA, aes(x = outcome, y = hematocrit, color = outcome)) +
   theme_minimal()
 
 ```
+
 The plot illustrates a comparison of hematocrit levels in patients who were admitted to the ICU with heart failure and subsequently either survived (Alive) or did not (Death). There doesn't seem to be a clear separation between the two outcomes based on hematocrit levels alone. The peak of the distribution for the deceased patients appears to be slightly lower than that of the survivors. 
 
 ### Heart Rate Distribution by Outcome
@@ -234,6 +216,8 @@ This scatterplot shows systolic vs. diastolic blood pressure colored by outcome.
 
 ### Other Lab Results Analysis
 
+This section contains the visualization for some other lab results, like the distributions for creatinine and BUN levels. More visualization can be found in the shiny app section. 
+
 ```{r, figures-side, fig.show="hold", out.width="50%"}
 par(mar = c(4, 4, .1, .1))
 
@@ -264,10 +248,7 @@ ggplot(mortality_data_EDA %>% drop_na(glucose), aes(x = glucose, fill = as.facto
 
 ```
 
-**Blood Urea Nitrogen Levels by Outcome:**
+Observations based on the plots include:
 
-Patients with higher levels seem to have a poorer outcome, as indicated by the longer tail in the distribution for non-survivors. High blood urea nitrogen levels can be indicative of renal insufficiency or failure, which is a known risk factor for mortality.
-
-**Leucocyte Count by Outcome:**
-
-The density plot shows a higher peak for leucocyte count among survivors (outcome 0) compared to non-survivors (outcome 1). However, there is a long tail in the distribution for non-survivors, suggesting that some patients who did not survive had very high leucocyte counts, which could indicate severe infection or systemic stress.
+- **Blood Urea Nitrogen Levels by Outcome**: Patients with higher blood urea Nitrogen levels seem to have a poorer outcome, as indicated by the longer tail in the distribution for non-survivors. High blood urea nitrogen levels can be indicative of renal insufficiency or failure, which is a known risk factor for mortality.
+- **Leucocyte Count by Outcome**: The density plot shows a higher peak for leucocyte count among survivors (outcome 0) compared to non-survivors (outcome 1). However, there is a long tail in the distribution for non-survivors, suggesting that some patients who did not survive had very high leucocyte counts, which could indicate severe infection or systemic stress.
