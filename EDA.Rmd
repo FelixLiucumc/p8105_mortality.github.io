@@ -16,9 +16,10 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(data.table)
 library(survival)
+library(plotly)
 ```
 
-# Data Cleaning 
+## Data Cleaning 
 ```{r echo = FALSE, message = FALSE, warning = FALSE}
 # Define a function to convert multiple columns to factors
 convert_to_factor <- function(df, columns) {
@@ -76,11 +77,11 @@ mortality_data_EDA <- convert_factors_to_yes_no(mortality_data_EDA, comorbidity_
 ```
 
 
-## Demographic Characteristics as Predictors of In-Hospital Mortality  
+## Demographic Characteristics 
 
 The exploration of demographic factors such as gender and age provides critical insights into their potential impact on the outcomes of heart failure patients admitted to the Intensive Care Unit (ICU). This report section presents an analysis of in-hospital mortality rates categorized by gender and age groups. 
 
-#### Gender-Based Mortality Analysis
+### Gender-Based Mortality Analysis
 
 ```{r}
 mortality_data_EDA %>%
@@ -97,7 +98,7 @@ mortality_data_EDA %>%
 The dataset comprised 618 females and 558 males. The mortality rate among female patients was 12.8%, while the mortality rate for male patients was slightly higher at 14.3%. 
 
 
-#### Age-Based Mortality Analysis
+### Age-Based Mortality Analysis
 
 ```{r}
 # Define age intervals
@@ -128,7 +129,7 @@ ggplot(mortality_data_EDA, aes(x = age)) +
 
 The histogram shows the age distribution of patients with heart failure admitted to the ICU, and it is highly left-skewed. It shows that the bulk of patients falls within the middle-aged to elderly category, with a significant concentration between ages 70 and 90. This suggests that heart failure is more prevalent or more severe, warranting ICU admission, in this age demographic.
 
-#### Gender & Age Bivariate Analysis
+### Gender & Age Bivariate Analysis
 
 ```{r}
 # Bivariate Analysis
@@ -141,43 +142,11 @@ ggplot(mortality_data_EDA, aes(x = gender, y = age, fill = outcome)) +
 The boxplots show the age distribution for different genders and outcomes. We see that for both genders, the age distribution for patients who did not survive (outcome 1) is slightly higher. This could indicate that older age is a risk factor for mortality in this patient group.
 
 
-# Comorbidities
-```{r}
-# Blood Pressure by Outcome
-ggplot(mortality_data_EDA, aes(x = systolic_blood_pressure, y = diastolic_blood_pressure, color = as.factor(outcome))) +
-  geom_point(alpha = 0.5) +
-  ggtitle("Blood Pressure by Outcome")
+## Comorbidities Analysis
 
-# BMI by Gender and Outcome
-ggplot(mortality_data_EDA %>% drop_na(bmi), aes(x = bmi, fill = as.factor(outcome))) +
-  geom_histogram(binwidth = 1, position = "dodge") +
-  facet_wrap(~gender) +
-  ggtitle("BMI by Gender and Outcome")
+Analyzing the distribution of comorbidities by outcome can identify factors that influence mortality in patients with heart failure. It helps to understand the impact of comorbid conditions on patient survival and could inform targeted interventions. The stacked bar chart below presents the distribution of various comorbidities among heart failure patients in the ICU, differentiated by patient outcomes of survival and death. 
 
-# Heart Rate by Outcome
-ggplot(mortality_data_EDA, aes(x = heart_rate, fill = as.factor(outcome))) +
-  geom_density(alpha = 0.7) +
-  ggtitle("Heart Rate Distribution by Outcome")
-```
-
-
-**Blood Pressure by Outcome:**
-
-This scatterplot shows systolic vs. diastolic blood pressure colored by outcome. The points are widely spread, indicating variability in blood pressure readings across the patient population. There doesn't seem to be a clear separation between the two outcomes based on blood pressure alone.
-
-
-**BMI by Gender and Outcome:**
-
-It shows a wide range of BMI values for both genders, with no clear pattern indicating that BMI is distinctly associated with the outcome. However, there are more data points for BMI for outcome 0, which may suggest a higher survival rate for patients with a lower BMI, although further statistical analysis is needed.
-
-
-**Heart Rate Distribution by Outcome:**
-
-The density plot for heart rate shows that the distribution of heart rates for patients who did not survive is slightly shifted towards the higher end compared to those who survived. This could suggest that a higher heart rate is associated with a higher risk of mortality.
-
-
-# Comorbidities Analysis
-```{r, fig.width = 14, fig.height = 6}
+```{r, fig.width = 9, fig.height = 6, message = FALSE, warning = FALSE}
 # Analyzing the presence of comorbidities by outcome
 comorbidities <- c("hypertensive", "diabetes", "deficiencyanemias", "depression", "renal_failure", "copd", "hyperlipemia")
 
@@ -185,36 +154,122 @@ comorbidities <- c("hypertensive", "diabetes", "deficiencyanemias", "depression"
 mortality_long <- melt(mortality_data_EDA, id.vars = "outcome", measure.vars = comorbidities)
 
 # Plotting comorbidities by outcome
-ggplot(mortality_long, aes(x = variable, fill = as.factor(value))) +
+comorbidity_plot <- ggplot(mortality_long, aes(x = variable, fill = as.factor(value))) +
   geom_bar(position = "fill") +
   facet_wrap(~outcome) +
-  labs(x = "Comorbidity", y = "Count", fill = "Presence") +
+  labs(x = " ", y = "Count", fill = "Presence") +
   ggtitle("Distribution of Comorbidities by Outcome") +
-  scale_y_continuous(labels = scales::percent)
+  scale_y_continuous(labels = scales::percent) +
+  theme(axis.text.x = element_text(angle = 50, hjust = 1))
+
+interactive_plot <- ggplotly(comorbidity_plot)
+
+interactive_plot
+```
+
+Observations based on the chart include:
+
+1. **Prevalence of Comorbidities**: The chart shows that certain comorbidities such as hypertension, diabetes, and hyperlipemia are common among heart failure patients. This indicates that these conditions frequently co-occur with heart failure, which could compound the complexity of patient management.
+
+2. **Impact on Mortality**: The chart indicates a higher 'Yes' proportion in the 'Alive' outcome, which suggests that having the comorbidity did not necessarily correlate with a higher mortality risk for that specific condition within this patient sample. However, there could be a survival bias where patients with certain comorbidities survive long enough to be included in the study, whereas those severely affected may not have been admitted or were not included in the dataset. 
+
+3. **Variable Significance**: The difference between two groups underscores the importance of considering comorbidities in predictive modeling for mortality. Further analysis could involve investigating the reasons behind the survival rates of patients with specific comorbidities. 
+
+
+## Lab Results Analysis
+```{r}
+# Visualize Creatinine Levels by Outcome with a boxplot
+ggplot(mortality_data_EDA, aes(x = outcome, y = creatinine, color = outcome)) +
+  geom_boxplot() +
+  labs(title = "Creatinine Levels by Outcome", x = "Outcome", y = "Creatinine (mg/dL)") +
+  theme_minimal()
+
+# Visualize Hematocrit Levels by Outcome with a violin plot
+ggplot(mortality_data_EDA, aes(x = outcome, y = hematocrit, color = outcome)) +
+  geom_violin() +
+  labs(title = "Hematocrit Levels by Outcome", x = "Outcome", y = "Hematocrit (%)") +
+  theme_minimal()
+
+# Visualize Sodium Levels by Outcome with a histogram
+ggplot(mortality_data_EDA, aes(x = blood_sodium, fill = outcome)) +
+  geom_histogram(binwidth = 1, position = "dodge") +
+  facet_wrap(~outcome) +
+  labs(title = "Sodium Levels by Outcome", x = "Sodium (mmol/L)", y = "Count") +
+  theme_minimal()
+
+# Visualize Potassium Levels by Outcome with a density plot
+ggplot(mortality_data_EDA, aes(x = blood_potassium, fill = outcome)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(~outcome) +
+  labs(title = "Potassium Levels by Outcome", x = "Potassium (mmol/L)", y = "Density") +
+  theme_minimal()
+
+# Visualize Glucose Levels by Outcome with a scatter plot, comparing with Creatinine
+ggplot(mortality_data_EDA, aes(x = glucose, y = creatinine, color = outcome)) +
+  geom_point(alpha = 0.6) +
+  labs(title = "Glucose vs. Creatinine Levels by Outcome", x = "Glucose (mg/dL)", y = "Creatinine (mg/dL)") +
+  theme_minimal()
+
+```
+### Heart Rate Distribution by Outcome
+
+The density plot below illustrates the distribution of heart rate among patients with heart failure, categorized by the outcome of either survival (Alive) or death (Death). 
+
+```{r}
+# Heart Rate by Outcome
+ggplot(mortality_data_EDA, aes(x = heart_rate, fill = as.factor(outcome))) +
+  geom_density(alpha = 0.7) +
+  labs(title = "Heart Rate Distribution by Outcome", x = "Heart Rate", y = "Density") +
+  theme_minimal()
+```
+
+The density plot for heart rate shows that the distribution of heart rates for patients who did not survive is slightly shifted towards the higher end compared to those who survived. This could suggest that a higher heart rate is associated with a higher risk of mortality.
+
+### BMI by Gender and Outcome
+
+The histogram below illustrates the distribution of Body Mass Index (BMI) across patients with heart failure, categorized by gender and outcome (Alive vs. Death).
+
+```{r, fig.width = 9, fig.height = 6}
+# BMI by Gender and Outcome
+ggplot(mortality_data_EDA %>% drop_na(bmi), aes(x = bmi, fill = as.factor(outcome))) +
+  geom_histogram(binwidth = 4, position = "dodge") +
+  facet_wrap(~gender) +
+  ggtitle("BMI by Gender and Outcome")
 
 ```
 
-**Distribution of Comorbidities by Outcome:**
+It shows a wide range of BMI values for both genders, with no clear pattern indicating that BMI is distinctly associated with the outcome. However, there are more data points for BMI for outcome "Alive", which may suggest a higher survival rate for patients with a lower BMI, but further statistical analysis is needed.
 
-The stacked bar plot shows the distribution of comorbidities by outcome. It appears that the proportion of patients with certain comorbidities like renal failure and COPD is higher among non-survivors. 
-
-
-# Lab Results Analysis
+### Blood Pressure by Outcome
 ```{r}
+# Blood Pressure by Outcome
+ggplot(mortality_data_EDA, aes(x = systolic_blood_pressure, y = diastolic_blood_pressure, color = as.factor(outcome))) +
+  geom_point(alpha = 0.5) +
+  ggtitle("Blood Pressure by Outcome")
+
+```
+
+This scatterplot shows systolic vs. diastolic blood pressure colored by outcome. The points are widely spread, indicating variability in blood pressure readings across the patient population. There doesn't seem to be a clear separation between the two outcomes based on blood pressure alone.
+
+### Other Lab Results Analysis
+
+```{r, figures-side, fig.show="hold", out.width="50%"}
+par(mar = c(4, 4, .1, .1))
+
 # Creatinine levels by outcome
 ggplot(mortality_data_EDA %>% drop_na(creatinine), aes(x = creatinine, fill = as.factor(outcome))) +
   geom_density(alpha = 0.5) +
-  ggtitle("Creatinine Levels by Outcome")
-
-# Lactic acid levels by outcome
-ggplot(mortality_data_EDA %>% drop_na(lactic_acid), aes(x = lactic_acid, fill = as.factor(outcome))) +
-  geom_density(alpha = 0.5) +
-  ggtitle("Lactic Acid Levels by Outcome")
+  ggtitle("Creatinine Levels by Outcome") 
 
 # Urea nitrogen levels by outcome
 ggplot(mortality_data_EDA %>% drop_na(urea_nitrogen), aes(x = urea_nitrogen, fill = as.factor(outcome))) +
   geom_density(alpha = 0.5) +
   ggtitle("Blood Urea nitrogen Levels by Outcome")
+```
+
+
+```{r, fig.show="hold", out.width="50%"}
+par(mar = c(4, 4, .1, .1))
 
 # Leucocyte count by outcome
 ggplot(mortality_data_EDA %>% drop_na(leucocyte), aes(x = leucocyte, fill = as.factor(outcome))) +
@@ -226,15 +281,6 @@ ggplot(mortality_data_EDA %>% drop_na(glucose), aes(x = glucose, fill = as.facto
   geom_density(alpha = 0.5) +
   ggtitle("Glucose Levels by Outcome")
 
-ggplot(mortality_data_EDA %>% drop_na(anion_gap), aes(x = anion_gap, fill = as.factor(outcome))) +
-  geom_density(alpha = 0.5) +
-  ggtitle("Anion Gap Levels by Outcome")
-
-ggplot(mortality_data_EDA %>% drop_na(pco2), aes(x = pco2, fill = as.factor(outcome))) +
-  geom_density(alpha = 0.5) +
-  ggtitle("Pco2 Levels by Outcome")
-
-
 ```
 
 **Blood Urea Nitrogen Levels by Outcome:**
@@ -244,16 +290,3 @@ Patients with higher levels seem to have a poorer outcome, as indicated by the l
 **Leucocyte Count by Outcome:**
 
 The density plot shows a higher peak for leucocyte count among survivors (outcome 0) compared to non-survivors (outcome 1). However, there is a long tail in the distribution for non-survivors, suggesting that some patients who did not survive had very high leucocyte counts, which could indicate severe infection or systemic stress.
-
-# Logistic Regression for Outcome Prediction
-```{r}
-# Logistic regression to assess the impact of various factors on outcome
-# Select relevant variables for the logistic regression model
-logistic_model <- glm(outcome ~ age + gender + bmi + hypertensive + diabetes + renal_failure + leucocyte +
-                        urea_nitrogen + heart_rate, 
-                      data = mortality_data, family = binomial())
-
-# Summary of the model to check for significant variables
-summary(logistic_model)
-
-```
