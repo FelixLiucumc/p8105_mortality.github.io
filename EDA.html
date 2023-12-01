@@ -387,771 +387,18 @@ div.tocify {
 
 <div id="data-cleaning" class="section level1">
 <h1>Data Cleaning</h1>
-<pre class="r"><code># Define a function to convert multiple columns to factors
-convert_to_factor &lt;- function(df, columns) {
-  df[columns] &lt;- lapply(df[columns], factor)
-  return(df)
-}
-
-# Load the data and preprocess it
-mortality_data &lt;- read_csv(&quot;mortality_data.csv&quot;) %&gt;%
-  janitor::clean_names() %&gt;%
-  drop_na(outcome) %&gt;%
-  convert_to_factor(., c(&quot;group&quot;, &quot;gendera&quot;, &quot;outcome&quot;, &quot;hypertensive&quot;, 
-                         &quot;atrialfibrillation&quot;, &quot;chd_with_no_mi&quot;, &quot;diabetes&quot;, 
-                         &quot;deficiencyanemias&quot;, &quot;depression&quot;, &quot;hyperlipemia&quot;, 
-                         &quot;renal_failure&quot;, &quot;copd&quot;)) %&gt;%
-  rename(gender = gendera)  # Rename gendera to gender after conversion</code></pre>
-<pre><code>## Rows: 1177 Columns: 51
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## dbl (51): group, ID, outcome, age, gendera, BMI, hypertensive, atrialfibrill...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre class="r"><code># Imputing numerical columns with mean value 
-numerical_columns &lt;- sapply(mortality_data, is.numeric)
-mortality_data[numerical_columns] &lt;- lapply(mortality_data[numerical_columns], function(x) {
-   ifelse(is.na(x), mean(x, na.rm = TRUE), x)
-})
-
-write_csv(mortality_data, &quot;mortality_data_cleaned.csv&quot;)</code></pre>
-</div>
-<div id="overview-of-the-data" class="section level1">
-<h1>Overview of the data</h1>
-<pre class="r"><code>skimr::skim(mortality_data)</code></pre>
-<table>
-<caption>Data summary</caption>
-<tbody>
-<tr class="odd">
-<td align="left">Name</td>
-<td align="left">mortality_data</td>
-</tr>
-<tr class="even">
-<td align="left">Number of rows</td>
-<td align="left">1176</td>
-</tr>
-<tr class="odd">
-<td align="left">Number of columns</td>
-<td align="left">51</td>
-</tr>
-<tr class="even">
-<td align="left">_______________________</td>
-<td align="left"></td>
-</tr>
-<tr class="odd">
-<td align="left">Column type frequency:</td>
-<td align="left"></td>
-</tr>
-<tr class="even">
-<td align="left">factor</td>
-<td align="left">12</td>
-</tr>
-<tr class="odd">
-<td align="left">numeric</td>
-<td align="left">39</td>
-</tr>
-<tr class="even">
-<td align="left">________________________</td>
-<td align="left"></td>
-</tr>
-<tr class="odd">
-<td align="left">Group variables</td>
-<td align="left">None</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Variable type: factor</strong></p>
-<table>
-<colgroup>
-<col width="25%" />
-<col width="13%" />
-<col width="18%" />
-<col width="10%" />
-<col width="11%" />
-<col width="21%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="left">skim_variable</th>
-<th align="right">n_missing</th>
-<th align="right">complete_rate</th>
-<th align="left">ordered</th>
-<th align="right">n_unique</th>
-<th align="left">top_counts</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">group</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="left">FALSE</td>
-<td align="right">2</td>
-<td align="left">1: 825, 2: 351</td>
-</tr>
-<tr class="even">
-<td align="left">outcome</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="left">FALSE</td>
-<td align="right">2</td>
-<td align="left">0: 1017, 1: 159</td>
-</tr>
-<tr class="odd">
-<td align="left">gender</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="left">FALSE</td>
-<td align="right">2</td>
-<td align="left">2: 618, 1: 558</td>
-</tr>
-<tr class="even">
-<td align="left">hypertensive</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="left">FALSE</td>
-<td align="right">2</td>
-<td align="left">1: 844, 0: 332</td>
-</tr>
-<tr class="odd">
-<td align="left">atrialfibrillation</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="left">FALSE</td>
-<td align="right">2</td>
-<td align="left">0: 645, 1: 531</td>
-</tr>
-<tr class="even">
-<td align="left">chd_with_no_mi</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="left">FALSE</td>
-<td align="right">2</td>
-<td align="left">0: 1075, 1: 101</td>
-</tr>
-<tr class="odd">
-<td align="left">diabetes</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="left">FALSE</td>
-<td align="right">2</td>
-<td align="left">0: 681, 1: 495</td>
-</tr>
-<tr class="even">
-<td align="left">deficiencyanemias</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="left">FALSE</td>
-<td align="right">2</td>
-<td align="left">0: 777, 1: 399</td>
-</tr>
-<tr class="odd">
-<td align="left">depression</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="left">FALSE</td>
-<td align="right">2</td>
-<td align="left">0: 1036, 1: 140</td>
-</tr>
-<tr class="even">
-<td align="left">hyperlipemia</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="left">FALSE</td>
-<td align="right">2</td>
-<td align="left">0: 729, 1: 447</td>
-</tr>
-<tr class="odd">
-<td align="left">renal_failure</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="left">FALSE</td>
-<td align="right">2</td>
-<td align="left">0: 747, 1: 429</td>
-</tr>
-<tr class="even">
-<td align="left">copd</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="left">FALSE</td>
-<td align="right">2</td>
-<td align="left">0: 1087, 1: 89</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Variable type: numeric</strong></p>
-<table style="width:100%;">
-<colgroup>
-<col width="20%" />
-<col width="8%" />
-<col width="11%" />
-<col width="8%" />
-<col width="7%" />
-<col width="8%" />
-<col width="8%" />
-<col width="8%" />
-<col width="8%" />
-<col width="8%" />
-<col width="4%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="left">skim_variable</th>
-<th align="right">n_missing</th>
-<th align="right">complete_rate</th>
-<th align="right">mean</th>
-<th align="right">sd</th>
-<th align="right">p0</th>
-<th align="right">p25</th>
-<th align="right">p50</th>
-<th align="right">p75</th>
-<th align="right">p100</th>
-<th align="left">hist</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">id</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">150768.29</td>
-<td align="right">29045.06</td>
-<td align="right">100213.00</td>
-<td align="right">125573.00</td>
-<td align="right">151899.00</td>
-<td align="right">176121.50</td>
-<td align="right">199952.00</td>
-<td align="left">▇▇▇▇▇</td>
-</tr>
-<tr class="even">
-<td align="left">age</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">74.05</td>
-<td align="right">13.44</td>
-<td align="right">19.00</td>
-<td align="right">65.00</td>
-<td align="right">77.00</td>
-<td align="right">85.00</td>
-<td align="right">99.00</td>
-<td align="left">▁▁▅▇▆</td>
-</tr>
-<tr class="odd">
-<td align="left">bmi</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">30.19</td>
-<td align="right">8.43</td>
-<td align="right">13.35</td>
-<td align="right">25.27</td>
-<td align="right">30.19</td>
-<td align="right">32.10</td>
-<td align="right">104.97</td>
-<td align="left">▇▂▁▁▁</td>
-</tr>
-<tr class="even">
-<td align="left">heart_rate</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">84.58</td>
-<td align="right">15.94</td>
-<td align="right">36.00</td>
-<td align="right">72.54</td>
-<td align="right">83.78</td>
-<td align="right">95.61</td>
-<td align="right">135.71</td>
-<td align="left">▁▆▇▅▁</td>
-</tr>
-<tr class="odd">
-<td align="left">systolic_blood_pressure</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">118.00</td>
-<td align="right">17.26</td>
-<td align="right">75.00</td>
-<td align="right">105.49</td>
-<td align="right">116.37</td>
-<td align="right">128.49</td>
-<td align="right">203.00</td>
-<td align="left">▂▇▃▁▁</td>
-</tr>
-<tr class="even">
-<td align="left">diastolic_blood_pressure</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">59.53</td>
-<td align="right">10.62</td>
-<td align="right">24.74</td>
-<td align="right">52.29</td>
-<td align="right">58.61</td>
-<td align="right">65.41</td>
-<td align="right">107.00</td>
-<td align="left">▁▇▇▂▁</td>
-</tr>
-<tr class="odd">
-<td align="left">respiratory_rate</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">20.80</td>
-<td align="right">3.98</td>
-<td align="right">11.14</td>
-<td align="right">17.95</td>
-<td align="right">20.45</td>
-<td align="right">23.37</td>
-<td align="right">40.90</td>
-<td align="left">▂▇▃▁▁</td>
-</tr>
-<tr class="even">
-<td align="left">temperature</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">36.68</td>
-<td align="right">0.60</td>
-<td align="right">33.25</td>
-<td align="right">36.29</td>
-<td align="right">36.66</td>
-<td align="right">37.02</td>
-<td align="right">39.13</td>
-<td align="left">▁▁▇▅▁</td>
-</tr>
-<tr class="odd">
-<td align="left">sp_o2</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">96.27</td>
-<td align="right">2.29</td>
-<td align="right">75.92</td>
-<td align="right">95.00</td>
-<td align="right">96.42</td>
-<td align="right">97.89</td>
-<td align="right">100.00</td>
-<td align="left">▁▁▁▃▇</td>
-</tr>
-<tr class="even">
-<td align="left">urine_output</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">1899.28</td>
-<td align="right">1253.27</td>
-<td align="right">0.00</td>
-<td align="right">997.25</td>
-<td align="right">1715.00</td>
-<td align="right">2475.00</td>
-<td align="right">8820.00</td>
-<td align="left">▇▆▁▁▁</td>
-</tr>
-<tr class="odd">
-<td align="left">hematocrit</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">31.91</td>
-<td align="right">5.20</td>
-<td align="right">20.31</td>
-<td align="right">28.15</td>
-<td align="right">30.80</td>
-<td align="right">35.00</td>
-<td align="right">55.42</td>
-<td align="left">▂▇▃▁▁</td>
-</tr>
-<tr class="even">
-<td align="left">rbc</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">3.57</td>
-<td align="right">0.63</td>
-<td align="right">2.03</td>
-<td align="right">3.12</td>
-<td align="right">3.49</td>
-<td align="right">3.90</td>
-<td align="right">6.58</td>
-<td align="left">▂▇▃▁▁</td>
-</tr>
-<tr class="odd">
-<td align="left">mch</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">29.54</td>
-<td align="right">2.62</td>
-<td align="right">18.12</td>
-<td align="right">28.25</td>
-<td align="right">29.75</td>
-<td align="right">31.24</td>
-<td align="right">40.31</td>
-<td align="left">▁▂▇▃▁</td>
-</tr>
-<tr class="even">
-<td align="left">mchc</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">32.86</td>
-<td align="right">1.40</td>
-<td align="right">27.82</td>
-<td align="right">32.01</td>
-<td align="right">32.99</td>
-<td align="right">33.83</td>
-<td align="right">37.01</td>
-<td align="left">▁▂▇▆▁</td>
-</tr>
-<tr class="odd">
-<td align="left">mcv</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">89.90</td>
-<td align="right">6.54</td>
-<td align="right">62.60</td>
-<td align="right">86.25</td>
-<td align="right">90.00</td>
-<td align="right">93.86</td>
-<td align="right">116.71</td>
-<td align="left">▁▂▇▂▁</td>
-</tr>
-<tr class="even">
-<td align="left">rdw</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">15.95</td>
-<td align="right">2.13</td>
-<td align="right">12.09</td>
-<td align="right">14.46</td>
-<td align="right">15.51</td>
-<td align="right">16.94</td>
-<td align="right">29.05</td>
-<td align="left">▇▇▂▁▁</td>
-</tr>
-<tr class="odd">
-<td align="left">leucocyte</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">10.72</td>
-<td align="right">5.23</td>
-<td align="right">0.10</td>
-<td align="right">7.44</td>
-<td align="right">9.68</td>
-<td align="right">12.74</td>
-<td align="right">64.75</td>
-<td align="left">▇▂▁▁▁</td>
-</tr>
-<tr class="even">
-<td align="left">platelets</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">241.52</td>
-<td align="right">113.17</td>
-<td align="right">9.57</td>
-<td align="right">168.90</td>
-<td align="right">222.67</td>
-<td align="right">304.28</td>
-<td align="right">1028.20</td>
-<td align="left">▇▇▁▁▁</td>
-</tr>
-<tr class="odd">
-<td align="left">neutrophils</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">80.12</td>
-<td align="right">10.43</td>
-<td align="right">5.00</td>
-<td align="right">76.44</td>
-<td align="right">80.53</td>
-<td align="right">86.60</td>
-<td align="right">98.00</td>
-<td align="left">▁▁▁▃▇</td>
-</tr>
-<tr class="even">
-<td align="left">basophils</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">0.41</td>
-<td align="right">0.41</td>
-<td align="right">0.10</td>
-<td align="right">0.20</td>
-<td align="right">0.40</td>
-<td align="right">0.41</td>
-<td align="right">8.80</td>
-<td align="left">▇▁▁▁▁</td>
-</tr>
-<tr class="odd">
-<td align="left">lymphocyte</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">12.23</td>
-<td align="right">8.09</td>
-<td align="right">0.97</td>
-<td align="right">7.10</td>
-<td align="right">11.63</td>
-<td align="right">14.70</td>
-<td align="right">83.50</td>
-<td align="left">▇▂▁▁▁</td>
-</tr>
-<tr class="even">
-<td align="left">pt</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">17.49</td>
-<td align="right">7.32</td>
-<td align="right">10.10</td>
-<td align="right">13.20</td>
-<td align="right">14.70</td>
-<td align="right">18.69</td>
-<td align="right">71.27</td>
-<td align="left">▇▂▁▁▁</td>
-</tr>
-<tr class="odd">
-<td align="left">inr</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">1.63</td>
-<td align="right">0.83</td>
-<td align="right">0.87</td>
-<td align="right">1.14</td>
-<td align="right">1.30</td>
-<td align="right">1.71</td>
-<td align="right">8.34</td>
-<td align="left">▇▁▁▁▁</td>
-</tr>
-<tr class="even">
-<td align="left">nt_pro_bnp</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">11011.04</td>
-<td align="right">13153.83</td>
-<td align="right">50.00</td>
-<td align="right">2250.00</td>
-<td align="right">5837.75</td>
-<td align="right">14980.75</td>
-<td align="right">118928.00</td>
-<td align="left">▇▁▁▁▁</td>
-</tr>
-<tr class="odd">
-<td align="left">creatine_kinase</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">246.94</td>
-<td align="right">1377.02</td>
-<td align="right">8.00</td>
-<td align="right">51.00</td>
-<td align="right">110.00</td>
-<td align="right">246.94</td>
-<td align="right">42987.50</td>
-<td align="left">▇▁▁▁▁</td>
-</tr>
-<tr class="even">
-<td align="left">creatinine</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">1.64</td>
-<td align="right">1.28</td>
-<td align="right">0.27</td>
-<td align="right">0.94</td>
-<td align="right">1.29</td>
-<td align="right">1.89</td>
-<td align="right">15.53</td>
-<td align="left">▇▁▁▁▁</td>
-</tr>
-<tr class="odd">
-<td align="left">urea_nitrogen</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">36.29</td>
-<td align="right">21.86</td>
-<td align="right">5.36</td>
-<td align="right">20.83</td>
-<td align="right">30.61</td>
-<td align="right">45.26</td>
-<td align="right">161.75</td>
-<td align="left">▇▃▁▁▁</td>
-</tr>
-<tr class="even">
-<td align="left">glucose</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">148.80</td>
-<td align="right">51.12</td>
-<td align="right">66.67</td>
-<td align="right">114.00</td>
-<td align="right">137.37</td>
-<td align="right">169.00</td>
-<td align="right">414.10</td>
-<td align="left">▇▆▂▁▁</td>
-</tr>
-<tr class="odd">
-<td align="left">blood_potassium</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">4.18</td>
-<td align="right">0.41</td>
-<td align="right">3.00</td>
-<td align="right">3.90</td>
-<td align="right">4.11</td>
-<td align="right">4.40</td>
-<td align="right">6.57</td>
-<td align="left">▁▇▂▁▁</td>
-</tr>
-<tr class="even">
-<td align="left">blood_sodium</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">138.90</td>
-<td align="right">4.15</td>
-<td align="right">114.67</td>
-<td align="right">136.67</td>
-<td align="right">139.25</td>
-<td align="right">141.60</td>
-<td align="right">154.74</td>
-<td align="left">▁▁▆▇▁</td>
-</tr>
-<tr class="odd">
-<td align="left">blood_calcium</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">8.50</td>
-<td align="right">0.57</td>
-<td align="right">6.70</td>
-<td align="right">8.15</td>
-<td align="right">8.50</td>
-<td align="right">8.87</td>
-<td align="right">10.95</td>
-<td align="left">▁▆▇▁▁</td>
-</tr>
-<tr class="even">
-<td align="left">chloride</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">102.29</td>
-<td align="right">5.33</td>
-<td align="right">80.27</td>
-<td align="right">99.00</td>
-<td align="right">102.52</td>
-<td align="right">105.57</td>
-<td align="right">122.53</td>
-<td align="left">▁▂▇▃▁</td>
-</tr>
-<tr class="odd">
-<td align="left">anion_gap</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">13.92</td>
-<td align="right">2.65</td>
-<td align="right">6.64</td>
-<td align="right">12.25</td>
-<td align="right">13.67</td>
-<td align="right">15.40</td>
-<td align="right">25.50</td>
-<td align="left">▁▇▅▁▁</td>
-</tr>
-<tr class="even">
-<td align="left">magnesium_ion</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">2.12</td>
-<td align="right">0.25</td>
-<td align="right">1.40</td>
-<td align="right">1.96</td>
-<td align="right">2.09</td>
-<td align="right">2.24</td>
-<td align="right">4.07</td>
-<td align="left">▂▇▁▁▁</td>
-</tr>
-<tr class="odd">
-<td align="left">ph</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">7.38</td>
-<td align="right">0.06</td>
-<td align="right">7.09</td>
-<td align="right">7.35</td>
-<td align="right">7.38</td>
-<td align="right">7.41</td>
-<td align="right">7.58</td>
-<td align="left">▁▁▇▅▁</td>
-</tr>
-<tr class="even">
-<td align="left">bicarbonate</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">26.91</td>
-<td align="right">5.17</td>
-<td align="right">12.86</td>
-<td align="right">23.45</td>
-<td align="right">26.50</td>
-<td align="right">29.88</td>
-<td align="right">47.67</td>
-<td align="left">▁▇▇▂▁</td>
-</tr>
-<tr class="odd">
-<td align="left">lactic_acid</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">1.85</td>
-<td align="right">0.88</td>
-<td align="right">0.50</td>
-<td align="right">1.30</td>
-<td align="right">1.83</td>
-<td align="right">2.00</td>
-<td align="right">8.33</td>
-<td align="left">▇▂▁▁▁</td>
-</tr>
-<tr class="even">
-<td align="left">pco2</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">45.54</td>
-<td align="right">11.01</td>
-<td align="right">18.75</td>
-<td align="right">39.00</td>
-<td align="right">45.54</td>
-<td align="right">47.28</td>
-<td align="right">98.60</td>
-<td align="left">▂▇▂▁▁</td>
-</tr>
-<tr class="odd">
-<td align="left">ef</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">48.71</td>
-<td align="right">12.87</td>
-<td align="right">15.00</td>
-<td align="right">40.00</td>
-<td align="right">55.00</td>
-<td align="right">55.00</td>
-<td align="right">75.00</td>
-<td align="left">▁▂▃▇▁</td>
-</tr>
-</tbody>
-</table>
-<p>Target Variable - Outcome * 0 - Alive * 1 - Death</p>
-</div>
-<div id="change-the-factor-variables-for-eda" class="section level1">
-<h1>Change the factor variables for EDA</h1>
-<pre class="r"><code># Assuming &#39;mortality_data&#39; is already loaded and cleaned up as per your previous steps
-
-# Manually recoding factors to their meaningful character values
-mortality_data_EDA &lt;- mortality_data %&gt;%
-  mutate(
-    group = recode(group, `1` = &quot;Group 1&quot;, `2` = &quot;Group 2&quot;),
-    gender = recode(gender, `1` = &quot;Male&quot;, `2` = &quot;Female&quot;),
-    outcome = recode(outcome, `0` = &quot;Alive&quot;, `1` = &quot;Death&quot;)
-  ) %&gt;%
-  mutate_if(is.factor, as.character) # Converts all remaining factors to characters
-
-# Function to recode factor variables to &#39;Yes&#39; or &#39;No&#39;
-convert_factors_to_yes_no &lt;- function(df, comorbidity_columns) {
-  df &lt;- df %&gt;%
-    mutate(across(all_of(comorbidity_columns), ~ ifelse(as.character(.) == &quot;1&quot;, &quot;Yes&quot;, &quot;No&quot;)))
-  return(df)
-}
-
-# List of comorbidity columns to convert
-comorbidity_columns &lt;- c(&quot;hypertensive&quot;, &quot;atrialfibrillation&quot;, &quot;chd_with_no_mi&quot;, 
-                         &quot;diabetes&quot;, &quot;deficiencyanemias&quot;, &quot;depression&quot;, 
-                         &quot;hyperlipemia&quot;, &quot;renal_failure&quot;, &quot;copd&quot;)
-
-# Apply the function to the mortality_data_EDA dataframe
-mortality_data_EDA &lt;- convert_factors_to_yes_no(mortality_data_EDA, comorbidity_columns)</code></pre>
-</div>
-<div id="gender-outcome" class="section level1">
-<h1>Gender &amp; Outcome</h1>
+<div
+id="demographic-characteristics-as-predictors-of-in-hospital-mortality"
+class="section level2">
+<h2>Demographic Characteristics as Predictors of In-Hospital
+Mortality</h2>
+<p>The exploration of demographic factors such as gender and age
+provides critical insights into their potential impact on the outcomes
+of heart failure patients admitted to the Intensive Care Unit (ICU).
+This report section presents an analysis of in-hospital mortality rates
+categorized by gender and age groups.</p>
+<div id="gender-based-mortality-analysis" class="section level4">
+<h4>Gender-Based Mortality Analysis</h4>
 <pre class="r"><code>mortality_data_EDA %&gt;%
   group_by(gender) %&gt;%
   summarise(
@@ -1188,9 +435,12 @@ mortality_data_EDA &lt;- convert_factors_to_yes_no(mortality_data_EDA, comorbidi
 </tr>
 </tbody>
 </table>
+<p>The dataset comprised 618 females and 558 males. The mortality rate
+among female patients was 12.8%, while the mortality rate for male
+patients was slightly higher at 14.3%.</p>
 </div>
-<div id="age-outcome" class="section level1">
-<h1>Age &amp; Outcome</h1>
+<div id="age-based-mortality-analysis" class="section level4">
+<h4>Age-Based Mortality Analysis</h4>
 <pre class="r"><code># Define age intervals
 age_breaks &lt;- c(-Inf, 20, 40, 60, 80, Inf)
 age_labels &lt;- c(&#39;Under 20&#39;, &#39;20-40&#39;, &#39;40-60&#39;, &#39;60-80&#39;, &#39;Over 80&#39;)
@@ -1252,62 +502,57 @@ mortality_data_EDA %&gt;%
 </tr>
 </tbody>
 </table>
-</div>
-<div id="univariate-analysis" class="section level1">
-<h1>Univariate Analysis</h1>
+<p>It was observed that patients under 20 years had a 0% mortality rate.
+Patients aged 20-40 years had a mortality rate of 6.2%, which increased
+with age. The 40-60 and 60-80 age groups had mortality rates of 12.7%
+and 11.6%, respectively. Notably, the group over 80 years had the
+highest mortality rate at 15.9%, underscoring the increased
+vulnerability among the elderly population.</p>
 <pre class="r"><code># Distribution of Age
 ggplot(mortality_data_EDA, aes(x = age)) +
-  geom_histogram(binwidth = 1, fill = &quot;steelblue&quot;, color = &quot;black&quot;) +
+  geom_histogram(binwidth = 3, fill = &quot;steelblue&quot;, color = &quot;black&quot;) +
   ggtitle(&quot;Age Distribution&quot;)</code></pre>
-<p><img src="EDA_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
-<pre class="r"><code># Distribution of BMI (handling missing values)
-ggplot(mortality_data_EDA %&gt;% drop_na(bmi), aes(x = bmi)) +
-  geom_histogram(binwidth = 1, fill = &quot;darkgreen&quot;, color = &quot;black&quot;) +
-  ggtitle(&quot;BMI Distribution&quot;)</code></pre>
-<p><img src="EDA_files/figure-html/unnamed-chunk-6-2.png" width="672" /></p>
+<p><img src="EDA_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>The histogram shows the age distribution of patients with heart
+failure admitted to the ICU, and it is highly left-skewed. It shows that
+the bulk of patients falls within the middle-aged to elderly category,
+with a significant concentration between ages 70 and 90. This suggests
+that heart failure is more prevalent or more severe, warranting ICU
+admission, in this age demographic.</p>
 </div>
-<div id="bivariate-analysis" class="section level1">
-<h1>Bivariate Analysis</h1>
+<div id="gender-age-bivariate-analysis" class="section level4">
+<h4>Gender &amp; Age Bivariate Analysis</h4>
 <pre class="r"><code># Bivariate Analysis
 ggplot(mortality_data_EDA, aes(x = gender, y = age, fill = outcome)) +
   geom_boxplot() +
   ggtitle(&quot;Age Distribution by Gender and Outcome&quot;)</code></pre>
-<p><img src="EDA_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
-<p><strong>Age Distribution by Gender and Outcome:</strong> The boxplots
-show the age distribution for different genders and outcomes. We see
-that for both genders, the age distribution for patients who did not
-survive (outcome 1) is slightly higher. This could indicate that older
-age is a risk factor for mortality in this patient group.</p>
+<p><img src="EDA_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>The boxplots show the age distribution for different genders and
+outcomes. We see that for both genders, the age distribution for
+patients who did not survive (outcome 1) is slightly higher. This could
+indicate that older age is a risk factor for mortality in this patient
+group.</p>
 </div>
-<div id="exploring-outcomes" class="section level1">
-<h1>Exploring Outcomes</h1>
-<pre class="r"><code># Age distribution by Outcome
-ggplot(mortality_data_EDA, aes(x = age, fill = as.factor(outcome))) +
-  geom_histogram(binwidth = 5, position = &quot;dodge&quot;) +
-  ggtitle(&quot;Age Distribution by Outcome&quot;)</code></pre>
-<p><img src="EDA_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+</div>
+</div>
+<div id="comorbidities" class="section level1">
+<h1>Comorbidities</h1>
 <pre class="r"><code># Blood Pressure by Outcome
 ggplot(mortality_data_EDA, aes(x = systolic_blood_pressure, y = diastolic_blood_pressure, color = as.factor(outcome))) +
   geom_point(alpha = 0.5) +
   ggtitle(&quot;Blood Pressure by Outcome&quot;)</code></pre>
-<p><img src="EDA_files/figure-html/unnamed-chunk-8-2.png" width="672" /></p>
+<p><img src="EDA_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <pre class="r"><code># BMI by Gender and Outcome
 ggplot(mortality_data_EDA %&gt;% drop_na(bmi), aes(x = bmi, fill = as.factor(outcome))) +
   geom_histogram(binwidth = 1, position = &quot;dodge&quot;) +
   facet_wrap(~gender) +
   ggtitle(&quot;BMI by Gender and Outcome&quot;)</code></pre>
-<p><img src="EDA_files/figure-html/unnamed-chunk-8-3.png" width="672" /></p>
+<p><img src="EDA_files/figure-html/unnamed-chunk-7-2.png" width="672" /></p>
 <pre class="r"><code># Heart Rate by Outcome
 ggplot(mortality_data_EDA, aes(x = heart_rate, fill = as.factor(outcome))) +
   geom_density(alpha = 0.7) +
   ggtitle(&quot;Heart Rate Distribution by Outcome&quot;)</code></pre>
-<p><img src="EDA_files/figure-html/unnamed-chunk-8-4.png" width="672" /></p>
-<p><strong>Age Distribution by Outcome:</strong></p>
-<p>The histogram shows the age distribution for the two outcomes. We
-observe that the majority of patients are between 60 and 80 years old.
-There is a noticeable overlap in the age distribution of patients who
-survived and those who did not, suggesting that while age may be a
-factor, it’s not the sole determinant of mortality.</p>
+<p><img src="EDA_files/figure-html/unnamed-chunk-7-3.png" width="672" /></p>
 <p><strong>Blood Pressure by Outcome:</strong></p>
 <p>This scatterplot shows systolic vs. diastolic blood pressure colored
 by outcome. The points are widely spread, indicating variability in
@@ -1348,7 +593,7 @@ ggplot(mortality_long, aes(x = variable, fill = as.factor(value))) +
   labs(x = &quot;Comorbidity&quot;, y = &quot;Count&quot;, fill = &quot;Presence&quot;) +
   ggtitle(&quot;Distribution of Comorbidities by Outcome&quot;) +
   scale_y_continuous(labels = scales::percent)</code></pre>
-<p><img src="EDA_files/figure-html/unnamed-chunk-9-1.png" width="1344" /></p>
+<p><img src="EDA_files/figure-html/unnamed-chunk-8-1.png" width="1344" /></p>
 <p><strong>Distribution of Comorbidities by Outcome:</strong></p>
 <p>The stacked bar plot shows the distribution of comorbidities by
 outcome. It appears that the proportion of patients with certain
@@ -1361,35 +606,35 @@ non-survivors.</p>
 ggplot(mortality_data_EDA %&gt;% drop_na(creatinine), aes(x = creatinine, fill = as.factor(outcome))) +
   geom_density(alpha = 0.5) +
   ggtitle(&quot;Creatinine Levels by Outcome&quot;)</code></pre>
-<p><img src="EDA_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><img src="EDA_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <pre class="r"><code># Lactic acid levels by outcome
 ggplot(mortality_data_EDA %&gt;% drop_na(lactic_acid), aes(x = lactic_acid, fill = as.factor(outcome))) +
   geom_density(alpha = 0.5) +
   ggtitle(&quot;Lactic Acid Levels by Outcome&quot;)</code></pre>
-<p><img src="EDA_files/figure-html/unnamed-chunk-10-2.png" width="672" /></p>
+<p><img src="EDA_files/figure-html/unnamed-chunk-9-2.png" width="672" /></p>
 <pre class="r"><code># Urea nitrogen levels by outcome
 ggplot(mortality_data_EDA %&gt;% drop_na(urea_nitrogen), aes(x = urea_nitrogen, fill = as.factor(outcome))) +
   geom_density(alpha = 0.5) +
   ggtitle(&quot;Blood Urea nitrogen Levels by Outcome&quot;)</code></pre>
-<p><img src="EDA_files/figure-html/unnamed-chunk-10-3.png" width="672" /></p>
+<p><img src="EDA_files/figure-html/unnamed-chunk-9-3.png" width="672" /></p>
 <pre class="r"><code># Leucocyte count by outcome
 ggplot(mortality_data_EDA %&gt;% drop_na(leucocyte), aes(x = leucocyte, fill = as.factor(outcome))) +
   geom_density(alpha = 0.5) +
   ggtitle(&quot;Leucocyte Count by Outcome&quot;)</code></pre>
-<p><img src="EDA_files/figure-html/unnamed-chunk-10-4.png" width="672" /></p>
+<p><img src="EDA_files/figure-html/unnamed-chunk-9-4.png" width="672" /></p>
 <pre class="r"><code># Glucose levels by outcome
 ggplot(mortality_data_EDA %&gt;% drop_na(glucose), aes(x = glucose, fill = as.factor(outcome))) +
   geom_density(alpha = 0.5) +
   ggtitle(&quot;Glucose Levels by Outcome&quot;)</code></pre>
-<p><img src="EDA_files/figure-html/unnamed-chunk-10-5.png" width="672" /></p>
+<p><img src="EDA_files/figure-html/unnamed-chunk-9-5.png" width="672" /></p>
 <pre class="r"><code>ggplot(mortality_data_EDA %&gt;% drop_na(anion_gap), aes(x = anion_gap, fill = as.factor(outcome))) +
   geom_density(alpha = 0.5) +
   ggtitle(&quot;Anion Gap Levels by Outcome&quot;)</code></pre>
-<p><img src="EDA_files/figure-html/unnamed-chunk-10-6.png" width="672" /></p>
+<p><img src="EDA_files/figure-html/unnamed-chunk-9-6.png" width="672" /></p>
 <pre class="r"><code>ggplot(mortality_data_EDA %&gt;% drop_na(pco2), aes(x = pco2, fill = as.factor(outcome))) +
   geom_density(alpha = 0.5) +
   ggtitle(&quot;Pco2 Levels by Outcome&quot;)</code></pre>
-<p><img src="EDA_files/figure-html/unnamed-chunk-10-7.png" width="672" /></p>
+<p><img src="EDA_files/figure-html/unnamed-chunk-9-7.png" width="672" /></p>
 <p><strong>Blood Urea Nitrogen Levels by Outcome:</strong></p>
 <p>Patients with higher levels seem to have a poorer outcome, as
 indicated by the longer tail in the distribution for non-survivors. High
