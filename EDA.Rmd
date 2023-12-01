@@ -229,7 +229,7 @@ The density plot for heart rate shows that the distribution of heart rates for p
 
 The histogram below illustrates the distribution of Body Mass Index (BMI) across patients with heart failure, categorized by gender and outcome (Alive vs. Death).
 
-```{r}
+```{r, fig.width = 9, fig.height = 6}
 # BMI by Gender and Outcome
 ggplot(mortality_data_EDA %>% drop_na(bmi), aes(x = bmi, fill = as.factor(outcome))) +
   geom_histogram(binwidth = 4, position = "dodge") +
