@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Yifei Liu" />
+
+
+<title>Preliminary Study</title>
+
+<script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Home</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="introduction.html">Introduction</a>
+</li>
+<li>
+  <a href="Datasets.html">Data</a>
+</li>
+<li>
+  <a href="analysis.html">Prelimary Analysis</a>
+</li>
+<li>
+  <a href="EDA.html">EDA</a>
+</li>
+<li>
+  <a href="regression_model.html">Regression</a>
+</li>
+<li>
+  <a href="conclusion.html">Conclusion</a>
+</li>
+<li>
+  <a href="https://7lx8uo-txbrook.shinyapps.io/map_dashboard/#section-life-expectancy">Shiny App</a>
+</li>
+<li>
+  <a href="project_report.html">Report</a>
+</li>
+<li>
+  <a href="mailto:&lt;jy3360@cumc.columbia.edu&gt;">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://github.com/candicejiaruiyu/p8105_mortality.github.io">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Preliminary Study</h1>
+<h4 class="author">Yifei Liu</h4>
+<h4 class="date">2023/11/25</h4>
+
+</div>
+
+
+<pre class="r"><code>library(tidyverse)
+library(modelr)
+library(purrr)
+library(corrplot)</code></pre>
+<pre><code>## Warning: 程辑包&#39;corrplot&#39;是用R版本4.3.2 来建造的</code></pre>
+<pre class="r"><code>library(FactoMineR)</code></pre>
+<pre><code>## Warning: 程辑包&#39;FactoMineR&#39;是用R版本4.3.2 来建造的</code></pre>
+<pre class="r"><code>library(factoextra)</code></pre>
+<pre><code>## Warning: 程辑包&#39;factoextra&#39;是用R版本4.3.2 来建造的</code></pre>
+<pre class="r"><code>library(rpart)
+library(rpart.plot)</code></pre>
+<pre><code>## Warning: 程辑包&#39;rpart.plot&#39;是用R版本4.3.2 来建造的</code></pre>
+<pre class="r"><code>library(randomForest)</code></pre>
+<pre><code>## Warning: 程辑包&#39;randomForest&#39;是用R版本4.3.2 来建造的</code></pre>
+<pre class="r"><code>set.seed(1)</code></pre>
+<pre class="r"><code>#load mortality dataset
+mort_data =
+  read_csv(&quot;mortality_data_cleaned.csv&quot;) |&gt; 
+  janitor::clean_names() |&gt;
+  select(-group, everything())</code></pre>
+<pre><code>## Rows: 1176 Columns: 51
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## dbl (51): group, id, outcome, age, gender, bmi, hypertensive, atrialfibrilla...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>convert_to_factor &lt;- function(df, columns) {
+  df[columns] &lt;- lapply(df[columns], factor)
+  return(df)
+}
+
+mort_tidy = 
+  read_csv(&quot;mortality_data_cleaned.csv&quot;) |&gt;
+  janitor::clean_names()  |&gt;
+  convert_to_factor(c(&quot;group&quot;, &quot;gender&quot;, &quot;outcome&quot;, &quot;hypertensive&quot;, 
+                      &quot;atrialfibrillation&quot;, &quot;chd_with_no_mi&quot;, &quot;diabetes&quot;, 
+                      &quot;deficiencyanemias&quot;, &quot;depression&quot;, &quot;hyperlipemia&quot;, 
+                      &quot;renal_failure&quot;, &quot;copd&quot;))</code></pre>
+<pre><code>## Rows: 1176 Columns: 51
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## dbl (51): group, id, outcome, age, gender, bmi, hypertensive, atrialfibrilla...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>#select patient outcome and complications
+com_data =
+  mort_data |&gt;
+  select(hypertensive:copd)
+
+com_tidy =
+  mort_tidy |&gt;
+  select(outcome, hypertensive:copd)
+
+#select patient outcome and vital signs
+sign_data =
+  mort_data |&gt;
+  select(heart_rate:ef)
+
+sign_tidy =
+  mort_tidy |&gt;
+  select(outcome, heart_rate:ef)</code></pre>
+<pre class="r"><code>#show correlation
+corrplot(cor(com_data), type = &quot;upper&quot;, diag = FALSE)</code></pre>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-3-1.png" width="960" /></p>
+<p>Interpretation:<br />
+- <code>outcome</code> seems strongly connected with
+<code>deficiencyanemias</code>, <code>renal_failure</code>.  -
+<code>hypertensive</code> shows strong correlation with
+<code>hyperlipemia</code> and <code>renal_failure</code>.<br />
+- <code>diabetes</code> shows strong correlation with
+<code>renal_failure</code>.<br />
+- <code>hyperlipemia</code> also shows strong correlation with
+<code>renal_failure</code>.<br />
+</p>
+<pre class="r"><code>#show correlation
+corrplot(cor(sign_data), type = &quot;upper&quot;, diag = FALSE)</code></pre>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-4-1.png" width="960" /></p>
+<pre class="r"><code>#decision tree
+tree_model = rpart(outcome ~ ., data = sign_tidy, method = &quot;class&quot;)
+print(tree_model)</code></pre>
+<pre><code>## n= 1176 
+## 
+## node), split, n, loss, yval, (yprob)
+##       * denotes terminal node
+## 
+##   1) root 1176 159 0 (0.86479592 0.13520408)  
+##     2) anion_gap&lt; 16.92121 1051 108 0 (0.89724072 0.10275928)  
+##       4) blood_calcium&gt;=7.837088 933  75 0 (0.91961415 0.08038585)  
+##         8) lymphocyte&gt;=3.133333 890  60 0 (0.93258427 0.06741573)  
+##          16) ph&gt;=7.341548 714  33 0 (0.95378151 0.04621849) *
+##          17) ph&lt; 7.341548 176  27 0 (0.84659091 0.15340909)  
+##            34) magnesium_ion&lt; 2.63 168  22 0 (0.86904762 0.13095238)  
+##              68) urine_output&gt;=1110.5 122   9 0 (0.92622951 0.07377049) *
+##              69) urine_output&lt; 1110.5 46  13 0 (0.71739130 0.28260870)  
+##               138) ph&lt; 7.326111 35   5 0 (0.85714286 0.14285714) *
+##               139) ph&gt;=7.326111 11   3 1 (0.27272727 0.72727273) *
+##            35) magnesium_ion&gt;=2.63 8   3 1 (0.37500000 0.62500000) *
+##         9) lymphocyte&lt; 3.133333 43  15 0 (0.65116279 0.34883721)  
+##          18) rbc&gt;=2.956944 33   7 0 (0.78787879 0.21212121) *
+##          19) rbc&lt; 2.956944 10   2 1 (0.20000000 0.80000000) *
+##       5) blood_calcium&lt; 7.837088 118  33 0 (0.72033898 0.27966102)  
+##        10) lactic_acid&lt; 2.606667 101  21 0 (0.79207921 0.20792079) *
+##        11) lactic_acid&gt;=2.606667 17   5 1 (0.29411765 0.70588235) *
+##     3) anion_gap&gt;=16.92121 125  51 0 (0.59200000 0.40800000)  
+##       6) bicarbonate&gt;=19.68333 87  24 0 (0.72413793 0.27586207)  
+##        12) respiratory_rate&lt; 22.4221 47   5 0 (0.89361702 0.10638298) *
+##        13) respiratory_rate&gt;=22.4221 40  19 0 (0.52500000 0.47500000)  
+##          26) lymphocyte&gt;=10.25 17   3 0 (0.82352941 0.17647059) *
+##          27) lymphocyte&lt; 10.25 23   7 1 (0.30434783 0.69565217) *
+##       7) bicarbonate&lt; 19.68333 38  11 1 (0.28947368 0.71052632)  
+##        14) heart_rate&lt; 80.35606 15   6 0 (0.60000000 0.40000000) *
+##        15) heart_rate&gt;=80.35606 23   2 1 (0.08695652 0.91304348) *</code></pre>
+<pre class="r"><code>rpart.plot(tree_model)</code></pre>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<pre class="r"><code>#rf
+rf_model = randomForest(outcome ~ ., data = sign_tidy)
+importance(rf_model)</code></pre>
+<pre><code>##                          MeanDecreaseGini
+## heart_rate                       6.859208
+## systolic_blood_pressure          6.937945
+## diastolic_blood_pressure         5.518282
+## respiratory_rate                 8.020710
+## temperature                      8.190226
+## sp_o2                            7.639249
+## urine_output                    10.685705
+## hematocrit                       5.515888
+## rbc                              6.495000
+## mch                              5.613478
+## mchc                             4.811632
+## mcv                              5.630671
+## rdw                              6.408361
+## leucocyte                       10.776052
+## platelets                        8.896284
+## neutrophils                      7.591088
+## basophils                        4.811617
+## lymphocyte                      11.706720
+## pt                               6.731306
+## inr                              7.424569
+## nt_pro_bnp                       6.389993
+## creatine_kinase                  5.551827
+## creatinine                       6.545176
+## urea_nitrogen                    8.977957
+## glucose                          6.127691
+## blood_potassium                  7.012943
+## blood_sodium                     7.283388
+## blood_calcium                    9.913167
+## chloride                         6.500830
+## anion_gap                       14.512110
+## magnesium_ion                    6.284564
+## ph                               8.190435
+## bicarbonate                     13.357985
+## lactic_acid                     12.173188
+## pco2                             6.051818
+## ef                               2.618589</code></pre>
+<pre class="r"><code>rfPermute::confusionMatrix(rf_model)</code></pre>
+<pre><code>##            0  1 pct.correct  LCI_0.95 UCI_0.95
+## 0       1013  4    99.60669 98.996047 99.89273
+## 1        136 23    14.46541  9.396128 20.91057
+## Overall   NA NA    88.09524 86.105969 89.89159</code></pre>
+<pre class="r"><code>summary(rf_model)</code></pre>
+<pre><code>## 
+## Call:
+##  randomForest(formula = outcome ~ ., data = sign_tidy) 
+##                Type of random forest: classification
+##                      Number of trees: 500
+## No. of variables tried at each split: 6
+## 
+##         OOB estimate of  error rate: 11.9%
+## Confusion matrix:
+##      0  1 class.error
+## 0 1013  4 0.003933137
+## 1  136 23 0.855345912</code></pre>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-5-2.png" width="672" /></p>
+<pre class="r"><code>varImpPlot(rf_model)</code></pre>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-5-3.png" width="672" /></p>
+<pre class="r"><code>library(party)</code></pre>
+<pre><code>## Warning: 程辑包&#39;party&#39;是用R版本4.3.2 来建造的</code></pre>
+<pre><code>## 载入需要的程辑包：grid</code></pre>
+<pre><code>## 载入需要的程辑包：mvtnorm</code></pre>
+<pre><code>## Warning: 程辑包&#39;mvtnorm&#39;是用R版本4.3.2 来建造的</code></pre>
+<pre><code>## 载入需要的程辑包：modeltools</code></pre>
+<pre><code>## 载入需要的程辑包：stats4</code></pre>
+<pre><code>## 载入需要的程辑包：strucchange</code></pre>
+<pre><code>## Warning: 程辑包&#39;strucchange&#39;是用R版本4.3.2 来建造的</code></pre>
+<pre><code>## 载入需要的程辑包：zoo</code></pre>
+<pre><code>## Warning: 程辑包&#39;zoo&#39;是用R版本4.3.2 来建造的</code></pre>
+<pre><code>## 
+## 载入程辑包：&#39;zoo&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     as.Date, as.Date.numeric</code></pre>
+<pre><code>## 载入需要的程辑包：sandwich</code></pre>
+<pre><code>## Warning: 程辑包&#39;sandwich&#39;是用R版本4.3.2 来建造的</code></pre>
+<pre><code>## 
+## 载入程辑包：&#39;strucchange&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:stringr&#39;:
+## 
+##     boundary</code></pre>
+<pre><code>## 
+## 载入程辑包：&#39;party&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
+## 
+##     where</code></pre>
+<pre class="r"><code>tree_com = ctree(outcome ~ ., data = com_tidy)
+plot(tree_com)</code></pre>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-5-4.png" width="672" /></p>
+<pre class="r"><code>tree_sign = ctree(outcome ~ ., data = sign_tidy)
+plot(tree_sign)</code></pre>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-5-5.png" width="672" /></p>
+<pre class="r"><code>#pca for vital signs
+sign_names = 
+  sign_data |&gt;
+  select(heart_rate:ef) |&gt;
+  colnames()
+
+#pca using R build-in function prcomp()
+vars_sign = sign_data[, sign_names]
+pca_res_sign = prcomp(vars_sign, scale. = TRUE)
+summary(pca_res_sign)</code></pre>
+<pre><code>## Importance of components:
+##                           PC1     PC2     PC3     PC4     PC5     PC6     PC7
+## Standard deviation     1.9704 1.75519 1.58788 1.53481 1.48901 1.40515 1.30262
+## Proportion of Variance 0.1078 0.08557 0.07004 0.06543 0.06159 0.05485 0.04713
+## Cumulative Proportion  0.1078 0.19342 0.26346 0.32889 0.39048 0.44532 0.49246
+##                            PC8     PC9    PC10    PC11    PC12    PC13    PC14
+## Standard deviation     1.25500 1.18055 1.12159 1.08514 1.06435 1.01906 0.98288
+## Proportion of Variance 0.04375 0.03871 0.03494 0.03271 0.03147 0.02885 0.02683
+## Cumulative Proportion  0.53621 0.57492 0.60986 0.64257 0.67404 0.70289 0.72972
+##                           PC15    PC16   PC17    PC18   PC19    PC20    PC21
+## Standard deviation     0.94975 0.93029 0.9059 0.87727 0.8633 0.83018 0.81972
+## Proportion of Variance 0.02506 0.02404 0.0228 0.02138 0.0207 0.01914 0.01867
+## Cumulative Proportion  0.75478 0.77882 0.8016 0.82299 0.8437 0.86284 0.88151
+##                           PC22    PC23    PC24    PC25    PC26    PC27   PC28
+## Standard deviation     0.78710 0.77189 0.73835 0.71059 0.69022 0.63136 0.5500
+## Proportion of Variance 0.01721 0.01655 0.01514 0.01403 0.01323 0.01107 0.0084
+## Cumulative Proportion  0.89871 0.91527 0.93041 0.94443 0.95767 0.96874 0.9771
+##                           PC29    PC30    PC31    PC32    PC33    PC34    PC35
+## Standard deviation     0.53262 0.49727 0.38231 0.35390 0.11283 0.07647 0.03288
+## Proportion of Variance 0.00788 0.00687 0.00406 0.00348 0.00035 0.00016 0.00003
+## Cumulative Proportion  0.98502 0.99189 0.99595 0.99943 0.99979 0.99995 0.99998
+##                           PC36
+## Standard deviation     0.02807
+## Proportion of Variance 0.00002
+## Cumulative Proportion  1.00000</code></pre>
+<pre class="r"><code>#pca using packages `FactoMineR`, `factoextra`
+res_pca_sign = PCA(sign_data, scale.unit = TRUE, graph = TRUE)</code></pre>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<pre><code>## Warning: ggrepel: 10 unlabeled data points (too many overlaps). Consider
+## increasing max.overlaps</code></pre>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-6-2.png" width="672" /></p>
+<pre class="r"><code>#PCA() function would do the data standardization automatically.
+#keep 5 dimensions as result.
+
+get_eigenvalue(res_pca_sign)</code></pre>
+<pre><code>##          eigenvalue variance.percent cumulative.variance.percent
+## Dim.1  3.8823383058     10.784273072                    10.78427
+## Dim.2  3.0806929385      8.557480385                    19.34175
+## Dim.3  2.5213605846      7.003779402                    26.34553
+## Dim.4  2.3556330047      6.543425013                    32.88896
+## Dim.5  2.2171588093      6.158774470                    39.04773
+## Dim.6  1.9744560329      5.484600091                    44.53233
+## Dim.7  1.6968202108      4.713389474                    49.24572
+## Dim.8  1.5750125846      4.375034957                    53.62076
+## Dim.9  1.3937018264      3.871393962                    57.49215
+## Dim.10 1.2579643101      3.494345306                    60.98650
+## Dim.11 1.1775311390      3.270919831                    64.25742
+## Dim.12 1.1328467937      3.146796649                    67.40421
+## Dim.13 1.0384849030      2.884680286                    70.28889
+## Dim.14 0.9660455818      2.683459950                    72.97235
+## Dim.15 0.9020277951      2.505632764                    75.47799
+## Dim.16 0.8654315803      2.403976612                    77.88196
+## Dim.17 0.8207039312      2.279733142                    80.16170
+## Dim.18 0.7696050551      2.137791820                    82.29949
+## Dim.19 0.7452352298      2.070097860                    84.36959
+## Dim.20 0.6892066565      1.914462935                    86.28405
+## Dim.21 0.6719476581      1.866521273                    88.15057
+## Dim.22 0.6195214896      1.720893027                    89.87146
+## Dim.23 0.5958147476      1.655040966                    91.52650
+## Dim.24 0.5451543521      1.514317645                    93.04082
+## Dim.25 0.5049433524      1.402620423                    94.44344
+## Dim.26 0.4763982493      1.323328470                    95.76677
+## Dim.27 0.3986187827      1.107274396                    96.87404
+## Dim.28 0.3025340700      0.840372417                    97.71442
+## Dim.29 0.2836820804      0.788005779                    98.50242
+## Dim.30 0.2472778493      0.686882915                    99.18931
+## Dim.31 0.1461572492      0.405992359                    99.59530
+## Dim.32 0.1252456966      0.347904713                    99.94320
+## Dim.33 0.0127299486      0.035360968                    99.97856
+## Dim.34 0.0058484104      0.016245584                    99.99481
+## Dim.35 0.0010810096      0.003002805                    99.99781
+## Dim.36 0.0007877808      0.002188280                   100.00000</code></pre>
+<pre class="r"><code>#`variance.percent` explains the percentage of change. 70% would be adequate.
+
+#scree plot
+fviz_eig(res_pca_sign, addlabels = TRUE, ylim = c(0, 20))</code></pre>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-6-3.png" width="672" /></p>
+<pre class="r"><code>#visualize the contributions of each dimension.
+
+#result
+var_sign &lt;- get_pca_var(res_pca_sign) 
+var_sign$coord</code></pre>
+<pre><code>##                                Dim.1       Dim.2        Dim.3         Dim.4
+## heart_rate               -0.02246391  0.06090055 -0.392530078  0.3260299099
+## systolic_blood_pressure  -0.25558121 -0.05105447  0.190220573  0.0339117783
+## diastolic_blood_pressure -0.27807267  0.21786491  0.015124638  0.4552871695
+## respiratory_rate         -0.02763299  0.17948997 -0.335546928  0.2666654389
+## temperature              -0.18072057 -0.27190713 -0.205912393  0.1346234947
+## sp_o2                     0.24003019 -0.29155170  0.031909909 -0.0507796416
+## urine_output             -0.43725294  0.08103086  0.035063741  0.2143190027
+## hematocrit               -0.42569719  0.41664045 -0.026923947  0.3389792493
+## rbc                      -0.41236767  0.62385055 -0.112910279  0.3028089891
+## mch                       0.05403986 -0.69027140  0.087386790  0.1799180887
+## mchc                      0.02280423 -0.55392227 -0.141009442  0.3404398098
+## mcv                       0.05441586 -0.53454171  0.191828591  0.0233207116
+## rdw                       0.33744043  0.24411938  0.119197478 -0.1538592625
+## leucocyte                 0.23464198  0.20181966 -0.461443491 -0.0004189803
+## platelets                -0.10757415  0.22695636 -0.279416696 -0.0867225624
+## neutrophils               0.14259222  0.13892791 -0.528725108 -0.5006385025
+## basophils                -0.11938196 -0.04007822  0.320882887  0.3481866648
+## lymphocyte               -0.22076603 -0.12632259  0.550206151  0.4794449340
+## pt                        0.28056540  0.37190432 -0.164753737 -0.0620408227
+## inr                       0.27891688  0.36767643 -0.155407858 -0.0650790475
+## nt_pro_bnp                0.55398080  0.09778268  0.116276389 -0.0076213419
+## creatine_kinase           0.06682307  0.03142546 -0.141177532  0.1100149869
+## creatinine                0.56966024  0.12568562  0.447903822  0.0368800105
+## urea_nitrogen             0.65085503  0.19179569  0.341940637 -0.1333378983
+## glucose                   0.04827023  0.16247097 -0.047026877  0.0240938819
+## blood_potassium           0.33166568  0.25633318  0.378786579  0.0297641095
+## blood_sodium             -0.20887997 -0.12909590 -0.008583072 -0.2970508521
+## blood_calcium            -0.23599460  0.25204149  0.318971662  0.0788230726
+## chloride                  0.20849506 -0.41635980 -0.251276306 -0.0627482140
+## anion_gap                 0.68628769  0.20587355  0.097193294  0.3828988134
+## magnesium_ion             0.20783582  0.13658310  0.207283011 -0.0803755041
+## ph                       -0.18913475 -0.13867178 -0.293603511  0.1718440184
+## bicarbonate              -0.70503334  0.23884302  0.230432292 -0.3656182777
+## lactic_acid               0.30401696  0.22495752 -0.195277022  0.3926850463
+## pco2                     -0.43693715  0.25760703  0.403227259 -0.4653029646
+## ef                       -0.18434007 -0.26854157 -0.002609225 -0.2976239513
+##                                Dim.5
+## heart_rate               -0.06151389
+## systolic_blood_pressure   0.21980664
+## diastolic_blood_pressure  0.13005109
+## respiratory_rate          0.08044240
+## temperature              -0.05361588
+## sp_o2                    -0.22650341
+## urine_output              0.02413758
+## hematocrit                0.37489667
+## rbc                       0.19312196
+## mch                       0.41806200
+## mchc                      0.29269240
+## mcv                       0.34986837
+## rdw                      -0.46462126
+## leucocyte                 0.19151879
+## platelets                 0.01502668
+## neutrophils               0.47035110
+## basophils                -0.30728196
+## lymphocyte               -0.45040607
+## pt                       -0.32997374
+## inr                      -0.32622521
+## nt_pro_bnp                0.06356329
+## creatine_kinase           0.02918418
+## creatinine                0.22161390
+## urea_nitrogen             0.28447024
+## glucose                   0.17806024
+## blood_potassium           0.15109416
+## blood_sodium             -0.04736755
+## blood_calcium             0.33244064
+## chloride                 -0.21326311
+## anion_gap                 0.26003168
+## magnesium_ion             0.32314412
+## ph                       -0.01637378
+## bicarbonate               0.06212000
+## lactic_acid              -0.08203611
+## pco2                      0.06452242
+## ef                        0.06966678</code></pre>
+<pre class="r"><code>#shown by correlation
+
+fviz_pca_var(res_pca_sign, col.var = &quot;contrib&quot;, gradient.cols = c(&quot;#00AFBB&quot;, &quot;#E7B800&quot;, &quot;#FC4E07&quot;))</code></pre>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-6-4.png" width="672" /></p>
+<pre class="r"><code>#based on above results (`var_com$coord`)
+#basically,
+#(a) positive correlated variables are grouped together,
+#(b) negative correlated variables are located on opposite sides of the origin,
+#(c) the distance between the variable and the origin measures the quality of the variable. Variables that are far from the origin are well represented.
+
+corrplot(var_sign$cos2, is.corr=FALSE)</code></pre>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-6-5.png" width="672" /></p>
+<pre class="r"><code>#shows the quality of variables.
+
+var_sign$contrib</code></pre>
+<pre><code>##                                Dim.1       Dim.2        Dim.3        Dim.4
+## heart_rate                0.01299803  0.12039099 6.110981e+00 4.512397e+00
+## systolic_blood_pressure   1.68253645  0.08460949 1.435093e+00 4.881952e-02
+## diastolic_blood_pressure  1.99169679  1.54072860 9.072668e-03 8.799605e+00
+## respiratory_rate          0.01966810  1.04575985 4.465515e+00 3.018741e+00
+## temperature               0.84124369  2.39989801 1.681628e+00 7.693679e-01
+## sp_o2                     1.48401526  2.75919724 4.038464e-02 1.094641e-01
+## urine_output              4.92461280  0.21313387 4.876200e-02 1.949906e+00
+## hematocrit                4.66775651  5.63474745 2.875031e-02 4.877964e+00
+## rbc                       4.38001753 12.63318090 5.056290e-01 3.892511e+00
+## mch                       0.07522028 15.46647523 3.028703e-01 1.374175e+00
+## mchc                      0.01339484  9.95976830 7.886085e-01 4.920090e+00
+## mcv                       0.07627069  9.27501865 1.459458e+00 2.308745e-02
+## rdw                       2.93292427  1.93444382 5.635068e-01 1.004939e+00
+## leucocyte                 1.41813655  1.32214332 8.445047e+00 7.452117e-06
+## platelets                 0.29807289  1.67200015 3.096490e+00 3.192689e-01
+## neutrophils               0.52371892  0.62651377 1.108728e+01 1.063998e+01
+## basophils                 0.36709973  0.05213969 4.083741e+00 5.146555e+00
+## lymphocyte                1.25536822  0.51798077 1.200649e+01 9.758203e+00
+## pt                        2.02756531  4.48966606 1.076553e+00 1.633983e-01
+## inr                       2.00380848  4.38816721 9.578797e-01 1.797938e-01
+## nt_pro_bnp                7.90489403  0.31036692 5.362263e-01 2.465785e-03
+## creatine_kinase           0.11501632  0.03205641 7.904897e-01 5.138023e-01
+## creatinine                8.35869422  0.51277016 7.956729e+00 5.773969e-02
+## urea_nitrogen            10.91126617  1.19406862 4.637314e+00 7.547438e-01
+## glucose                   0.06001578  0.85684670 8.771166e-02 2.464370e-02
+## blood_potassium           2.83339862  2.13285457 5.690550e+00 3.760782e-02
+## blood_sodium              1.12382896  0.54097415 2.921800e-03 3.745881e+00
+## blood_calcium             1.43453365  2.06203324 4.035239e+00 2.637540e-01
+## chloride                  1.11969093  5.62715885 2.504195e+00 1.671457e-01
+## anion_gap                12.13162687  1.37579167 3.746603e-01 6.223869e+00
+## magnesium_ion             1.11262140  0.60554376 1.704090e+00 2.742457e-01
+## ph                        0.92140227  0.62420577 3.418909e+00 1.253606e+00
+## bicarbonate              12.80341830  1.85172583 2.105968e+00 5.674769e+00
+## lactic_acid               2.38068678  1.64267871 1.512402e+00 6.546077e+00
+## pco2                      4.91750215  2.15410570 6.448591e+00 9.191026e+00
+## ef                        0.87527820  2.34085559 2.700151e-04 3.760349e+00
+##                               Dim.5
+## heart_rate               0.17066703
+## systolic_blood_pressure  2.17913834
+## diastolic_blood_pressure 0.76283607
+## respiratory_rate         0.29185910
+## temperature              0.12965523
+## sp_o2                    2.31394315
+## urine_output             0.02627790
+## hematocrit               6.33908203
+## rbc                      1.68215703
+## mch                      7.88287412
+## mchc                     3.86390193
+## mcv                      5.52093412
+## rdw                      9.73646602
+## leucocyte                1.65434465
+## platelets                0.01018426
+## neutrophils              9.97809244
+## basophils                4.25870286
+## lymphocyte               9.14980122
+## pt                       4.91090979
+## inr                      4.79996681
+## nt_pro_bnp               0.18222836
+## creatine_kinase          0.03841478
+## creatinine               2.21511971
+## urea_nitrogen            3.64986569
+## glucose                  1.43000360
+## blood_potassium          1.02967113
+## blood_sodium             0.10119640
+## blood_calcium            4.98461255
+## chloride                 2.05132600
+## anion_gap                3.04969011
+## magnesium_ion            4.70972675
+## ph                       0.01209208
+## bicarbonate              0.17404682
+## lactic_acid              0.30353817
+## pco2                     0.18776925
+## ef                       0.21890447</code></pre>
+<pre class="r"><code>#shown by contribution
+
+fviz_contrib(res_pca_sign, choice = &quot;var&quot;, axes = 1, top = 10)</code></pre>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-6-6.png" width="672" /></p>
+<pre class="r"><code>fviz_contrib(res_pca_sign, choice = &quot;var&quot;, axes = 1:5, top = 10)</code></pre>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-6-7.png" width="672" /></p>
+<pre class="r"><code>#colored individuals
+fviz_pca_ind(res_pca_sign,
+             geom.ind = &quot;point&quot;,
+             col.ind = as.character(mort_tidy$outcome),
+             palette = c(&quot;#00AFBB&quot;, &quot;#FC4E07&quot;),
+             addEllipses = TRUE,
+             legend.title = &quot;Groups&quot;)</code></pre>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-6-8.png" width="672" /></p>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

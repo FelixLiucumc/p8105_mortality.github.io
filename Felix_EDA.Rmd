@@ -21,6 +21,19 @@ mort_data =
   read_csv("mortality_data_cleaned.csv") |> 
   janitor::clean_names() |>
   select(-group, everything())
+
+convert_to_factor <- function(df, columns) {
+  df[columns] <- lapply(df[columns], factor)
+  return(df)
+}
+
+mort_tidy = 
+  read_csv("mortality_data_cleaned.csv") |>
+  janitor::clean_names()  |>
+  convert_to_factor(c("group", "gender", "outcome", "hypertensive", 
+                      "atrialfibrillation", "chd_with_no_mi", "diabetes", 
+                      "deficiencyanemias", "depression", "hyperlipemia", 
+                      "renal_failure", "copd"))
 ```
 
 
@@ -28,6 +41,9 @@ mort_data =
 #select patient outcome and complications
 com_data =
   mort_data |>
+  select(outcome, hypertensive:copd)
+com_tidy =
+  mort_tidy |>
   select(outcome, hypertensive:copd)
 #show correlation
 corrplot(cor(com_data), type = "upper", diag = FALSE)
@@ -44,25 +60,17 @@ Interpretation:\
 sign_data =
   mort_data |>
   select(outcome, heart_rate:ef)
+sign_tidy =
+  mort_tidy |>
+  select(outcome, heart_rate:ef)
 #show correlation
 corrplot(cor(sign_data), type = "upper", diag = FALSE)
 ```
 
 
 ```{r}
-#linear model for complications
-model_com = glm(outcome ~ ., data = com_data)
-summary(model_com)
-
-model_com_se = lm(outcome ~ ., data = com_data) |>
-  step(direction = "both", trace = FALSE)
-summary(model_com_se)
-```
-
-
-```{r}
 #generalized linear model for complications
-model_com_glm = glm(outcome ~ ., data = com_data)
+model_com_glm = glm(outcome ~ ., data = com_tidy, family = binomial(link = "logit"))
 summary(model_com_glm)
 
 model_com_glm_se = glm(outcome ~ ., data = com_data) |>
