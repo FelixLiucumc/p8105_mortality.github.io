@@ -34,6 +34,7 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
@@ -222,6 +223,9 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
 
 
@@ -325,7 +329,7 @@ div.tocify {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="introduction.html">Introduction</a>
+  <a href="Introduction.html">Introduction</a>
 </li>
 <li>
   <a href="Datasets.html">Data</a>
@@ -349,12 +353,6 @@ div.tocify {
   <a href="project_report.html">Report</a>
 </li>
 <li>
-  <a href="mailto:&lt;jy3360@cumc.columbia.edu&gt;">
-    <span class="fa fa-envelope fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="https://github.com/candicejiaruiyu/p8105_mortality.github.io">
     <span class="fa fa-github fa-lg"></span>
      
@@ -366,6 +364,14 @@ div.tocify {
 </div><!--/.navbar -->
 
 <div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
 
 
 
@@ -379,223 +385,347 @@ div.tocify {
 <pre class="r"><code>library(tidyverse)
 library(modelr)
 library(purrr)
-library(corrplot)</code></pre>
-<pre><code>## Warning: 程辑包&#39;corrplot&#39;是用R版本4.3.2 来建造的</code></pre>
-<pre class="r"><code>library(FactoMineR)</code></pre>
-<pre><code>## Warning: 程辑包&#39;FactoMineR&#39;是用R版本4.3.2 来建造的</code></pre>
-<pre class="r"><code>library(factoextra)</code></pre>
-<pre><code>## Warning: 程辑包&#39;factoextra&#39;是用R版本4.3.2 来建造的</code></pre>
-<pre class="r"><code>library(rpart)
-library(rpart.plot)</code></pre>
-<pre><code>## Warning: 程辑包&#39;rpart.plot&#39;是用R版本4.3.2 来建造的</code></pre>
-<pre class="r"><code>library(randomForest)</code></pre>
-<pre><code>## Warning: 程辑包&#39;randomForest&#39;是用R版本4.3.2 来建造的</code></pre>
-<pre class="r"><code>set.seed(1)</code></pre>
-<pre class="r"><code>#load mortality dataset
-mort_data =
-  read_csv(&quot;mortality_data_cleaned.csv&quot;) |&gt; 
-  janitor::clean_names() |&gt;
-  select(-group, everything())</code></pre>
-<pre><code>## Rows: 1176 Columns: 51
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## dbl (51): group, id, outcome, age, gender, bmi, hypertensive, atrialfibrilla...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre class="r"><code>convert_to_factor &lt;- function(df, columns) {
-  df[columns] &lt;- lapply(df[columns], factor)
-  return(df)
-}
+library(corrplot)
+library(FactoMineR)
+library(factoextra)
+library(rpart)
+library(rpart.plot)
+library(randomForest)
+library(party)
 
-mort_tidy = 
-  read_csv(&quot;mortality_data_cleaned.csv&quot;) |&gt;
-  janitor::clean_names()  |&gt;
-  convert_to_factor(c(&quot;group&quot;, &quot;gender&quot;, &quot;outcome&quot;, &quot;hypertensive&quot;, 
-                      &quot;atrialfibrillation&quot;, &quot;chd_with_no_mi&quot;, &quot;diabetes&quot;, 
-                      &quot;deficiencyanemias&quot;, &quot;depression&quot;, &quot;hyperlipemia&quot;, 
-                      &quot;renal_failure&quot;, &quot;copd&quot;))</code></pre>
-<pre><code>## Rows: 1176 Columns: 51
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## dbl (51): group, id, outcome, age, gender, bmi, hypertensive, atrialfibrilla...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre class="r"><code>#select patient outcome and complications
-com_data =
-  mort_data |&gt;
-  select(hypertensive:copd)
-
-com_tidy =
-  mort_tidy |&gt;
-  select(outcome, hypertensive:copd)
-
-#select patient outcome and vital signs
-sign_data =
-  mort_data |&gt;
-  select(heart_rate:ef)
-
-sign_tidy =
-  mort_tidy |&gt;
-  select(outcome, heart_rate:ef)</code></pre>
+set.seed(1)</code></pre>
+ 
+<div id="correlation-between-vital-signs" class="section level2">
+<h2>1. Correlation between Vital Signs</h2>
 <pre class="r"><code>#show correlation
-corrplot(cor(com_data), type = &quot;upper&quot;, diag = FALSE)</code></pre>
-<p><img src="preliminary_study_files/figure-html/unnamed-chunk-3-1.png" width="960" /></p>
-<p>Interpretation:<br />
-- <code>outcome</code> seems strongly connected with
-<code>deficiencyanemias</code>, <code>renal_failure</code>.  -
-<code>hypertensive</code> shows strong correlation with
-<code>hyperlipemia</code> and <code>renal_failure</code>.<br />
-- <code>diabetes</code> shows strong correlation with
-<code>renal_failure</code>.<br />
-- <code>hyperlipemia</code> also shows strong correlation with
-<code>renal_failure</code>.<br />
-</p>
-<pre class="r"><code>#show correlation
-corrplot(cor(sign_data), type = &quot;upper&quot;, diag = FALSE)</code></pre>
-<p><img src="preliminary_study_files/figure-html/unnamed-chunk-4-1.png" width="960" /></p>
-<pre class="r"><code>#decision tree
-tree_model = rpart(outcome ~ ., data = sign_tidy, method = &quot;class&quot;)
-print(tree_model)</code></pre>
+corrplot(cor(sign_tidy |&gt; select(-outcome)), type = &quot;upper&quot;, diag = FALSE)</code></pre>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-2-1.png" width="960" /></p>
+<ul>
+<li><p>The correlation plot illustrates the relationships between vital
+signs pairwise.</p></li>
+<li><p>Darker colors indicate stronger correlations, where blue
+signifies positive correlations and red signifies negative
+ones.</p></li>
+<li><p>Strong positive correlations were observed between variables such
+as <code>rbc</code> and <code>hematocrit</code>, <code>mcv</code> and
+<code>mch</code>, <code>inr</code> and <code>pt</code>,
+<code>pco2</code> and <code>bicarbonate</code>. Conversely, a strong
+negative correlation was found between <code>neutrophils</code> and
+<code>lymphocyte</code>.</p></li>
+<li><p>Strong positive correlations often suggest the potential for
+dimension reduction by merging these variables during
+selection.</p></li>
+</ul>
+ 
+</div>
+<div
+id="decision-trees-and-random-forests-dimension-reduction-and-core-variables-analysis"
+class="section level2">
+<h2>2. Decision Trees and Random Forests: Dimension Reduction and Core
+Variables Analysis</h2>
+ 
+<div id="analysis-of-patient-compllications-variables"
+class="section level3">
+<h3>Analysis of Patient Compllications Variables</h3>
+<pre class="r"><code>#decision tree for complications
+tree_com = ctree(outcome ~ ., data = com_tidy)
+plot(tree_com)</code></pre>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<ul>
+<li><p>The decision tree employed variables <code>renal_failure</code>
+and <code>atrialfibrillation</code> to predict the outcome, showing
+strong evidence (p&lt;0.05) for selecting these two variables.</p></li>
+<li><p>However, the probability distribution at the nodes suggests that
+this decision-making approach might not be sufficiently reliable. This
+could be due to the similar effects of each variable, making it
+challenging to determine the next variable for refining the decision.
+Alternatively, it might indicate insufficient evidence to support the
+selection of other variables (p-values not meeting the
+criteria).</p></li>
+<li><p>Furthermore, the binary nature of these patient complications
+variables posed certain challenges in constructing the classification
+tree, making characteristics of the variables hard to analyze.</p></li>
+</ul>
+<pre class="r"><code>#random forest for complications
+rf_com = randomForest(outcome ~ ., data = com_tidy)
+importance(rf_com) |&gt; knitr::kable(digits = 3)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">MeanDecreaseGini</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">hypertensive</td>
+<td align="right">3.707</td>
+</tr>
+<tr class="even">
+<td align="left">atrialfibrillation</td>
+<td align="right">5.391</td>
+</tr>
+<tr class="odd">
+<td align="left">chd_with_no_mi</td>
+<td align="right">3.851</td>
+</tr>
+<tr class="even">
+<td align="left">diabetes</td>
+<td align="right">3.871</td>
+</tr>
+<tr class="odd">
+<td align="left">deficiencyanemias</td>
+<td align="right">4.700</td>
+</tr>
+<tr class="even">
+<td align="left">depression</td>
+<td align="right">3.645</td>
+</tr>
+<tr class="odd">
+<td align="left">hyperlipemia</td>
+<td align="right">5.552</td>
+</tr>
+<tr class="even">
+<td align="left">renal_failure</td>
+<td align="right">4.855</td>
+</tr>
+<tr class="odd">
+<td align="left">copd</td>
+<td align="right">3.364</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>varImpPlot(rf_com)</code></pre>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<ul>
+<li><p>The random forest yielded a list of variables ranked by their
+importance based on <code>mean decrease in Gini index</code>, a
+parameter calculated by assessing the influence of variables on the
+nodes of the classification tree.</p></li>
+<li><p>In descending order of importance, the top 5 variables are:
+<code>hyperlipemia</code>, <code>atrialfibrillation</code>,
+<code>renal_failure</code>, <code>deficiencyanemias</code>,
+<code>diabetes</code>.</p></li>
+</ul>
+ 
+</div>
+<div id="analysis-of-patient-vital-signs-variables"
+class="section level3">
+<h3>Analysis of Patient Vital Signs Variables</h3>
+<pre class="r"><code>#decision tree for vital signs
+tree_sign_r = rpart(outcome ~ ., data = sign_tidy, method = &quot;class&quot;, control = rpart.control(cp = 0.02))
+print(tree_sign_r)</code></pre>
 <pre><code>## n= 1176 
 ## 
 ## node), split, n, loss, yval, (yprob)
 ##       * denotes terminal node
 ## 
-##   1) root 1176 159 0 (0.86479592 0.13520408)  
-##     2) anion_gap&lt; 16.92121 1051 108 0 (0.89724072 0.10275928)  
-##       4) blood_calcium&gt;=7.837088 933  75 0 (0.91961415 0.08038585)  
-##         8) lymphocyte&gt;=3.133333 890  60 0 (0.93258427 0.06741573)  
-##          16) ph&gt;=7.341548 714  33 0 (0.95378151 0.04621849) *
-##          17) ph&lt; 7.341548 176  27 0 (0.84659091 0.15340909)  
-##            34) magnesium_ion&lt; 2.63 168  22 0 (0.86904762 0.13095238)  
-##              68) urine_output&gt;=1110.5 122   9 0 (0.92622951 0.07377049) *
-##              69) urine_output&lt; 1110.5 46  13 0 (0.71739130 0.28260870)  
-##               138) ph&lt; 7.326111 35   5 0 (0.85714286 0.14285714) *
-##               139) ph&gt;=7.326111 11   3 1 (0.27272727 0.72727273) *
-##            35) magnesium_ion&gt;=2.63 8   3 1 (0.37500000 0.62500000) *
-##         9) lymphocyte&lt; 3.133333 43  15 0 (0.65116279 0.34883721)  
-##          18) rbc&gt;=2.956944 33   7 0 (0.78787879 0.21212121) *
-##          19) rbc&lt; 2.956944 10   2 1 (0.20000000 0.80000000) *
-##       5) blood_calcium&lt; 7.837088 118  33 0 (0.72033898 0.27966102)  
-##        10) lactic_acid&lt; 2.606667 101  21 0 (0.79207921 0.20792079) *
-##        11) lactic_acid&gt;=2.606667 17   5 1 (0.29411765 0.70588235) *
-##     3) anion_gap&gt;=16.92121 125  51 0 (0.59200000 0.40800000)  
-##       6) bicarbonate&gt;=19.68333 87  24 0 (0.72413793 0.27586207)  
-##        12) respiratory_rate&lt; 22.4221 47   5 0 (0.89361702 0.10638298) *
-##        13) respiratory_rate&gt;=22.4221 40  19 0 (0.52500000 0.47500000)  
-##          26) lymphocyte&gt;=10.25 17   3 0 (0.82352941 0.17647059) *
-##          27) lymphocyte&lt; 10.25 23   7 1 (0.30434783 0.69565217) *
-##       7) bicarbonate&lt; 19.68333 38  11 1 (0.28947368 0.71052632)  
-##        14) heart_rate&lt; 80.35606 15   6 0 (0.60000000 0.40000000) *
-##        15) heart_rate&gt;=80.35606 23   2 1 (0.08695652 0.91304348) *</code></pre>
-<pre class="r"><code>rpart.plot(tree_model)</code></pre>
-<p><img src="preliminary_study_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
-<pre class="r"><code>#rf
-rf_model = randomForest(outcome ~ ., data = sign_tidy)
-importance(rf_model)</code></pre>
-<pre><code>##                          MeanDecreaseGini
-## heart_rate                       6.859208
-## systolic_blood_pressure          6.937945
-## diastolic_blood_pressure         5.518282
-## respiratory_rate                 8.020710
-## temperature                      8.190226
-## sp_o2                            7.639249
-## urine_output                    10.685705
-## hematocrit                       5.515888
-## rbc                              6.495000
-## mch                              5.613478
-## mchc                             4.811632
-## mcv                              5.630671
-## rdw                              6.408361
-## leucocyte                       10.776052
-## platelets                        8.896284
-## neutrophils                      7.591088
-## basophils                        4.811617
-## lymphocyte                      11.706720
-## pt                               6.731306
-## inr                              7.424569
-## nt_pro_bnp                       6.389993
-## creatine_kinase                  5.551827
-## creatinine                       6.545176
-## urea_nitrogen                    8.977957
-## glucose                          6.127691
-## blood_potassium                  7.012943
-## blood_sodium                     7.283388
-## blood_calcium                    9.913167
-## chloride                         6.500830
-## anion_gap                       14.512110
-## magnesium_ion                    6.284564
-## ph                               8.190435
-## bicarbonate                     13.357985
-## lactic_acid                     12.173188
-## pco2                             6.051818
-## ef                               2.618589</code></pre>
-<pre class="r"><code>rfPermute::confusionMatrix(rf_model)</code></pre>
-<pre><code>##            0  1 pct.correct  LCI_0.95 UCI_0.95
-## 0       1013  4    99.60669 98.996047 99.89273
-## 1        136 23    14.46541  9.396128 20.91057
-## Overall   NA NA    88.09524 86.105969 89.89159</code></pre>
-<pre class="r"><code>summary(rf_model)</code></pre>
-<pre><code>## 
-## Call:
-##  randomForest(formula = outcome ~ ., data = sign_tidy) 
-##                Type of random forest: classification
-##                      Number of trees: 500
-## No. of variables tried at each split: 6
-## 
-##         OOB estimate of  error rate: 11.9%
-## Confusion matrix:
-##      0  1 class.error
-## 0 1013  4 0.003933137
-## 1  136 23 0.855345912</code></pre>
-<p><img src="preliminary_study_files/figure-html/unnamed-chunk-5-2.png" width="672" /></p>
-<pre class="r"><code>varImpPlot(rf_model)</code></pre>
-<p><img src="preliminary_study_files/figure-html/unnamed-chunk-5-3.png" width="672" /></p>
-<pre class="r"><code>library(party)</code></pre>
-<pre><code>## Warning: 程辑包&#39;party&#39;是用R版本4.3.2 来建造的</code></pre>
-<pre><code>## 载入需要的程辑包：grid</code></pre>
-<pre><code>## 载入需要的程辑包：mvtnorm</code></pre>
-<pre><code>## Warning: 程辑包&#39;mvtnorm&#39;是用R版本4.3.2 来建造的</code></pre>
-<pre><code>## 载入需要的程辑包：modeltools</code></pre>
-<pre><code>## 载入需要的程辑包：stats4</code></pre>
-<pre><code>## 载入需要的程辑包：strucchange</code></pre>
-<pre><code>## Warning: 程辑包&#39;strucchange&#39;是用R版本4.3.2 来建造的</code></pre>
-<pre><code>## 载入需要的程辑包：zoo</code></pre>
-<pre><code>## Warning: 程辑包&#39;zoo&#39;是用R版本4.3.2 来建造的</code></pre>
-<pre><code>## 
-## 载入程辑包：&#39;zoo&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:base&#39;:
-## 
-##     as.Date, as.Date.numeric</code></pre>
-<pre><code>## 载入需要的程辑包：sandwich</code></pre>
-<pre><code>## Warning: 程辑包&#39;sandwich&#39;是用R版本4.3.2 来建造的</code></pre>
-<pre><code>## 
-## 载入程辑包：&#39;strucchange&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:stringr&#39;:
-## 
-##     boundary</code></pre>
-<pre><code>## 
-## 载入程辑包：&#39;party&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
-## 
-##     where</code></pre>
-<pre class="r"><code>tree_com = ctree(outcome ~ ., data = com_tidy)
-plot(tree_com)</code></pre>
-<p><img src="preliminary_study_files/figure-html/unnamed-chunk-5-4.png" width="672" /></p>
-<pre class="r"><code>tree_sign = ctree(outcome ~ ., data = sign_tidy)
-plot(tree_sign)</code></pre>
-<p><img src="preliminary_study_files/figure-html/unnamed-chunk-5-5.png" width="672" /></p>
-<pre class="r"><code>#pca for vital signs
-sign_names = 
-  sign_data |&gt;
-  select(heart_rate:ef) |&gt;
-  colnames()
-
-#pca using R build-in function prcomp()
-vars_sign = sign_data[, sign_names]
-pca_res_sign = prcomp(vars_sign, scale. = TRUE)
+##  1) root 1176 159 Alive (0.86479592 0.13520408)  
+##    2) anion_gap&lt; 16.92121 1051 108 Alive (0.89724072 0.10275928)  
+##      4) blood_calcium&gt;=7.837088 933  75 Alive (0.91961415 0.08038585) *
+##      5) blood_calcium&lt; 7.837088 118  33 Alive (0.72033898 0.27966102)  
+##       10) lactic_acid&lt; 2.606667 101  21 Alive (0.79207921 0.20792079) *
+##       11) lactic_acid&gt;=2.606667 17   5 Death (0.29411765 0.70588235) *
+##    3) anion_gap&gt;=16.92121 125  51 Alive (0.59200000 0.40800000)  
+##      6) bicarbonate&gt;=19.68333 87  24 Alive (0.72413793 0.27586207)  
+##       12) respiratory_rate&lt; 22.4221 47   5 Alive (0.89361702 0.10638298) *
+##       13) respiratory_rate&gt;=22.4221 40  19 Alive (0.52500000 0.47500000)  
+##         26) lymphocyte&gt;=10.25 17   3 Alive (0.82352941 0.17647059) *
+##         27) lymphocyte&lt; 10.25 23   7 Death (0.30434783 0.69565217) *
+##      7) bicarbonate&lt; 19.68333 38  11 Death (0.28947368 0.71052632) *</code></pre>
+<pre class="r"><code>rpart.plot(tree_sign_r)</code></pre>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-5-1.png" width="960" /></p>
+<pre class="r"><code>tree_sign_c = ctree(outcome ~ ., data = sign_tidy)
+plot(tree_sign_c)</code></pre>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-5-2.png" width="960" /></p>
+<ul>
+<li><p>The analysis of continuous variables related to vital signs
+resulted in the successful establishment of classification criteria by
+the decision tree, incorporating a total of 7 variables. It formed a
+4-level classification structure with reasonably distributed
+probabilities across nodes.</p></li>
+<li><p>The primary level classification variable is
+<code>anion_gap</code>.</p></li>
+<li><p>The secondary level classification variables are
+<code>blood_calcium</code>, <code>bicarbonate</code>.</p></li>
+<li><p>The tertiary level classification variables are
+<code>lactic_acid</code>, <code>leucocyte</code>,
+<code>respiratory_rate</code>.</p></li>
+<li><p>The forth level classification variable is
+<code>pt</code>.</p></li>
+</ul>
+<pre class="r"><code>#random forest for vital signs
+rf_sign = randomForest(outcome ~ ., data = sign_tidy)
+importance(rf_sign) |&gt; knitr::kable(digits = 3)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">MeanDecreaseGini</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">heart_rate</td>
+<td align="right">7.350</td>
+</tr>
+<tr class="even">
+<td align="left">systolic_blood_pressure</td>
+<td align="right">7.044</td>
+</tr>
+<tr class="odd">
+<td align="left">diastolic_blood_pressure</td>
+<td align="right">5.303</td>
+</tr>
+<tr class="even">
+<td align="left">respiratory_rate</td>
+<td align="right">7.380</td>
+</tr>
+<tr class="odd">
+<td align="left">temperature</td>
+<td align="right">8.205</td>
+</tr>
+<tr class="even">
+<td align="left">sp_o2</td>
+<td align="right">7.740</td>
+</tr>
+<tr class="odd">
+<td align="left">urine_output</td>
+<td align="right">10.679</td>
+</tr>
+<tr class="even">
+<td align="left">hematocrit</td>
+<td align="right">5.438</td>
+</tr>
+<tr class="odd">
+<td align="left">rbc</td>
+<td align="right">6.804</td>
+</tr>
+<tr class="even">
+<td align="left">mch</td>
+<td align="right">5.536</td>
+</tr>
+<tr class="odd">
+<td align="left">mchc</td>
+<td align="right">4.423</td>
+</tr>
+<tr class="even">
+<td align="left">mcv</td>
+<td align="right">5.861</td>
+</tr>
+<tr class="odd">
+<td align="left">rdw</td>
+<td align="right">5.934</td>
+</tr>
+<tr class="even">
+<td align="left">leucocyte</td>
+<td align="right">10.877</td>
+</tr>
+<tr class="odd">
+<td align="left">platelets</td>
+<td align="right">9.689</td>
+</tr>
+<tr class="even">
+<td align="left">neutrophils</td>
+<td align="right">7.897</td>
+</tr>
+<tr class="odd">
+<td align="left">basophils</td>
+<td align="right">4.559</td>
+</tr>
+<tr class="even">
+<td align="left">lymphocyte</td>
+<td align="right">11.767</td>
+</tr>
+<tr class="odd">
+<td align="left">pt</td>
+<td align="right">6.454</td>
+</tr>
+<tr class="even">
+<td align="left">inr</td>
+<td align="right">7.150</td>
+</tr>
+<tr class="odd">
+<td align="left">nt_pro_bnp</td>
+<td align="right">6.092</td>
+</tr>
+<tr class="even">
+<td align="left">creatine_kinase</td>
+<td align="right">5.432</td>
+</tr>
+<tr class="odd">
+<td align="left">creatinine</td>
+<td align="right">6.756</td>
+</tr>
+<tr class="even">
+<td align="left">urea_nitrogen</td>
+<td align="right">9.399</td>
+</tr>
+<tr class="odd">
+<td align="left">glucose</td>
+<td align="right">6.103</td>
+</tr>
+<tr class="even">
+<td align="left">blood_potassium</td>
+<td align="right">6.804</td>
+</tr>
+<tr class="odd">
+<td align="left">blood_sodium</td>
+<td align="right">7.324</td>
+</tr>
+<tr class="even">
+<td align="left">blood_calcium</td>
+<td align="right">10.481</td>
+</tr>
+<tr class="odd">
+<td align="left">chloride</td>
+<td align="right">6.719</td>
+</tr>
+<tr class="even">
+<td align="left">anion_gap</td>
+<td align="right">13.770</td>
+</tr>
+<tr class="odd">
+<td align="left">magnesium_ion</td>
+<td align="right">6.359</td>
+</tr>
+<tr class="even">
+<td align="left">ph</td>
+<td align="right">7.745</td>
+</tr>
+<tr class="odd">
+<td align="left">bicarbonate</td>
+<td align="right">13.580</td>
+</tr>
+<tr class="even">
+<td align="left">lactic_acid</td>
+<td align="right">12.400</td>
+</tr>
+<tr class="odd">
+<td align="left">pco2</td>
+<td align="right">6.011</td>
+</tr>
+<tr class="even">
+<td align="left">ef</td>
+<td align="right">2.685</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>varImpPlot(rf_sign)</code></pre>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<ul>
+<li><p>Ranked by the <code>mean decrease gini</code>, the top 5
+variables are: <code>anion_gap</code>, <code>bicarbonate</code>,
+<code>lactic_acid</code>, <code>lymphocyte</code>,
+<code>leucocyte</code>.</p></li>
+<li><p>The results obtained from the random forest exhibit a overlap
+with the decision tree outcomes. In fact, random forest is an extension
+of decision trees that address over-fitting issues inherent in decision
+tree model. Therefore, we tend to prioritize the key variables
+identified by the random forest.</p></li>
+</ul>
+<pre class="r"><code>#pca using R build-in function prcomp()
+pca_res_sign = prcomp(sign_tidy |&gt; select(-outcome), scale. = TRUE)
 summary(pca_res_sign)</code></pre>
 <pre><code>## Importance of components:
 ##                           PC1     PC2     PC3     PC4     PC5     PC6     PC7
@@ -623,11 +753,11 @@ summary(pca_res_sign)</code></pre>
 ## Proportion of Variance 0.00002
 ## Cumulative Proportion  1.00000</code></pre>
 <pre class="r"><code>#pca using packages `FactoMineR`, `factoextra`
-res_pca_sign = PCA(sign_data, scale.unit = TRUE, graph = TRUE)</code></pre>
-<p><img src="preliminary_study_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+res_pca_sign = PCA(sign_tidy |&gt; select(-outcome), scale.unit = TRUE, graph = TRUE)</code></pre>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <pre><code>## Warning: ggrepel: 10 unlabeled data points (too many overlaps). Consider
 ## increasing max.overlaps</code></pre>
-<p><img src="preliminary_study_files/figure-html/unnamed-chunk-6-2.png" width="672" /></p>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-7-2.png" width="672" /></p>
 <pre class="r"><code>#PCA() function would do the data standardization automatically.
 #keep 5 dimensions as result.
 
@@ -673,7 +803,7 @@ get_eigenvalue(res_pca_sign)</code></pre>
 
 #scree plot
 fviz_eig(res_pca_sign, addlabels = TRUE, ylim = c(0, 20))</code></pre>
-<p><img src="preliminary_study_files/figure-html/unnamed-chunk-6-3.png" width="672" /></p>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-7-3.png" width="672" /></p>
 <pre class="r"><code>#visualize the contributions of each dimension.
 
 #result
@@ -756,7 +886,7 @@ var_sign$coord</code></pre>
 <pre class="r"><code>#shown by correlation
 
 fviz_pca_var(res_pca_sign, col.var = &quot;contrib&quot;, gradient.cols = c(&quot;#00AFBB&quot;, &quot;#E7B800&quot;, &quot;#FC4E07&quot;))</code></pre>
-<p><img src="preliminary_study_files/figure-html/unnamed-chunk-6-4.png" width="672" /></p>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-7-4.png" width="672" /></p>
 <pre class="r"><code>#based on above results (`var_com$coord`)
 #basically,
 #(a) positive correlated variables are grouped together,
@@ -764,7 +894,7 @@ fviz_pca_var(res_pca_sign, col.var = &quot;contrib&quot;, gradient.cols = c(&quo
 #(c) the distance between the variable and the origin measures the quality of the variable. Variables that are far from the origin are well represented.
 
 corrplot(var_sign$cos2, is.corr=FALSE)</code></pre>
-<p><img src="preliminary_study_files/figure-html/unnamed-chunk-6-5.png" width="672" /></p>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-7-5.png" width="672" /></p>
 <pre class="r"><code>#shows the quality of variables.
 
 var_sign$contrib</code></pre>
@@ -845,17 +975,19 @@ var_sign$contrib</code></pre>
 <pre class="r"><code>#shown by contribution
 
 fviz_contrib(res_pca_sign, choice = &quot;var&quot;, axes = 1, top = 10)</code></pre>
-<p><img src="preliminary_study_files/figure-html/unnamed-chunk-6-6.png" width="672" /></p>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-7-6.png" width="672" /></p>
 <pre class="r"><code>fviz_contrib(res_pca_sign, choice = &quot;var&quot;, axes = 1:5, top = 10)</code></pre>
-<p><img src="preliminary_study_files/figure-html/unnamed-chunk-6-7.png" width="672" /></p>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-7-7.png" width="672" /></p>
 <pre class="r"><code>#colored individuals
 fviz_pca_ind(res_pca_sign,
              geom.ind = &quot;point&quot;,
-             col.ind = as.character(mort_tidy$outcome),
+             col.ind = as.character(sign_tidy$outcome),
              palette = c(&quot;#00AFBB&quot;, &quot;#FC4E07&quot;),
              addEllipses = TRUE,
              legend.title = &quot;Groups&quot;)</code></pre>
-<p><img src="preliminary_study_files/figure-html/unnamed-chunk-6-8.png" width="672" /></p>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-7-8.png" width="672" /></p>
+</div>
+</div>
 
 
 
@@ -892,6 +1024,11 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
 <script>
 $(document).ready(function ()  {
