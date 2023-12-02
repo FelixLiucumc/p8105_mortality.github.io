@@ -214,7 +214,7 @@ renderPlotly({
             text = ~paste(Count, "cases"), 
             hoverinfo = 'text+x+y') %>%
       layout(title = paste("Distribution of", formattedVarName, "by Outcome"),
-             yaxis = list(title = "Percentage", tickformat = ",.0%"),
+             yaxis = list(title = "Count"),
              xaxis = list(title = formattedVarName),
              barmode = 'stack')
   })
