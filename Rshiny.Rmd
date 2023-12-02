@@ -65,7 +65,7 @@ formatVarName <- function(variable) {
 ```
 
 
-Demographic Characteristics
+Vital Sign
 ===================================== 
 
 Column {.sidebar}
