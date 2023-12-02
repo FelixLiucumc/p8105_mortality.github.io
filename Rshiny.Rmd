@@ -12,49 +12,23 @@ library(flexdashboard)
 library(tidyverse)
 library(plotly)
 library(shiny)
-```
+library(data.table)
+library(reshape2)
 
+# read the data
+mortality_data <- 
+  read_csv("mortality_data_cleaned.csv")
 
-```{r,include=FALSE}
+# Change the factor variables for EDA 
 
-# Define a function to convert multiple columns to factors
-convert_to_factor <- function(df, columns) {
-  df[columns] <- lapply(df[columns], factor)
-  return(df)
-}
-
-# Load the data and preprocess it
-mortality_data <- read_csv("mortality_data.csv") %>%
-  janitor::clean_names() %>%
-  drop_na(outcome) %>%
-  convert_to_factor(., c("group", "gendera", "outcome", "hypertensive", 
+col_names <- c("group", "outcome", "hypertensive", 
                          "atrialfibrillation", "chd_with_no_mi", "diabetes", 
                          "deficiencyanemias", "depression", "hyperlipemia", 
-                         "renal_failure", "copd")) %>%
-  rename(gender = gendera)  # Rename gendera to gender after conversion
+                         "renal_failure", "copd")
+
+mortality_data[,col_names] <- lapply(mortality_data[,col_names] , factor)
 
 
-# Imputing numerical columns with mean value 
-numerical_columns <- sapply(mortality_data, is.numeric)
-mortality_data[numerical_columns] <- lapply(mortality_data[numerical_columns], function(x) {
-   ifelse(is.na(x), mean(x, na.rm = TRUE), x)
-})
-
-write_csv(mortality_data, "mortality_data_cleaned.csv")
-
-mortality_data_EDA <- mortality_data %>%
-  mutate(
-    group = recode(group, `1` = "Group 1", `2` = "Group 2"),
-    gender = recode(gender, `1` = "Male", `2` = "Female"),
-    outcome = recode(outcome, `0` = "Alive", `1` = "Death")
-  ) %>%
-  mutate_if(is.factor, as.character)
-
-  
-```
-
-```{r,include=FALSE}
-# Change the factor variables for EDA 
 # Manually recoding factors to their meaningful character values
 mortality_data_EDA <- mortality_data %>%
   mutate(
@@ -79,6 +53,14 @@ comorbidity_columns <- c("hypertensive", "atrialfibrillation", "chd_with_no_mi",
 # Apply the function to the mortality_data_EDA dataframe
 mortality_data_EDA <- convert_factors_to_yes_no(mortality_data_EDA, comorbidity_columns)
 
+
+# function to correct the title format 
+formatVarName <- function(variable) {
+  variable <- gsub("_", " ", variable)  # Replace underscores with spaces
+  variable <- tools::toTitleCase(variable)  # Capitalize the first letter of each word
+  return(variable)
+}
+
 ```
 
 
@@ -91,130 +73,47 @@ Column {.sidebar}
 
 ```{r}
 selectInput(
-    inputId = "char_index",
-    label = h3("Select Index"),
-    choices = c("age", "gender", "bmi"),
-    selected = "age"
-  )
-```
-
-
-
-
-Row{data-height=650}
------------------------------------------------------------------------
-
-### Demographic Characteristics
-
-```{r}
-renderPlotly({
-
-variable <- input$char_index
-    plot_ly(mortality_data_EDA %>% drop_na(.data[[variable]]), 
-            x = ~.data[[variable]], color = ~as.factor(outcome),
-            type = "scatter", mode = "lines", fill = "tozeroy") %>%
-      layout(title = paste(variable, "Levels by Outcome"),
-             xaxis = list(title = variable),
-             yaxis = list(title = "Density"))
-  
-})
-
-```
-
-Row {.tabset .tabset-fade}
--------------------------------------
-
-
-### Description
-
-
-This is the world map showing the life expectancy (years) of each country from 2000 to 2016. 
-
-\ \par
-Take the year of 2015 as an example,
-
-\ \par
-  * North America, Western and Northern Europe, Japan, New Zealand and Australia show longer life expectancy compared with other regions.
-  
-\ \par
-  * Central and Southern Africa have relatively shorter life expectancy because the color is lighter,
-  
-### Boxplot
-
-```{r}
-renderPlotly({
-  variable <- input$char_index
-  
-  plot_ly(mortality_data_EDA %>% drop_na(.data[[variable]]), 
-          x = ~as.factor(outcome),
-          y = ~.data[[variable]],
-          type = "box") %>%
-    layout(title = paste(variable, "Levels by Outcome"),
-           xaxis = list(title = "Outcome"),
-           yaxis = list(title = variable))
-})
-
-```
-
-
-Vital Signs
-===================================== 
-
-Column {.sidebar}
------------------------------------------------------------------------
-
-
-```{r}
-selectInput(
     inputId = "vital_sign_index_x",
     label = h3("Select Index"),
-    choices = c("heart_rate", "systolic_blood_pressure", "diastolic_blood_pressure", "respiratory_rate", "temperature", "sp_o2", "urine_output"),
-    selected = "systolic_blood_pressure"
+    choices = c("Heart Rate" = "heart_rate", 
+                "Systolic Blood Pressure" = "systolic_blood_pressure", 
+                "Diastolic Blood Pressure" = "diastolic_blood_pressure", 
+                "Respiratory Rate" = "respiratory_rate", 
+                "Temperature" = "temperature", 
+                "SpO2" = "sp_o2", 
+                "Urine Output" = "urine_output"),
+    selected = "heart_rate"
   )
-
 
 ```
 
-```{r}
-selectInput(
-    inputId = "vital_sign_index_y",
-    label = h3("Select Index"),
-    choices = c("heart_rate", "systolic_blood_pressure", "diastolic_blood_pressure", "respiratory_rate", "temperature", "sp_o2", "urine_output"),
-    selected = "diastolic_blood_pressure"
-  )
 
-
-```
 
 
 Row{data-height=650}
 -----------------------------------------------------------------------
 
-### Vital Signs
+### Vital Sign
 
 ```{r}
+
 renderPlotly({
-
-  vital_sign_index_x <- input$vital_sign_index_x
-  vital_sign_index_y <- input$vital_sign_index_y
-
+    variable <- input$vital_sign_index_x
+    formattedVarName <- formatVarName(variable)
   
-  plot_ly(mortality_data_EDA %>% drop_na(.data[[vital_sign_index_x, vital_sign_index_y]]), 
-          x = ~.data[[vital_sign_index_x]], 
-          y = ~.data[[vital_sign_index_y]], 
-          color = ~as.factor(outcome),
-          type = "scatter",
-          mode = "markers",
-          marker = list(size = 8, opacity = 0.5)) %>%
-    layout(title = paste(vital_sign_index_x, "vs", vital_sign_index_y, "by Outcome"),
-           xaxis = list(title = vital_sign_index_x),
-           yaxis = list(title = vital_sign_index_y))
-  
-})
+    plot_ly(data = mortality_data_EDA %>% drop_na(.data[[variable]]),
+            x = ~.data[[variable]],
+            color = ~as.factor(outcome),
+            type = 'histogram',
+            opacity = 0.6) %>%
+      layout(barmode = "overlay",
+             title = paste(formattedVarName, "Levels by Outcome"),
+             xaxis = list(title = formattedVarName),
+             yaxis = list(title = "Density"))
+  })
+
 
 ```
-
-
 
 Row {.tabset .tabset-fade}
 -------------------------------------
@@ -238,18 +137,22 @@ Take the year of 2015 as an example,
 
 ```{r}
 renderPlotly({
-  variable <- input$vital_sign_index
+  variable <- input$vital_sign_index_x
+  formattedVarName <- formatVarName(variable)
   
   plot_ly(mortality_data_EDA %>% drop_na(.data[[variable]]), 
           x = ~as.factor(outcome),
           y = ~.data[[variable]],
+          color = ~as.factor(outcome),
           type = "box") %>%
-    layout(title = paste(variable, "Levels by Outcome"),
+    layout(title = paste(formattedVarName, "Levels by Outcome"),
            xaxis = list(title = "Outcome"),
-           yaxis = list(title = variable))
+           yaxis = list(title = formattedVarName))
 })
 
 ```
+
+
 
 Comorbidities
 ===================================== 
@@ -257,21 +160,19 @@ Comorbidities
 Column {.sidebar}
 -----------------------------------------------------------------------
 
-
-```{r}
-selectInput(
-    inputId = "como_index_x",
-    label = h3("Select Index"),
-    choices = c("hypertensive", "atrialfibrillation", "chd_with_no_mi", "diabetes", "depression", "hyperlipemia", "hyperlipemia", "copd"),
-    selected = "diabetes"
-  )
-```
-
 ```{r}
 selectInput(
     inputId = "como_index_y",
-    label = h3("Select Index"),
-    choices = c("hypertensive", "atrialfibrillation", "chd_with_no_mi", "diabetes", "depression", "hyperlipemia", "hyperlipemia", "copd"),
+    label = h3("Select Comorbidity"),
+    choices = c("Hypertensive" = "hypertensive", 
+                "Atrialfibrillation" = "atrialfibrillation", 
+                "CHD with no MI"= "chd_with_no_mi",
+                "Diabetes" = "diabetes", 
+                "Deficiencyanemias"= "deficiencyanemias", 
+                "Depression"= "depression", 
+                "Hyperlipemia"= "hyperlipemia", 
+                "Renal Failure"= "renal_failure", 
+                "COPD"= "copd"),
     selected = "depression"
   )
 
@@ -285,24 +186,56 @@ Row{data-height=650}
 ### Comorbidities
 
 ```{r}
+comorbidities <- c("hypertensive", "atrialfibrillation", "chd_with_no_mi", 
+                         "diabetes", "deficiencyanemias", "depression", 
+                         "hyperlipemia", "renal_failure", "copd")
+
 renderPlotly({
-    como_index_x <- input$como_index_x
-  como_index_y <- input$como_index_y
-  
-  plot_ly() %>%
-    add_histogram(data = mortality_data_EDA, x = ~.data[[como_index_x]], 
-                  color = ~as.factor(outcome), 
-                  opacity = 0.5, 
-                  name = "Outcome 1") %>%
-    add_histogram(data = mortality_data_EDA, x = ~.data[[como_index_y]], 
-                  color = ~as.factor(outcome), 
-                  opacity = 0.5, 
-                  name = "Outcome 2") %>%
-    layout(barmode = "overlay",
-           title = paste("Histograms of", como_index_x, "and", como_index_y, "by Outcome"),
-           xaxis = list(title = "Values"),
-           yaxis = list(title = "Frequency"))
-})
+    variable <- input$como_index_y
+    formattedVarName <- formatVarName(variable)
+    # Melt the data into a long format for plotting
+    mortality_long <- melt(mortality_data_EDA, id.vars = "outcome", measure.vars = comorbidities)
+    
+    # Filter for the selected comorbidity
+    filtered_data <- mortality_long %>% 
+      filter(variable == input$como_index_y) %>%
+      mutate(Count = ifelse(value == "Yes", 1, 0)) %>%
+      group_by(outcome, variable) %>%
+      summarise(Yes = sum(Count), No = n() - sum(Count)) %>%
+      gather(key = "Presence", value = "Count", -outcome, -variable)
+    
+    # Create the stacked bar chart
+    plot_ly(data = filtered_data, 
+            x = ~outcome, 
+            y = ~Count, 
+            color = ~Presence, 
+            type = 'bar', 
+            text = ~paste(Count, "cases"), 
+            hoverinfo = 'text+x+y') %>%
+      layout(title = paste("Distribution of", formattedVarName, "by Outcome"),
+             yaxis = list(title = "Percentage", tickformat = ",.0%"),
+             xaxis = list(title = formattedVarName),
+             barmode = 'stack')
+  })
+```
+
+
+```{r eval=FALSE}
+renderPlotly({
+  variable <- input$como_index_y
+  formattedVarName <- formatVarName(variable)
+
+    # Create the stacked bar chart
+    plot_ly(data = mortality_long, 
+            x = ~variable, 
+            y = ~value, 
+            color = ~outcome, 
+            type = 'bar', 
+            text = ~paste(value, "cases")) %>%
+      layout(yaxis = list(title = "Count"), 
+             barmode = 'stack', 
+             xaxis = list(title = ""))
+  })
 
 ```
 
@@ -324,24 +257,7 @@ Take the year of 2015 as an example,
 \ \par
   * Central and Southern Africa have relatively shorter life expectancy because the color is lighter,
   
-### Boxplot
 
-```{r}
-renderPlotly({
-  como_index_x <- input$como_index_x
- como_index_y <- input$como_index_y
-  
-  plot_ly() %>%
-    add_boxplot(data = mortality_data_EDA, x = ~as.factor(outcome), y = ~.data[[como_index_x]], 
-                name = como_index_x, boxpoints = "all", jitter = 0.3, pointpos = -1.8) %>%
-    add_boxplot(data = mortality_data_EDA, x = ~as.factor(outcome), y = ~.data[[como_index_y]], 
-                name = como_index_y, boxpoints = "all", jitter = 0.3, pointpos = -0.6) %>%
-    layout(title = paste("Box Plots of", como_index_x, "and", como_index_y, "by Outcome"),
-           xaxis = list(title = "Outcome"),
-           yaxis = list(title = "Values"))
-})
-
-```
 
 Lab Results Analysis
 ===================================== 
@@ -354,10 +270,15 @@ Column {.sidebar}
 selectInput(
     inputId = "index",
     label = h3("Select Index"),
-    choices = c("creatinine", "lactic_acid", "urea_nitrogen", "leucocyte", "glucose", "anion_gap", "pco2"),
+    choices = c("Creatinine" = "creatinine", 
+                "Lactic Acid" = "lactic_acid", 
+                "Urea Nitrogen" = "urea_nitrogen", 
+                "Leucocyte" = "leucocyte", 
+                "Glucose" = "glucose", 
+                "Anion Gap" = "anion_gap", 
+                "PCO2" = "pco2"),
     selected = "creatinine"
   )
-
 
 ```
 
@@ -370,17 +291,23 @@ Row{data-height=650}
 ### Lab Results Analysis
 
 ```{r}
-renderPlotly({
 
-variable <- input$index
-    plot_ly(mortality_data_EDA %>% drop_na(all_of(variable)), 
-            x = ~.data[[variable]], color = ~as.factor(outcome),
-            type = "scatter", mode = "lines", fill = "tozeroy") %>%
-      layout(title = paste(variable, "Levels by Outcome"),
-             xaxis = list(title = variable),
-             yaxis = list(title = "Density"))
+renderPlotly({
+    variable <- input$index
+    formattedVarName <- formatVarName(variable)
   
-})
+    plot_ly(data = mortality_data_EDA %>% drop_na(.data[[variable]]),
+            x = ~.data[[variable]],
+            color = ~as.factor(outcome),
+            type = 'histogram',
+            opacity = 0.6) %>%
+      layout(barmode = "overlay",
+             title = paste(formattedVarName, "Levels by Outcome"),
+             xaxis = list(title = formattedVarName),
+             yaxis = list(title = "Density"))
+  })
+
+
 
 ```
 
@@ -407,14 +334,16 @@ Take the year of 2015 as an example,
 ```{r}
 renderPlotly({
   variable <- input$index
+  formattedVarName <- formatVarName(variable)
   
   plot_ly(mortality_data_EDA %>% drop_na(.data[[variable]]), 
           x = ~as.factor(outcome),
           y = ~.data[[variable]],
+          color = ~as.factor(outcome),
           type = "box") %>%
-    layout(title = paste(variable, "Levels by Outcome"),
+    layout(title = paste(formattedVarName, "Levels by Outcome"),
            xaxis = list(title = "Outcome"),
-           yaxis = list(title = variable))
+           yaxis = list(title = formattedVarName))
 })
 
 ```

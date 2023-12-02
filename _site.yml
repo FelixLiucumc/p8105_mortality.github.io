@@ -4,7 +4,7 @@ navbar:
   title: "Home"
   right:
     - text: "Introduction"
-      href: introduction.html
+      href: Introduction.html
     - text: "Data"
       href: Datasets.html
     - text: "Prelimary Analysis"
@@ -19,10 +19,10 @@ navbar:
       href: https://7lx8uo-txbrook.shinyapps.io/map_dashboard/#section-life-expectancy
     - text: "Report"
       href: project_report.html
-    - icon: fa-envelope fa-lg
-      href: mailto:<jy3360@cumc.columbia.edu>
     - icon: fa-github fa-lg
       href: https://github.com/candicejiaruiyu/p8105_mortality.github.io
 output:
   html_document:
     theme: cosmo
+    
+    

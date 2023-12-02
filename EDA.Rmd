@@ -122,6 +122,20 @@ ggplot(mortality_data_EDA, aes(x = gender, y = age, fill = outcome)) +
 
 The boxplots show the age distribution for different genders and outcomes. We see that for both genders, the age distribution for patients who did not survive (outcome 1) is slightly higher. This could indicate that older age is a risk factor for mortality in this patient group.
 
+### BMI by Gender and Outcome
+
+The histogram below illustrates the distribution of Body Mass Index (BMI) across patients with heart failure, categorized by gender and outcome (Alive vs. Death).
+
+```{r, fig.width = 9, fig.height = 6}
+# BMI by Gender and Outcome
+ggplot(mortality_data_EDA %>% drop_na(bmi), aes(x = bmi, fill = as.factor(outcome))) +
+  geom_histogram(binwidth = 4, position = "dodge") +
+  facet_wrap(~gender) +
+  ggtitle("BMI by Gender and Outcome")
+
+```
+
+It shows a wide range of BMI values for both genders, with no clear pattern indicating that BMI is distinctly associated with the outcome. However, there are more data points for BMI for outcome "Alive", which may suggest a higher survival rate for patients with a lower BMI, but further statistical analysis is needed.
 
 ## Comorbidities Analysis
 
@@ -187,21 +201,6 @@ ggplot(mortality_data_EDA, aes(x = heart_rate, fill = as.factor(outcome))) +
 ```
 
 The density plot for heart rate shows that the distribution of heart rates for patients who did not survive is slightly shifted towards the higher end compared to those who survived. This could suggest that a higher heart rate is associated with a higher risk of mortality.
-
-### BMI by Gender and Outcome
-
-The histogram below illustrates the distribution of Body Mass Index (BMI) across patients with heart failure, categorized by gender and outcome (Alive vs. Death).
-
-```{r, fig.width = 9, fig.height = 6}
-# BMI by Gender and Outcome
-ggplot(mortality_data_EDA %>% drop_na(bmi), aes(x = bmi, fill = as.factor(outcome))) +
-  geom_histogram(binwidth = 4, position = "dodge") +
-  facet_wrap(~gender) +
-  ggtitle("BMI by Gender and Outcome")
-
-```
-
-It shows a wide range of BMI values for both genders, with no clear pattern indicating that BMI is distinctly associated with the outcome. However, there are more data points for BMI for outcome "Alive", which may suggest a higher survival rate for patients with a lower BMI, but further statistical analysis is needed.
 
 ### Blood Pressure by Outcome
 ```{r}
