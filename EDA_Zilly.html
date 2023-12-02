@@ -31,7 +31,11 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
@@ -220,7 +224,73 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
 
 
 
@@ -230,6 +300,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -250,16 +330,31 @@ $(document).ready(function () {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="about.html">About</a>
+  <a href="Introduction.html">Introduction</a>
 </li>
 <li>
-  <a href="mailto:&lt;you@youremail.com&gt;">
-    <span class="fa fa-envelope fa-lg"></span>
-     
-  </a>
+  <a href="Datasets.html">Data</a>
 </li>
 <li>
-  <a href="http://github.com/&lt;YOUR_GH_NAME&gt;/">
+  <a href="analysis.html">Prelimary Analysis</a>
+</li>
+<li>
+  <a href="EDA.html">EDA</a>
+</li>
+<li>
+  <a href="regression_model.html">Regression</a>
+</li>
+<li>
+  <a href="conclusion.html">Conclusion</a>
+</li>
+<li>
+  <a href="https://7lx8uo-txbrook.shinyapps.io/map_dashboard/#section-life-expectancy">Shiny App</a>
+</li>
+<li>
+  <a href="project_report.html">Report</a>
+</li>
+<li>
+  <a href="https://github.com/candicejiaruiyu/p8105_mortality.github.io">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -271,6 +366,14 @@ $(document).ready(function () {
 
 <div id="header">
 
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
 
 
 <h1 class="title toc-ignore">EDA_Zilly</h1>
@@ -280,26 +383,17 @@ $(document).ready(function () {
 </div>
 
 
-<pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-## ✔ dplyr     1.1.3     ✔ readr     2.1.4
-## ✔ forcats   1.0.0     ✔ stringr   1.5.0
-## ✔ ggplot2   3.4.3     ✔ tibble    3.2.1
-## ✔ lubridate 1.9.2     ✔ tidyr     1.3.0
-## ✔ purrr     1.0.2     
-## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-## ✖ dplyr::filter() masks stats::filter()
-## ✖ dplyr::lag()    masks stats::lag()
-## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
-<pre class="r"><code>library(stargazer)</code></pre>
-<pre><code>## 
-## Please cite as: 
-## 
-##  Hlavac, Marek (2022). stargazer: Well-Formatted Regression and Summary Statistics Tables.
-##  R package version 5.2.3. https://CRAN.R-project.org/package=stargazer</code></pre>
-<pre class="r"><code>library(ROCR)</code></pre>
-<div id="import-data" class="section level1">
-<h1>Import data</h1>
+<pre class="r"><code>library(tidyverse)
+library(stargazer)
+library(ROCR)</code></pre>
+<div id="about-regression" class="section level1">
+<h1>About Regression</h1>
+<p>In this section, we want to generate a generalized linear model to
+see the relationship between patients’ mortality status and predictive
+variables.</p>
+</div>
+<div id="data-pre-processing" class="section level1">
+<h1>Data Pre-processing</h1>
 <pre class="r"><code>convert_to_factor &lt;- function(df, columns) {
   df[columns] &lt;- lapply(df[columns], factor)
   return(df)
@@ -313,7 +407,7 @@ mortality_cleaned =
                       &quot;deficiencyanemias&quot;, &quot;depression&quot;, &quot;hyperlipemia&quot;, 
                       &quot;renal_failure&quot;, &quot;copd&quot;))</code></pre>
 <pre><code>## Rows: 1176 Columns: 51
-## ── Column specification ────────────────────────────────────────────────────────
+## ── Column specification ───────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## dbl (51): group, id, outcome, age, gender, bmi, hypertensive, atrialfibrilla...
 ## 
@@ -625,6 +719,8 @@ auc = performance(pred, measure = &quot;auc&quot;)@y.values[[1]]</code></pre>
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -656,7 +752,41 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

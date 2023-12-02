@@ -1,7 +1,7 @@
 Cynthia’s_Manipulation
 ================
 Yangyang Chen
-2023-11-28
+2023-12-02
 
 # *Pre-processing*
 
@@ -29,7 +29,7 @@ mort_df =
 ```
 
     ## Rows: 1177 Columns: 51
-    ## ── Column specification ────────────────────────────────────────────────────────
+    ## ── Column specification ───────────────────────────────────────────────────────
     ## Delimiter: ","
     ## dbl (51): group, ID, outcome, age, gendera, BMI, hypertensive, atrialfibrill...
     ## 

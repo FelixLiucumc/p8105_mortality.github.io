@@ -3,7 +3,7 @@ title: "EDA_Zilly"
 author: "lz2951"
 date: "2023-11-29"
 output: 
-  github_document:
+  html_document:
     toc: true
     toc_float: true
     theme: cosmo

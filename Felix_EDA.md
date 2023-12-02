@@ -8,21 +8,9 @@ library(tidyverse)
 library(modelr)
 library(purrr)
 library(corrplot)
-```
-
-    ## Warning: 程辑包'corrplot'是用R版本4.3.2 来建造的
-
-``` r
 library(FactoMineR)
-```
-
-    ## Warning: 程辑包'FactoMineR'是用R版本4.3.2 来建造的
-
-``` r
 library(factoextra)
 ```
-
-    ## Warning: 程辑包'factoextra'是用R版本4.3.2 来建造的
 
 ``` r
 #load mortality dataset
@@ -33,7 +21,30 @@ mort_data =
 ```
 
     ## Rows: 1176 Columns: 51
-    ## ── Column specification ────────────────────────────────────────────────────────
+    ## ── Column specification ───────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## dbl (51): group, id, outcome, age, gender, bmi, hypertensive, atrialfibrilla...
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+``` r
+convert_to_factor <- function(df, columns) {
+  df[columns] <- lapply(df[columns], factor)
+  return(df)
+}
+
+mort_tidy = 
+  read_csv("mortality_data_cleaned.csv") |>
+  janitor::clean_names()  |>
+  convert_to_factor(c("group", "gender", "outcome", "hypertensive", 
+                      "atrialfibrillation", "chd_with_no_mi", "diabetes", 
+                      "deficiencyanemias", "depression", "hyperlipemia", 
+                      "renal_failure", "copd"))
+```
+
+    ## Rows: 1176 Columns: 51
+    ## ── Column specification ───────────────────────────────────────────────────────
     ## Delimiter: ","
     ## dbl (51): group, id, outcome, age, gender, bmi, hypertensive, atrialfibrilla...
     ## 
@@ -44,6 +55,9 @@ mort_data =
 #select patient outcome and complications
 com_data =
   mort_data |>
+  select(outcome, hypertensive:copd)
+com_tidy =
+  mort_tidy |>
   select(outcome, hypertensive:copd)
 #show correlation
 corrplot(cor(com_data), type = "upper", diag = FALSE)
@@ -63,6 +77,9 @@ Interpretation:
 sign_data =
   mort_data |>
   select(outcome, heart_rate:ef)
+sign_tidy =
+  mort_tidy |>
+  select(outcome, heart_rate:ef)
 #show correlation
 corrplot(cor(sign_data), type = "upper", diag = FALSE)
 ```
@@ -70,101 +87,38 @@ corrplot(cor(sign_data), type = "upper", diag = FALSE)
 ![](Felix_EDA_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
 
 ``` r
-#linear model for complications
-model_com = glm(outcome ~ ., data = com_data)
-summary(model_com)
-```
-
-    ## 
-    ## Call:
-    ## glm(formula = outcome ~ ., data = com_data)
-    ## 
-    ## Coefficients:
-    ##                    Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept)         0.19967    0.02384   8.375  < 2e-16 ***
-    ## hypertensive       -0.03630    0.02288  -1.586  0.11295    
-    ## atrialfibrillation  0.06474    0.01995   3.245  0.00121 ** 
-    ## chd_with_no_mi     -0.00497    0.03515  -0.141  0.88759    
-    ## diabetes           -0.01438    0.02051  -0.701  0.48351    
-    ## deficiencyanemias  -0.05271    0.02118  -2.488  0.01298 *  
-    ## depression         -0.05380    0.03053  -1.762  0.07829 .  
-    ## hyperlipemia       -0.02237    0.02099  -1.066  0.28672    
-    ## renal_failure      -0.06352    0.02142  -2.965  0.00308 ** 
-    ## copd               -0.06873    0.03738  -1.839  0.06621 .  
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-    ## 
-    ## (Dispersion parameter for gaussian family taken to be 0.1134037)
-    ## 
-    ##     Null deviance: 137.50  on 1175  degrees of freedom
-    ## Residual deviance: 132.23  on 1166  degrees of freedom
-    ## AIC: 789.38
-    ## 
-    ## Number of Fisher Scoring iterations: 2
-
-``` r
-model_com_se = lm(outcome ~ ., data = com_data) |>
-  step(direction = "both", trace = FALSE)
-summary(model_com_se)
-```
-
-    ## 
-    ## Call:
-    ## lm(formula = outcome ~ hypertensive + atrialfibrillation + deficiencyanemias + 
-    ##     depression + renal_failure + copd, data = com_data)
-    ## 
-    ## Residuals:
-    ##      Min       1Q   Median       3Q      Max 
-    ## -0.25569 -0.15866 -0.12482 -0.06886  0.97537 
-    ## 
-    ## Coefficients:
-    ##                    Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept)         0.19180    0.02285   8.394  < 2e-16 ***
-    ## hypertensive       -0.04319    0.02227  -1.939  0.05269 .  
-    ## atrialfibrillation  0.06390    0.01991   3.210  0.00136 ** 
-    ## deficiencyanemias  -0.05385    0.02114  -2.547  0.01099 *  
-    ## depression         -0.05589    0.03044  -1.836  0.06662 .  
-    ## renal_failure      -0.06704    0.02113  -3.172  0.00155 ** 
-    ## copd               -0.06698    0.03728  -1.797  0.07264 .  
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-    ## 
-    ## Residual standard error: 0.3366 on 1169 degrees of freedom
-    ## Multiple R-squared:  0.03684,    Adjusted R-squared:  0.0319 
-    ## F-statistic: 7.453 on 6 and 1169 DF,  p-value: 7.536e-08
-
-``` r
 #generalized linear model for complications
-model_com_glm = glm(outcome ~ ., data = com_data)
+model_com_glm = glm(outcome ~ ., data = com_tidy, family = binomial(link = "logit"))
 summary(model_com_glm)
 ```
 
     ## 
     ## Call:
-    ## glm(formula = outcome ~ ., data = com_data)
+    ## glm(formula = outcome ~ ., family = binomial(link = "logit"), 
+    ##     data = com_tidy)
     ## 
     ## Coefficients:
-    ##                    Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept)         0.19967    0.02384   8.375  < 2e-16 ***
-    ## hypertensive       -0.03630    0.02288  -1.586  0.11295    
-    ## atrialfibrillation  0.06474    0.01995   3.245  0.00121 ** 
-    ## chd_with_no_mi     -0.00497    0.03515  -0.141  0.88759    
-    ## diabetes           -0.01438    0.02051  -0.701  0.48351    
-    ## deficiencyanemias  -0.05271    0.02118  -2.488  0.01298 *  
-    ## depression         -0.05380    0.03053  -1.762  0.07829 .  
-    ## hyperlipemia       -0.02237    0.02099  -1.066  0.28672    
-    ## renal_failure      -0.06352    0.02142  -2.965  0.00308 ** 
-    ## copd               -0.06873    0.03738  -1.839  0.06621 .  
+    ##                     Estimate Std. Error z value Pr(>|z|)    
+    ## (Intercept)         -1.38060    0.19640  -7.029 2.07e-12 ***
+    ## hypertensive1       -0.28940    0.19131  -1.513  0.13035    
+    ## atrialfibrillation1  0.57510    0.17674   3.254  0.00114 ** 
+    ## chd_with_no_mi1     -0.07041    0.32852  -0.214  0.83029    
+    ## diabetes1           -0.12939    0.18533  -0.698  0.48507    
+    ## deficiencyanemias1  -0.52393    0.20752  -2.525  0.01158 *  
+    ## depression1         -0.59139    0.33206  -1.781  0.07491 .  
+    ## hyperlipemia1       -0.20023    0.19343  -1.035  0.30060    
+    ## renal_failure1      -0.62351    0.20840  -2.992  0.00277 ** 
+    ## copd1               -0.73692    0.40959  -1.799  0.07200 .  
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## (Dispersion parameter for gaussian family taken to be 0.1134037)
+    ## (Dispersion parameter for binomial family taken to be 1)
     ## 
-    ##     Null deviance: 137.50  on 1175  degrees of freedom
-    ## Residual deviance: 132.23  on 1166  degrees of freedom
-    ## AIC: 789.38
+    ##     Null deviance: 931.77  on 1175  degrees of freedom
+    ## Residual deviance: 883.79  on 1166  degrees of freedom
+    ## AIC: 903.79
     ## 
-    ## Number of Fisher Scoring iterations: 2
+    ## Number of Fisher Scoring iterations: 5
 
 ``` r
 model_com_glm_se = glm(outcome ~ ., data = com_data) |>
@@ -346,7 +300,7 @@ cv_com_rmse |>
   theme_minimal()
 ```
 
-![](Felix_EDA_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](Felix_EDA_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
 ``` r
 #pca for complications
@@ -377,7 +331,7 @@ com = com_data |> select(-outcome)
 res_pca_com = PCA(com, scale.unit = TRUE, graph = TRUE)
 ```
 
-![](Felix_EDA_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->![](Felix_EDA_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
+![](Felix_EDA_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->![](Felix_EDA_files/figure-gfm/unnamed-chunk-7-2.png)<!-- -->
 
 ``` r
 #PCA() function would do the data standardization automatically.
@@ -404,7 +358,7 @@ get_eigenvalue(res_pca_com)
 fviz_eig(res_pca_com, addlabels = TRUE, ylim = c(0, 20))
 ```
 
-![](Felix_EDA_files/figure-gfm/unnamed-chunk-8-3.png)<!-- -->
+![](Felix_EDA_files/figure-gfm/unnamed-chunk-7-3.png)<!-- -->
 
 ``` r
 #visualize the contributions of each dimension.
@@ -431,7 +385,7 @@ var_com$coord
 fviz_pca_var(res_pca_com, col.var = "contrib", gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"))
 ```
 
-![](Felix_EDA_files/figure-gfm/unnamed-chunk-8-4.png)<!-- -->
+![](Felix_EDA_files/figure-gfm/unnamed-chunk-7-4.png)<!-- -->
 
 ``` r
 #based on above results (`var_com$coord`)
@@ -443,7 +397,7 @@ fviz_pca_var(res_pca_com, col.var = "contrib", gradient.cols = c("#00AFBB", "#E7
 corrplot(var_com$cos2, is.corr=FALSE)
 ```
 
-![](Felix_EDA_files/figure-gfm/unnamed-chunk-8-5.png)<!-- -->
+![](Felix_EDA_files/figure-gfm/unnamed-chunk-7-5.png)<!-- -->
 
 ``` r
 #shows the quality of variables.
@@ -468,13 +422,25 @@ var_com$contrib
 fviz_contrib(res_pca_com, choice = "var", axes = 1, top = 10)
 ```
 
-![](Felix_EDA_files/figure-gfm/unnamed-chunk-8-6.png)<!-- -->
+![](Felix_EDA_files/figure-gfm/unnamed-chunk-7-6.png)<!-- -->
 
 ``` r
 fviz_contrib(res_pca_com, choice = "var", axes = 1:5, top = 10)
 ```
 
-![](Felix_EDA_files/figure-gfm/unnamed-chunk-8-7.png)<!-- -->
+![](Felix_EDA_files/figure-gfm/unnamed-chunk-7-7.png)<!-- -->
+
+``` r
+#colored individuals
+fviz_pca_ind(res_pca_com,
+             geom.ind = "point",
+             col.ind = as.character(com_data$outcome),
+             palette = c("#00AFBB", "#FC4E07"),
+             addEllipses = TRUE,
+             legend.title = "Groups")
+```
+
+![](Felix_EDA_files/figure-gfm/unnamed-chunk-7-8.png)<!-- -->
 
 ``` r
 #pca for vital signs
@@ -521,12 +487,12 @@ sign = sign_data |> select(-outcome)
 res_pca_sign = PCA(sign, scale.unit = TRUE, graph = TRUE)
 ```
 
-![](Felix_EDA_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](Felix_EDA_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
-    ## Warning: ggrepel: 11 unlabeled data points (too many overlaps). Consider
+    ## Warning: ggrepel: 10 unlabeled data points (too many overlaps). Consider
     ## increasing max.overlaps
 
-![](Felix_EDA_files/figure-gfm/unnamed-chunk-9-2.png)<!-- -->
+![](Felix_EDA_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
 
 ``` r
 #PCA() function would do the data standardization automatically.
@@ -580,7 +546,7 @@ get_eigenvalue(res_pca_sign)
 fviz_eig(res_pca_sign, addlabels = TRUE, ylim = c(0, 20))
 ```
 
-![](Felix_EDA_files/figure-gfm/unnamed-chunk-9-3.png)<!-- -->
+![](Felix_EDA_files/figure-gfm/unnamed-chunk-8-3.png)<!-- -->
 
 ``` r
 #visualize the contributions of each dimension.
@@ -671,7 +637,7 @@ var_sign$coord
 fviz_pca_var(res_pca_sign, col.var = "contrib", gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"))
 ```
 
-![](Felix_EDA_files/figure-gfm/unnamed-chunk-9-4.png)<!-- -->
+![](Felix_EDA_files/figure-gfm/unnamed-chunk-8-4.png)<!-- -->
 
 ``` r
 #based on above results (`var_com$coord`)
@@ -679,7 +645,7 @@ fviz_pca_var(res_pca_sign, col.var = "contrib", gradient.cols = c("#00AFBB", "#E
 corrplot(var_sign$cos2, is.corr=FALSE)
 ```
 
-![](Felix_EDA_files/figure-gfm/unnamed-chunk-9-5.png)<!-- -->
+![](Felix_EDA_files/figure-gfm/unnamed-chunk-8-5.png)<!-- -->
 
 ``` r
 #shows the quality of variables.
@@ -768,10 +734,22 @@ var_sign$contrib
 fviz_contrib(res_pca_sign, choice = "var", axes = 1, top = 10)
 ```
 
-![](Felix_EDA_files/figure-gfm/unnamed-chunk-9-6.png)<!-- -->
+![](Felix_EDA_files/figure-gfm/unnamed-chunk-8-6.png)<!-- -->
 
 ``` r
 fviz_contrib(res_pca_sign, choice = "var", axes = 1:5, top = 10)
 ```
 
-![](Felix_EDA_files/figure-gfm/unnamed-chunk-9-7.png)<!-- -->
+![](Felix_EDA_files/figure-gfm/unnamed-chunk-8-7.png)<!-- -->
+
+``` r
+#colored individuals
+fviz_pca_ind(res_pca_sign,
+             geom.ind = "point",
+             col.ind = as.character(sign_data$outcome),
+             palette = c("#00AFBB", "#FC4E07"),
+             addEllipses = TRUE,
+             legend.title = "Groups")
+```
+
+![](Felix_EDA_files/figure-gfm/unnamed-chunk-8-8.png)<!-- -->
