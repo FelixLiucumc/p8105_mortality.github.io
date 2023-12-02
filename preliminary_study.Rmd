@@ -74,10 +74,10 @@ corrplot(cor(sign_tidy |> select(-outcome)), type = "upper", diag = FALSE)
   * Strong positive correlations often suggest the potential for dimension reduction by merging these variables during selection. 
 
 \ \par
-## 2. Decision Trees and Random Forests: Dimension Reduction and Core Variables Analysis
+## 2. CART and rf: Dimension Reduction and Core Variables Analysis
 
 \ \par
-### Analysis of Patient Compllications Variables
+### 2.1 Analysis of Patient Compllications Variables
 
 ```{r}
 #decision tree for complications
@@ -94,7 +94,11 @@ plot(tree_com)
 ```{r}
 #random forest for complications
 rf_com = randomForest(outcome ~ ., data = com_tidy)
-importance(rf_com) |> knitr::kable(digits = 3)
+importance(rf_com) |> 
+  as.data.frame() |> 
+  arrange(-MeanDecreaseGini) |> 
+  head(8) |> 
+  knitr::kable(digits = 3)
 varImpPlot(rf_com)
 ```
 
@@ -103,7 +107,7 @@ varImpPlot(rf_com)
   * In descending order of importance, the top 5 variables are: `hyperlipemia`, `atrialfibrillation`, `renal_failure`, `deficiencyanemias`, `diabetes`. 
 
 \ \par
-### Analysis of Patient Vital Signs Variables
+### 2.2 Analysis of Patient Vital Signs Variables
 
 ```{r fig.width = 10, fig.height = 10}
 #decision tree for vital signs
@@ -128,7 +132,11 @@ plot(tree_sign_c)
 ```{r}
 #random forest for vital signs
 rf_sign = randomForest(outcome ~ ., data = sign_tidy)
-importance(rf_sign) |> knitr::kable(digits = 3)
+importance(rf_sign) |> 
+  as.data.frame() |> 
+  arrange(-MeanDecreaseGini) |> 
+  head(8) |> 
+  knitr::kable(digits = 3)
 varImpPlot(rf_sign)
 ```
 
@@ -136,44 +144,105 @@ varImpPlot(rf_sign)
 
   * The results obtained from the random forest exhibit a overlap with the decision tree outcomes. In fact, random forest is an extension of decision trees that address over-fitting issues inherent in decision tree model. Therefore, we tend to prioritize the key variables identified by the random forest. 
 
+\ \par
+## 3. PCA: Dimension Reduction
+
+\ \par
+### Dimension Reduction for Patient Vital Signs Variables
+
 ```{r}
 #pca using R build-in function prcomp()
-pca_res_sign = prcomp(sign_tidy |> select(-outcome), scale. = TRUE)
-summary(pca_res_sign)
+#pca_res_sign = prcomp(sign_tidy |> select(-outcome), scale. = TRUE)
+#summary(pca_res_sign)
 
 #pca using packages `FactoMineR`, `factoextra`
-res_pca_sign = PCA(sign_tidy |> select(-outcome), scale.unit = TRUE, graph = TRUE)
 #PCA() function would do the data standardization automatically.
 #keep 5 dimensions as result.
+res_pca_sign = PCA(sign_tidy |> select(-outcome), scale.unit = TRUE, graph = FALSE)
 
-get_eigenvalue(res_pca_sign)
 #`variance.percent` explains the percentage of change. 70% would be adequate.
+get_eigenvalue(res_pca_sign) |> 
+  as.data.frame() |> 
+  filter(cumulative.variance.percent < 61) |> 
+  knitr::kable(digits = 3)
+```
 
+  * The `eigenvalue` connects with the amount of data variance explained by each principal component (PC). A higher eigenvalue indicates a greater proportion of data variance that can be explained (`variance.percent`). 
+  
+  * The PCs are arranged in descending order based on the eigenvalues, indicating that the PCs positioned earlier correspond to the directions with the greatest data variation.
+
+  * Typically, we can limit the number of dimensions/PCs by controlling the `cumulative.variance.percent`. For instance, in this case, we aimed to explain 60% of the total data variance in the model, resulting in the selection of 10 dimensions.
+
+```{r}
 #scree plot
-fviz_eig(res_pca_sign, addlabels = TRUE, ylim = c(0, 20))
 #visualize the contributions of each dimension.
+fviz_screeplot(res_pca_sign, addlabels = TRUE, ylim = c(0, 20))
+```
 
+  * Another approach involves examining the **scree plot**, which visualizes the ability of each dimension to explain the overall variance in the data. When the explanatory power begins to decrease and flatten out, it suggests diminishing returns in terms of dimension reduction. This is often considered a bottleneck point, and it's generally reasonable to halt operations.
+
+  * In this instance, after introducing the third dimension, there's a limited change in the explanatory power as the dimensions increase. It might be considered to select the first three dimensions for subsequent model analysis. However, due to the relatively small absolute size of the overall explainable variance, the cumulative explained variance of the first three dimensions falls short of 50%. Therefore, in this case, this approach might not be suitable.
+
+```{r}
 #result
 var_sign <- get_pca_var(res_pca_sign) 
-var_sign$coord
-#shown by correlation
+var_sign$cos2 |> knitr::kable(digits = 3)
+```
 
-fviz_pca_var(res_pca_sign, col.var = "contrib", gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"))
+  * In a factor map, a higher `cos2` value close to 1 indicates a stronger relationship between the variable and the principal component, signifying higher quality.
+
+```{r}
+#shows the quality of variables.
+corrplot(var_sign$cos2, is.corr = FALSE)
+```
+
+  * The correlation plot visualizes the indicator `cos2`, representing the variable-PC correlation. The model selected 5 dimensions for plotting the correlation map. 
+  
+  * For `dim.1`, the variable with the highest correlation are `bicarbonate`, `anion_gap`, `urea_nitrogen`. 
+  
+  * For `dim.2`, the variable with the highest correlation are `mch`, `rbc`. 
+
+```{r}
+#result
+var_sign$contrib |> knitr::kable(digits = 3)
+```
+
+  * The `var$contrib` provides the contribution magnitude of variables to each PC. Subsequently, visualizations can be generated based on the contribution values of variables to PCs. 
+
+  * However, due to limitations in two-dimensional plotting, typically only the first two dimensions can be visualized. 
+
+```{r}
+#shows the contribution in different dimensions.
+corrplot(var_sign$contrib, is.corr = FALSE)
+```
+
+  * Correlation plot can draw emphasis on the highest contribution variables in each dimension. 
+
+```{r}
+fviz_contrib(res_pca_sign, choice = "var", axes = 1, top = 10)
+fviz_contrib(res_pca_sign, choice = "var", axes = 1:5, top = 10)
+```
+
+  * Generate bar charts displaying the contribution magnitude for each dimension, with a red dashed line indicating the expected average contribution. 
+
+  * For a given PC, if a variable's contribution exceeds this threshold, it can be considered important within that PC or group of PCs. 
+
+```{r}
 #based on above results (`var_com$coord`)
 #basically,
 #(a) positive correlated variables are grouped together,
 #(b) negative correlated variables are located on opposite sides of the origin,
 #(c) the distance between the variable and the origin measures the quality of the variable. Variables that are far from the origin are well represented.
+fviz_pca_var(res_pca_sign, col.var = "contrib", gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"))
+```
 
-corrplot(var_sign$cos2, is.corr=FALSE)
-#shows the quality of variables.
+  * We've created visualizations showcasing the importance of variables concerning the two most significant dimensions. 
 
-var_sign$contrib
-#shown by contribution
+  * `cos2` is used to assess the variables' importance, represented by the distance between the arrow endpoint and the origin of the plot. Variables closer to the correlation circle with r=1 indicate higher representation on the factor map, signifying greater importance. Variables closer to the center of the plot are less important for the selected principal components. 
 
-fviz_contrib(res_pca_sign, choice = "var", axes = 1, top = 10)
-fviz_contrib(res_pca_sign, choice = "var", axes = 1:5, top = 10)
+  * Additionally, variables with larger contributions can be highlighted on the correlation plot by coloring them based on the values from `var_sign$contrib`. 
 
+```{r}
 #colored individuals
 fviz_pca_ind(res_pca_sign,
              geom.ind = "point",
@@ -183,4 +252,6 @@ fviz_pca_ind(res_pca_sign,
              legend.title = "Groups")
 ```
 
-
+  * Based on the outcome (`Alive` or `Death`), the data points were grouped and color-coded accordingly. 
+  
+  * Ellipses were generated to encapsulate the sample points for different groups (alive and death), showcasing the analysis using the two principal components. 
