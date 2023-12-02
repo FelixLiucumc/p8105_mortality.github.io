@@ -9,7 +9,6 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Yifei Liu" />
 
 
 <title>Preliminary Study</title>
@@ -376,8 +375,6 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">Preliminary Study</h1>
-<h4 class="author">Yifei Liu</h4>
-<h4 class="date">2023/11/25</h4>
 
 </div>
 
@@ -401,22 +398,17 @@ set.seed(1)</code></pre>
 <pre class="r"><code>#show correlation
 corrplot(cor(sign_tidy |&gt; select(-outcome)), type = &quot;upper&quot;, diag = FALSE)</code></pre>
 <p><img src="preliminary_study_files/figure-html/unnamed-chunk-2-1.png" width="960" /></p>
-<ul>
-<li><p>The correlation plot illustrates the relationships between vital
-signs pairwise.</p></li>
-<li><p>Darker colors indicate stronger correlations, where blue
-signifies positive correlations and red signifies negative
-ones.</p></li>
-<li><p>Strong positive correlations were observed between variables such
-as <code>rbc</code> and <code>hematocrit</code>, <code>mcv</code> and
+<p>The correlation plot illustrates the relationships between vital
+signs pairwise. Darker colors indicate stronger correlations, where blue
+signifies positive correlations and red signifies negative ones.</p>
+<p>Strong positive correlations were observed between variables such as
+<code>rbc</code> and <code>hematocrit</code>, <code>mcv</code> and
 <code>mch</code>, <code>inr</code> and <code>pt</code>,
 <code>pco2</code> and <code>bicarbonate</code>. Conversely, a strong
 negative correlation was found between <code>neutrophils</code> and
-<code>lymphocyte</code>.</p></li>
-<li><p>Strong positive correlations often suggest the potential for
-dimension reduction by merging these variables during
-selection.</p></li>
-</ul>
+<code>lymphocyte</code>. Strong positive correlations often suggest the
+potential for dimension reduction by merging these variables during
+selection.</p>
  
 </div>
 <div id="cart-and-rf-dimension-reduction-and-core-variables-analysis"
@@ -430,21 +422,18 @@ class="section level3">
 tree_com = ctree(outcome ~ ., data = com_tidy)
 plot(tree_com)</code></pre>
 <p><img src="preliminary_study_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
-<ul>
-<li><p>The decision tree employed variables <code>renal_failure</code>
-and <code>atrialfibrillation</code> to predict the outcome, showing
-strong evidence (p&lt;0.05) for selecting these two variables.</p></li>
-<li><p>However, the probability distribution at the nodes suggests that
-this decision-making approach might not be sufficiently reliable. This
-could be due to the similar effects of each variable, making it
-challenging to determine the next variable for refining the decision.
-Alternatively, it might indicate insufficient evidence to support the
-selection of other variables (p-values not meeting the
-criteria).</p></li>
-<li><p>Furthermore, the binary nature of these patient complications
+<p>The decision tree employed variables <code>renal_failure</code> and
+<code>atrialfibrillation</code> to predict the outcome, showing strong
+evidence (p&lt;0.05) for selecting these two variables.</p>
+<p>However, the probability distribution at the nodes suggests that this
+decision-making approach might not be sufficiently reliable. This could
+be due to the similar effects of each variable, making it challenging to
+determine the next variable for refining the decision. Alternatively, it
+might indicate insufficient evidence to support the selection of other
+variables (p-values not meeting the criteria).</p>
+<p>Furthermore, the binary nature of these patient complications
 variables posed certain challenges in constructing the classification
-tree, making characteristics of the variables hard to analyze.</p></li>
-</ul>
+tree, making characteristics of the variables hard to analyze.</p>
 <pre class="r"><code>#random forest for complications
 rf_com = randomForest(outcome ~ ., data = com_tidy)
 importance(rf_com) |&gt; 
@@ -496,16 +485,14 @@ importance(rf_com) |&gt;
 </table>
 <pre class="r"><code>varImpPlot(rf_com)</code></pre>
 <p><img src="preliminary_study_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
-<ul>
-<li><p>The random forest yielded a list of variables ranked by their
+<p>The random forest yielded a list of variables ranked by their
 importance based on <code>mean decrease in Gini index</code>, a
 parameter calculated by assessing the influence of variables on the
-nodes of the classification tree.</p></li>
-<li><p>In descending order of importance, the top 5 variables are:
+nodes of the classification tree.</p>
+<p>In descending order of importance, the top 5 variables are:
 <code>hyperlipemia</code>, <code>atrialfibrillation</code>,
 <code>renal_failure</code>, <code>deficiencyanemias</code>,
-<code>diabetes</code>.</p></li>
-</ul>
+<code>diabetes</code>.</p>
  
 </div>
 <div id="analysis-of-patient-vital-signs-variables"
@@ -537,22 +524,17 @@ print(tree_sign_r)</code></pre>
 <pre class="r"><code>tree_sign_c = ctree(outcome ~ ., data = sign_tidy)
 plot(tree_sign_c)</code></pre>
 <p><img src="preliminary_study_files/figure-html/unnamed-chunk-5-2.png" width="960" /></p>
-<ul>
-<li><p>The analysis of continuous variables related to vital signs
-resulted in the successful establishment of classification criteria by
-the decision tree, incorporating a total of 7 variables. It formed a
-4-level classification structure with reasonably distributed
-probabilities across nodes.</p></li>
-<li><p>The primary level classification variable is
-<code>anion_gap</code>.</p></li>
-<li><p>The secondary level classification variables are
-<code>blood_calcium</code>, <code>bicarbonate</code>.</p></li>
-<li><p>The tertiary level classification variables are
-<code>lactic_acid</code>, <code>leucocyte</code>,
-<code>respiratory_rate</code>.</p></li>
-<li><p>The forth level classification variable is
-<code>pt</code>.</p></li>
-</ul>
+<p>The analysis of continuous variables related to vital signs resulted
+in the successful establishment of classification criteria by the
+decision tree, incorporating a total of 7 variables. It formed a 4-level
+classification structure with reasonably distributed probabilities
+across nodes.</p>
+<p>The primary level classification variable is <code>anion_gap</code>.
+The secondary level classification variables are
+<code>blood_calcium</code>, <code>bicarbonate</code>. The tertiary level
+classification variables are <code>lactic_acid</code>,
+<code>leucocyte</code>, <code>respiratory_rate</code>. The forth level
+classification variable is <code>pt</code>.</p>
 <pre class="r"><code>#random forest for vital signs
 rf_sign = randomForest(outcome ~ ., data = sign_tidy)
 importance(rf_sign) |&gt; 
@@ -604,17 +586,15 @@ importance(rf_sign) |&gt;
 </table>
 <pre class="r"><code>varImpPlot(rf_sign)</code></pre>
 <p><img src="preliminary_study_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
-<ul>
-<li><p>Ranked by the <code>mean decrease gini</code>, the top 5
-variables are: <code>anion_gap</code>, <code>bicarbonate</code>,
+<p>Ranked by the <code>mean decrease gini</code>, the top 5 variables
+are: <code>anion_gap</code>, <code>bicarbonate</code>,
 <code>lactic_acid</code>, <code>lymphocyte</code>,
-<code>leucocyte</code>.</p></li>
-<li><p>The results obtained from the random forest exhibit a overlap
-with the decision tree outcomes. In fact, random forest is an extension
-of decision trees that address over-fitting issues inherent in decision
+<code>leucocyte</code>.</p>
+<p>The results obtained from the random forest exhibit a overlap with
+the decision tree outcomes. In fact, random forest is an extension of
+decision trees that address over-fitting issues inherent in decision
 tree model. Therefore, we tend to prioritize the key variables
-identified by the random forest.</p></li>
-</ul>
+identified by the random forest.</p>
  
 </div>
 </div>
@@ -710,38 +690,34 @@ get_eigenvalue(res_pca_sign) |&gt;
 </tr>
 </tbody>
 </table>
-<ul>
-<li><p>The <code>eigenvalue</code> connects with the amount of data
-variance explained by each principal component (PC). A higher eigenvalue
+<p>The <code>eigenvalue</code> connects with the amount of data variance
+explained by each principal component (PC). A higher eigenvalue
 indicates a greater proportion of data variance that can be explained
-(<code>variance.percent</code>).</p></li>
-<li><p>The PCs are arranged in descending order based on the
-eigenvalues, indicating that the PCs positioned earlier correspond to
-the directions with the greatest data variation.</p></li>
-<li><p>Typically, we can limit the number of dimensions/PCs by
-controlling the <code>cumulative.variance.percent</code>. For instance,
-in this case, we aimed to explain 60% of the total data variance in the
-model, resulting in the selection of 10 dimensions.</p></li>
-</ul>
+(<code>variance.percent</code>).</p>
+<p>The PCs are arranged in descending order based on the eigenvalues,
+indicating that the PCs positioned earlier correspond to the directions
+with the greatest data variation.</p>
+<p>Typically, we can limit the number of dimensions/PCs by controlling
+the <code>cumulative.variance.percent</code>. For instance, in this
+case, we aimed to explain 60% of the total data variance in the model,
+resulting in the selection of 10 dimensions.</p>
 <pre class="r"><code>#scree plot
 #visualize the contributions of each dimension.
 fviz_screeplot(res_pca_sign, addlabels = TRUE, ylim = c(0, 20))</code></pre>
 <p><img src="preliminary_study_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
-<ul>
-<li><p>Another approach involves examining the <strong>scree
-plot</strong>, which visualizes the ability of each dimension to explain
-the overall variance in the data. When the explanatory power begins to
-decrease and flatten out, it suggests diminishing returns in terms of
-dimension reduction. This is often considered a bottleneck point, and
-it’s generally reasonable to halt operations.</p></li>
-<li><p>In this instance, after introducing the third dimension, there’s
-a limited change in the explanatory power as the dimensions increase. It
+<p>Another approach involves examining the <strong>scree plot</strong>,
+which visualizes the ability of each dimension to explain the overall
+variance in the data. When the explanatory power begins to decrease and
+flatten out, it suggests diminishing returns in terms of dimension
+reduction. This is often considered a bottleneck point, and it’s
+generally reasonable to halt operations.</p>
+<p>In this instance, after introducing the third dimension, there’s a
+limited change in the explanatory power as the dimensions increase. It
 might be considered to select the first three dimensions for subsequent
 model analysis. However, due to the relatively small absolute size of
 the overall explainable variance, the cumulative explained variance of
 the first three dimensions falls short of 50%. Therefore, in this case,
-this approach might not be suitable.</p></li>
-</ul>
+this approach might not be suitable.</p>
 <pre class="r"><code>#result
 var_sign &lt;- get_pca_var(res_pca_sign) 
 var_sign$cos2 |&gt; knitr::kable(digits = 3)</code></pre>
@@ -1047,24 +1023,19 @@ var_sign$cos2 |&gt; knitr::kable(digits = 3)</code></pre>
 </tr>
 </tbody>
 </table>
-<ul>
-<li>In a factor map, a higher <code>cos2</code> value close to 1
+<p>In a factor map, a higher <code>cos2</code> value close to 1
 indicates a stronger relationship between the variable and the principal
-component, signifying higher quality.</li>
-</ul>
+component, signifying higher quality.</p>
 <pre class="r"><code>#shows the quality of variables.
 corrplot(var_sign$cos2, is.corr = FALSE)</code></pre>
 <p><img src="preliminary_study_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
-<ul>
-<li><p>The correlation plot visualizes the indicator <code>cos2</code>,
+<p>The correlation plot visualizes the indicator <code>cos2</code>,
 representing the variable-PC correlation. The model selected 5
-dimensions for plotting the correlation map.</p></li>
-<li><p>For <code>dim.1</code>, the variable with the highest correlation
-are <code>bicarbonate</code>, <code>anion_gap</code>,
-<code>urea_nitrogen</code>.</p></li>
-<li><p>For <code>dim.2</code>, the variable with the highest correlation
-are <code>mch</code>, <code>rbc</code>.</p></li>
-</ul>
+dimensions for plotting the correlation map.</p>
+<p>For <code>dim.1</code>, the variable with the highest correlation are
+<code>bicarbonate</code>, <code>anion_gap</code>,
+<code>urea_nitrogen</code>. For <code>dim.2</code>, the variable with
+the highest correlation are <code>mch</code>, <code>rbc</code>.</p>
 <pre class="r"><code>#result
 var_sign$contrib |&gt; knitr::kable(digits = 3)</code></pre>
 <table>
@@ -1369,32 +1340,25 @@ var_sign$contrib |&gt; knitr::kable(digits = 3)</code></pre>
 </tr>
 </tbody>
 </table>
-<ul>
-<li><p>The <code>var$contrib</code> provides the contribution magnitude
-of variables to each PC. Subsequently, visualizations can be generated
-based on the contribution values of variables to PCs.</p></li>
-<li><p>However, due to limitations in two-dimensional plotting,
-typically only the first two dimensions can be visualized.</p></li>
-</ul>
+<p>The <code>var$contrib</code> provides the contribution magnitude of
+variables to each PC. Subsequently, visualizations can be generated
+based on the contribution values of variables to PCs. However, due to
+limitations in two-dimensional plotting, typically only the first two
+dimensions can be visualized.</p>
 <pre class="r"><code>#shows the contribution in different dimensions.
 corrplot(var_sign$contrib, is.corr = FALSE)</code></pre>
 <p><img src="preliminary_study_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
-<ul>
-<li>Correlation plot can draw emphasis on the highest contribution
-variables in each dimension.</li>
-</ul>
+<p>Correlation plot can draw emphasis on the highest contribution
+variables in each dimension.</p>
 <pre class="r"><code>fviz_contrib(res_pca_sign, choice = &quot;var&quot;, axes = 1, top = 10)</code></pre>
 <p><img src="preliminary_study_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <pre class="r"><code>fviz_contrib(res_pca_sign, choice = &quot;var&quot;, axes = 1:5, top = 10)</code></pre>
 <p><img src="preliminary_study_files/figure-html/unnamed-chunk-13-2.png" width="672" /></p>
-<ul>
-<li><p>Generate bar charts displaying the contribution magnitude for
-each dimension, with a red dashed line indicating the expected average
-contribution.</p></li>
-<li><p>For a given PC, if a variable’s contribution exceeds this
+<p>Generate bar charts displaying the contribution magnitude for each
+dimension, with a red dashed line indicating the expected average
+contribution.For a given PC, if a variable’s contribution exceeds this
 threshold, it can be considered important within that PC or group of
-PCs.</p></li>
-</ul>
+PCs.</p>
 <pre class="r"><code>#based on above results (`var_com$coord`)
 #basically,
 #(a) positive correlated variables are grouped together,
@@ -1402,19 +1366,17 @@ PCs.</p></li>
 #(c) the distance between the variable and the origin measures the quality of the variable. Variables that are far from the origin are well represented.
 fviz_pca_var(res_pca_sign, col.var = &quot;contrib&quot;, gradient.cols = c(&quot;#00AFBB&quot;, &quot;#E7B800&quot;, &quot;#FC4E07&quot;))</code></pre>
 <p><img src="preliminary_study_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
-<ul>
-<li><p>We’ve created visualizations showcasing the importance of
-variables concerning the two most significant dimensions.</p></li>
-<li><p><code>cos2</code> is used to assess the variables’ importance,
+<p>We’ve created visualizations showcasing the importance of variables
+concerning the two most significant dimensions.</p>
+<p><code>cos2</code> is used to assess the variables’ importance,
 represented by the distance between the arrow endpoint and the origin of
 the plot. Variables closer to the correlation circle with r=1 indicate
 higher representation on the factor map, signifying greater importance.
 Variables closer to the center of the plot are less important for the
-selected principal components.</p></li>
-<li><p>Additionally, variables with larger contributions can be
-highlighted on the correlation plot by coloring them based on the values
-from <code>var_sign$contrib</code>.</p></li>
-</ul>
+selected principal components.</p>
+<p>Additionally, variables with larger contributions can be highlighted
+on the correlation plot by coloring them based on the values from
+<code>var_sign$contrib</code>.</p>
 <pre class="r"><code>#colored individuals
 fviz_pca_ind(res_pca_sign,
              geom.ind = &quot;point&quot;,
@@ -1423,13 +1385,11 @@ fviz_pca_ind(res_pca_sign,
              addEllipses = TRUE,
              legend.title = &quot;Groups&quot;)</code></pre>
 <p><img src="preliminary_study_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
-<ul>
-<li><p>Based on the outcome (<code>Alive</code> or <code>Death</code>),
-the data points were grouped and color-coded accordingly.</p></li>
-<li><p>Ellipses were generated to encapsulate the sample points for
-different groups (alive and death), showcasing the analysis using the
-two principal components.</p></li>
-</ul>
+<p>Based on the outcome (<code>Alive</code> or <code>Death</code>), the
+data points were grouped and color-coded accordingly. Ellipses were
+generated to encapsulate the sample points for different groups (alive
+and death), showcasing the analysis using the two principal
+components.</p>
 </div>
 </div>
 

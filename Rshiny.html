@@ -1870,8 +1870,8 @@ window.FlexDashboardComponents.push({
 
 <div id="dashboard-container">
 
-<div id="section-demographic-characteristics" class="section level1">
-<h1>Demographic Characteristics</h1>
+<div id="section-vital-sign" class="section level1">
+<h1>Vital Sign</h1>
 <div id="section-column" class="section level2 sidebar">
 <h2 class="sidebar">Column</h2>
 <div class="knitr-options" data-fig-width="576" data-fig-height="460">
@@ -1895,12 +1895,12 @@ window.FlexDashboardComponents.push({
 </div>
 <div id="section-row" class="section level2" data-height="650">
 <h2>Row</h2>
-<div id="section-vital-sign" class="section level3">
+<div id="section-vital-sign-1" class="section level3">
 <h3>Vital Sign</h3>
 <div class="knitr-options" data-fig-width="576" data-fig-height="460">
 
 </div>
-<div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="out08e838399704ebef" style="width:100%;height:400px;"></div>
+<div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="out8e9a07fd4619d77f" style="width:100%;height:400px;"></div>
 </div>
 </div>
 <div id="section-row-1" class="section level2 tabset tabset-fade">
@@ -1927,7 +1927,7 @@ because the color is lighter,</li>
 <div class="knitr-options" data-fig-width="576" data-fig-height="460">
 
 </div>
-<div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="out2d71381a55393864" style="width:100%;height:400px;"></div>
+<div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="outd573e4ed289b8162" style="width:100%;height:400px;"></div>
 </div>
 </div>
 </div>
@@ -1963,7 +1963,7 @@ because the color is lighter,</li>
 <div class="knitr-options" data-fig-width="576" data-fig-height="460">
 
 </div>
-<div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="out429a828415929fd4" style="width:100%;height:400px;"></div>
+<div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="oute8330d5dc4597cdd" style="width:100%;height:400px;"></div>
 <div class="knitr-options" data-fig-width="576" data-fig-height="460">
 
 </div>
@@ -2020,7 +2020,7 @@ because the color is lighter,</li>
 <div class="knitr-options" data-fig-width="576" data-fig-height="460">
 
 </div>
-<div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="out9b2d38b3f1bd1c1e" style="width:100%;height:400px;"></div>
+<div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="out9e907bef36487ca1" style="width:100%;height:400px;"></div>
 </div>
 </div>
 <div id="section-row-5" class="section level2 tabset tabset-fade">
@@ -2047,7 +2047,7 @@ because the color is lighter,</li>
 <div class="knitr-options" data-fig-width="576" data-fig-height="460">
 
 </div>
-<div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="out4526f21b0d791eec" style="width:100%;height:400px;"></div>
+<div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="outca7109fb230e35ab" style="width:100%;height:400px;"></div>
 </div>
 </div>
 </div>
@@ -2136,7 +2136,7 @@ formatVarName &lt;- function(variable) {
 ```
 
 
-Demographic Characteristics
+Vital Sign
 ===================================== 
 
 Column {.sidebar}
@@ -2285,7 +2285,7 @@ renderPlotly({
             text = ~paste(Count, "cases"), 
             hoverinfo = 'text+x+y') %&gt;%
       layout(title = paste("Distribution of", formattedVarName, "by Outcome"),
-             yaxis = list(title = "Percentage", tickformat = ",.0%"),
+             yaxis = list(title = "Count"),
              xaxis = list(title = formattedVarName),
              barmode = 'stack')
   })

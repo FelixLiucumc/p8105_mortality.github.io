@@ -336,7 +336,7 @@ div.tocify {
   <a href="Datasets.html">Data</a>
 </li>
 <li>
-  <a href="analysis.html">Prelimary Analysis</a>
+  <a href="preliminary_study.html">Prelimary Analysis</a>
 </li>
 <li>
   <a href="EDA.html">EDA</a>
@@ -386,6 +386,7 @@ div.tocify {
 <pre class="r"><code>library(tidyverse)
 library(stargazer)
 library(ROCR)</code></pre>
+<pre><code>## Warning: package &#39;ROCR&#39; was built under R version 4.3.2</code></pre>
 <div id="about-regression" class="section level1">
 <h1>About Regression</h1>
 <p>In this section, we want to generate a generalized linear model to
@@ -407,7 +408,7 @@ mortality_cleaned =
                       &quot;deficiencyanemias&quot;, &quot;depression&quot;, &quot;hyperlipemia&quot;, 
                       &quot;renal_failure&quot;, &quot;copd&quot;))</code></pre>
 <pre><code>## Rows: 1176 Columns: 51
-## ── Column specification ───────────────────────────────────────────────────────
+## ── Column specification ─────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## dbl (51): group, id, outcome, age, gender, bmi, hypertensive, atrialfibrilla...
 ## 
