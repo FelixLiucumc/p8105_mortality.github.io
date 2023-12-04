@@ -21,7 +21,7 @@ mort_data =
 ```
 
     ## Rows: 1176 Columns: 51
-    ## ── Column specification ─────────────────────────────────────────────────────
+    ## ── Column specification ──────────────────────────────────────────────────────
     ## Delimiter: ","
     ## dbl (51): group, id, outcome, age, gender, bmi, hypertensive, atrialfibrilla...
     ## 
@@ -44,7 +44,7 @@ mort_tidy =
 ```
 
     ## Rows: 1176 Columns: 51
-    ## ── Column specification ─────────────────────────────────────────────────────
+    ## ── Column specification ──────────────────────────────────────────────────────
     ## Delimiter: ","
     ## dbl (51): group, id, outcome, age, gender, bmi, hypertensive, atrialfibrilla...
     ## 
@@ -489,7 +489,7 @@ res_pca_sign = PCA(sign, scale.unit = TRUE, graph = TRUE)
 
 ![](Felix_EDA_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
-    ## Warning: ggrepel: 11 unlabeled data points (too many overlaps). Consider
+    ## Warning: ggrepel: 10 unlabeled data points (too many overlaps). Consider
     ## increasing max.overlaps
 
 ![](Felix_EDA_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
@@ -720,7 +720,7 @@ var_sign$contrib
     ## blood_sodium             0.10119640
     ## blood_calcium            4.98461255
     ## chloride                 2.05132600
-    ## anion_gap                3.04969012
+    ## anion_gap                3.04969011
     ## magnesium_ion            4.70972675
     ## ph                       0.01209208
     ## bicarbonate              0.17404682
