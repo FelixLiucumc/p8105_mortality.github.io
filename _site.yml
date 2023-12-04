@@ -7,7 +7,7 @@ navbar:
       href: Introduction.html
     - text: "Data"
       href: Datasets.html
-    - text: "Prelimary Analysis"
+    - text: "Preliminary Analysis"
       href: preliminary_study.html
     - text: "EDA"
       href: EDA.html
@@ -16,7 +16,7 @@ navbar:
     - text: "Conclusion"
       href: conclusion.html
     - text: "Shiny App"
-      href: https://7lx8uo-txbrook.shinyapps.io/map_dashboard/#section-life-expectancy
+      href: https://cynthia-1688.shinyapps.io/p8105_mortality_Rshiny/
     - text: "Report"
       href: project_report.html
     - icon: fa-github fa-lg

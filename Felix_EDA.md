@@ -21,7 +21,7 @@ mort_data =
 ```
 
     ## Rows: 1176 Columns: 51
-    ## ── Column specification ───────────────────────────────────────────────────────
+    ## ── Column specification ──────────────────────────────────────────────────────
     ## Delimiter: ","
     ## dbl (51): group, id, outcome, age, gender, bmi, hypertensive, atrialfibrilla...
     ## 
@@ -44,7 +44,7 @@ mort_tidy =
 ```
 
     ## Rows: 1176 Columns: 51
-    ## ── Column specification ───────────────────────────────────────────────────────
+    ## ── Column specification ──────────────────────────────────────────────────────
     ## Delimiter: ","
     ## dbl (51): group, id, outcome, age, gender, bmi, hypertensive, atrialfibrilla...
     ## 
