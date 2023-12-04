@@ -18,7 +18,7 @@ navbar:
     - text: "Shiny App"
       href: https://7lx8uo-txbrook.shinyapps.io/map_dashboard/#section-life-expectancy
     - text: "Report"
-      href: project_report.html
+      href: report.html
     - icon: fa-github fa-lg
       href: https://github.com/candicejiaruiyu/p8105_mortality.github.io
 output:
