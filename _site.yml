@@ -7,7 +7,7 @@ navbar:
       href: Introduction.html
     - text: "Data"
       href: Datasets.html
-    - text: "Prelimary Analysis"
+    - text: "Preliminary Analysis"
       href: preliminary_study.html
     - text: "EDA"
       href: EDA.html
