@@ -123,16 +123,19 @@ Row {.tabset .tabset-fade}
 ### Description
 
 
-This is the world map showing the life expectancy (years) of each country from 2000 to 2016. 
+This is the density plot showing the patient's status (0 = alive, 1 = death) of each vital sign. 
 
 \ \par
-Take the year of 2015 as an example,
+Take the vital sign "Heart Rate" as an example,
 
 \ \par
-  * North America, Western and Northern Europe, Japan, New Zealand and Australia show longer life expectancy compared with other regions.
+  * Patients who survived have heart rate reaches the peak at approximately 80 (i.e.[79, 80.99]), with 63 patients alive.
   
 \ \par
-  * Central and Southern Africa have relatively shorter life expectancy because the color is lighter,
+  * While patients who didn't survive have heart rate reaches the peak at approximately 90 (i.e.[85, 89.99]), with 23 patients dead.
+  
+\ \par
+  * Both density distributions are symmetric with bell-shaped.
   
 ### Boxplot
 
@@ -247,17 +250,13 @@ Row {.tabset .tabset-fade}
 ### Description
 
 
-This is the world map showing the life expectancy (years) of each country from 2000 to 2016. 
+This is the density plot showing the patient's status (0 = alive, 1 = death) of each comorbities. 
 
 \ \par
-Take the year of 2015 as an example,
+Take the comorbities "Hypertensive" as an example,
 
 \ \par
-  * North America, Western and Northern Europe, Japan, New Zealand and Australia show longer life expectancy compared with other regions.
-  
-\ \par
-  * Central and Southern Africa have relatively shorter life expectancy because the color is lighter,
-  
+  * Patients who alive have higher proportion (prop. = `r 743/(743+274)`) to be diagnosed as hypertensive compared to patients who didn't survive (prop. = `r 101/(101+58)`) .
 
 
 Lab Results Analysis
@@ -318,17 +317,19 @@ Row {.tabset .tabset-fade}
 
 ### Description
 
-
-This is the world map showing the life expectancy (years) of each country from 2000 to 2016. 
-
-\ \par
-Take the year of 2015 as an example,
+This is the density plot showing the patient's status (0 = alive, 1 = death) of each "lab result analysis". 
 
 \ \par
-  * North America, Western and Northern Europe, Japan, New Zealand and Australia show longer life expectancy compared with other regions.
+Take the analysis of "Creatinine" as an example,
+
+\ \par
+  * Patients who survived have creatinine level reaches the peak at approximately 1 (i.e.[1, 1.199]), with 164 patients alive.
   
 \ \par
-  * Central and Southern Africa have relatively shorter life expectancy because the color is lighter,
+  * While patients who didn't survive have creatinine level reaches the peak at approximately 0.75 (i.e.[0.5, 0.999] and [1, 1.499]), with 76 patients dead (38 for each).
+  
+\ \par
+  * Both density distributions are right skewed with long tails.
   
 ### Boxplot
 
