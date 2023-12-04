@@ -18,7 +18,7 @@ navbar:
     - text: "Shiny App"
       href: https://cynthia-1688.shinyapps.io/p8105_mortality_Rshiny/
     - text: "Report"
-      href: project_report.html
+      href: report.html
     - icon: fa-github fa-lg
       href: https://github.com/candicejiaruiyu/p8105_mortality.github.io
 output:

@@ -11,7 +11,7 @@
 
 
 
-<title>Cynthia-s_Manipulation</title>
+<title>Conclusion</title>
 
 <script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -29,9 +29,14 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -219,6 +224,69 @@ $(document).ready(function () {
 
 
 
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
 
 </head>
 
@@ -226,6 +294,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -284,100 +362,68 @@ $(document).ready(function () {
 
 
 
+<h1 class="title toc-ignore">Conclusion</h1>
 
 </div>
 
 
-<div id="cynthias_manipulation" class="section level1">
-<h1>Cynthia’s_Manipulation</h1>
-<p>Yangyang Chen 2023-12-04</p>
+<div id="conclusion-of-exploratory-data-analysis"
+class="section level2">
+<h2>Conclusion of Exploratory Data Analysis</h2>
+<p>The EDA conducted on heart failure patients in the Intensive Care
+Unit (ICU) provides valuable insights into the demographic,
+physiological, and clinical factors influencing mortality rates. Key
+findings from the analysis are summarized below:</p>
+<div id="demographic-insights" class="section level3">
+<h3>Demographic Insights</h3>
+<p>The gender-based mortality analysis revealed a slightly higher
+mortality rate in male patients (14.3%) compared to females (12.8%).
+Age-wise, the highest mortality rate was observed in patients over 80
+years (15.9%), highlighting the increased vulnerability among the
+elderly.</p>
 </div>
-<div id="pre-processing" class="section level1">
-<h1><em>Pre-processing</em></h1>
-<pre class="r"><code>mort_df = 
-  read_csv(&quot;data/data01.csv&quot;) |&gt; 
-  janitor::clean_names() |&gt; 
-  drop_na() |&gt;
-  pivot_longer(
-   hypertensive:copd,
-   names_to = &quot;bi_mort_factor&quot;,
-    values_to = &quot;bi_state&quot;
-   ) |&gt;
-  pivot_longer(
-   heart_rate:ef,
-   names_to = &quot;cont_mort_factor&quot;,
-    values_to = &quot;cont_state&quot;
-   ) |&gt; 
-  rename(gender = gendera) |&gt; 
-  mutate(
-    bi_state = as.factor(bi_state),
-    gender = as.factor(gender)) |&gt; 
-  arrange(id) |&gt; 
-  group_by(group)</code></pre>
-<pre><code>## Rows: 1177 Columns: 51
-## ── Column specification ──────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## dbl (51): group, ID, outcome, age, gendera, BMI, hypertensive, atrialfibrill...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<div id="clinical-and-physiological-observations"
+class="section level3">
+<h3>Clinical and Physiological Observations</h3>
+<p>The analysis of BMI, comorbidities, and lab results did not show a
+distinct pattern directly correlating these factors with mortality
+rates. However, certain trends were noticeable:</p>
+<ul>
+<li>Higher mortality rates were associated with older age groups and
+higher heart rates.</li>
+<li>The presence of comorbidities such as hypertension and diabetes was
+common, but their direct correlation with mortality rates was not
+clearly evident.</li>
+<li>Lab results, including hematocrit and blood urea nitrogen levels,
+suggested potential biological markers that could contribute to the
+predictive model for mortality, though no clear separation between
+outcomes was observed based solely on these markers.</li>
+</ul>
 </div>
-<div id="eda" class="section level1">
-<h1><em>EDA</em></h1>
-<div id="scatter-plot" class="section level3">
-<h3><em>scatter plot</em></h3>
-<p>We could observe continuous mortality factor’s highest and lowest
-values in each gender by fixing abnormal range:</p>
-<pre class="r"><code>mort_df |&gt;  
-  filter(cont_state &gt;= 40, cont_state &lt;= 50) |&gt; 
-  ggplot(aes(x = cont_mort_factor, y = cont_state, color = gender, shape = gender)) + 
-  geom_point(alpha = .75) +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))</code></pre>
-<p><img src="Cynthia-s_Manipulation_files/figure-gfm/unnamed-chunk-3-1.png" width="90%" /></p>
+<div id="implications-for-patient-management" class="section level3">
+<h3>Implications for Patient Management</h3>
+<p>This EDA underscores the importance of considering age and gender in
+predicting mortality in heart failure patients. The presence of
+comorbidities and certain lab result patterns, while not definitive,
+could inform more nuanced patient management strategies.</p>
 </div>
-<div id="viridis-plot" class="section level3">
-<h3><em>viridis plot</em></h3>
-<p>Three highest continuous mortality factor in a fixed range</p>
-<pre class="r"><code>mort_df |&gt;
-  filter(cont_mort_factor %in% c(&quot;creatine_kinase&quot;, &quot;nt_pro_bnp&quot;, &quot;urine_output&quot;)) |&gt; 
-  filter(cont_state &gt;= 1000, cont_state &lt;= 5000) |&gt; 
-  mutate(cont_mort_factor = forcats::fct_relevel(cont_mort_factor)) |&gt; 
-  ggplot(aes(x = cont_mort_factor, y = cont_state)) + 
-  geom_violin(aes(fill = cont_mort_factor), color = &quot;blue&quot;, alpha = .5) </code></pre>
-<p><img src="Cynthia-s_Manipulation_files/figure-gfm/unnamed-chunk-4-1.png" width="90%" /></p>
-</div>
-<div id="density-plot" class="section level3">
-<h3><em>density plot</em></h3>
-<pre class="r"><code>mort_df |&gt;
-  filter(cont_mort_factor %in% c(&quot;lactic_acid&quot;, &quot;magnesium_ion&quot;, &quot;basophils&quot;)) |&gt; 
-  filter(cont_state &gt;= 0, cont_state &lt;= 5) |&gt; 
-  select(cont_mort_factor, cont_state, gender) |&gt; 
-  ggplot(aes(x = cont_state, fill = gender)) +
-  geom_density(alpha = .5) + 
-  facet_grid(~cont_mort_factor) + 
-  viridis::scale_fill_viridis(discrete = TRUE) +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))</code></pre>
-<pre><code>## Adding missing grouping variables: `group`</code></pre>
-<p><img src="Cynthia-s_Manipulation_files/figure-gfm/unnamed-chunk-5-1.png" width="90%" /></p>
-</div>
-<div id="violin-plot" class="section level3">
-<h3><em>violin plot</em></h3>
-<pre class="r"><code>mort_df |&gt; 
-  filter(cont_mort_factor %in% c(&quot;lactic_acid&quot;, &quot;magnesium_ion&quot;, &quot;basophils&quot;)) |&gt; 
-  filter(cont_state &gt;= 0, cont_state &lt;= 5) |&gt; 
-  filter(bi_mort_factor %in% c(&quot;hyperlipemia&quot;, &quot;hypertensive&quot;, &quot;atrialfibrillation&quot;, &quot;chd_with_no_mi&quot;)) |&gt; 
-  select(outcome, bi_mort_factor, bi_state, cont_mort_factor, cont_state) |&gt; 
-  ggplot(aes(x = cont_mort_factor, y = cont_state)) + 
-  geom_violin() + 
-  facet_grid(outcome ~ bi_mort_factor)+
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))</code></pre>
-<pre><code>## Adding missing grouping variables: `group`</code></pre>
-<p><img src="Cynthia-s_Manipulation_files/figure-gfm/unnamed-chunk-6-1.png" width="90%" /></p>
+<div id="future-directions" class="section level3">
+<h3>Future Directions</h3>
+<p>The insights gained from this analysis can guide further detailed
+statistical analysis and predictive modeling. Especially, investigating
+the reasons behind the observed trends and how they interact to
+influence patient outcomes could be a valuable next step.</p>
+<p>This exploratory analysis sets the stage for more in-depth
+statistical analysis and modeling, aiming to enhance the understanding
+and prediction of mortality rates in heart failure patients admitted to
+the ICU.</p>
 </div>
 </div>
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -410,6 +456,35 @@ $(document).ready(function () {
 
 <!-- code folding -->
 
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
