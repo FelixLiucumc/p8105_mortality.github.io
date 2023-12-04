@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="lz2951" />
+
+<meta name="date" content="2023-11-29" />
+
+<title>EDA_Zilly</title>
+
+<script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Home</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="Introduction.html">Introduction</a>
+</li>
+<li>
+  <a href="Datasets.html">Data</a>
+</li>
+<li>
+  <a href="analysis.html">Prelimary Analysis</a>
+</li>
+<li>
+  <a href="EDA.html">EDA</a>
+</li>
+<li>
+  <a href="regression_model.html">Regression</a>
+</li>
+<li>
+  <a href="conclusion.html">Conclusion</a>
+</li>
+<li>
+  <a href="https://7lx8uo-txbrook.shinyapps.io/map_dashboard/#section-life-expectancy">Shiny App</a>
+</li>
+<li>
+  <a href="project_report.html">Report</a>
+</li>
+<li>
+  <a href="https://github.com/candicejiaruiyu/p8105_mortality.github.io">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">EDA_Zilly</h1>
+<h4 class="author">lz2951</h4>
+<h4 class="date">2023-11-29</h4>
+
+</div>
+
+
+<pre class="r"><code>library(tidyverse)
+library(stargazer)
+library(ROCR)</code></pre>
+<div id="about-regression" class="section level1">
+<h1>About Regression</h1>
+<p>In this section, we want to generate a generalized linear model to
+see the relationship between patients’ mortality status and predictive
+variables.</p>
+</div>
+<div id="data-pre-processing" class="section level1">
+<h1>Data Pre-processing</h1>
+<pre class="r"><code>convert_to_factor &lt;- function(df, columns) {
+  df[columns] &lt;- lapply(df[columns], factor)
+  return(df)
+}
+
+mortality_cleaned = 
+  read_csv(&quot;mortality_data_cleaned.csv&quot;) |&gt;
+  janitor::clean_names()  |&gt;
+  convert_to_factor(c(&quot;group&quot;, &quot;gender&quot;, &quot;outcome&quot;, &quot;hypertensive&quot;, 
+                      &quot;atrialfibrillation&quot;, &quot;chd_with_no_mi&quot;, &quot;diabetes&quot;, 
+                      &quot;deficiencyanemias&quot;, &quot;depression&quot;, &quot;hyperlipemia&quot;, 
+                      &quot;renal_failure&quot;, &quot;copd&quot;))</code></pre>
+<pre><code>## Rows: 1176 Columns: 51
+## ── Column specification ───────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## dbl (51): group, id, outcome, age, gender, bmi, hypertensive, atrialfibrilla...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div id="generalized-linear-model" class="section level1">
+<h1>Generalized linear model</h1>
+<div
+id="generalized-linear-model-for-complete-dataset-including-both-group1-and-group2"
+class="section level2">
+<h2>Generalized linear model for complete dataset (including both group1
+and group2)</h2>
+<pre class="r"><code>mortality_complete = 
+  mortality_cleaned |&gt;
+  select(-group, -id)</code></pre>
+<pre class="r"><code>glm_complete = glm(outcome ~ ., data = mortality_complete, family = binomial(link = logit))</code></pre>
+<pre class="r"><code>stepwise_complete = step(glm_complete)</code></pre>
+<pre class="r"><code>stargazer(stepwise_complete, type = &quot;text&quot;)</code></pre>
+<pre><code>## 
+## ====================================================
+##                              Dependent variable:    
+##                          ---------------------------
+##                                    outcome          
+## ----------------------------------------------------
+## age                                 0.014           
+##                                    (0.009)          
+##                                                     
+## deficiencyanemias1                -0.654***         
+##                                    (0.246)          
+##                                                     
+## renal_failure1                    -1.142***         
+##                                    (0.276)          
+##                                                     
+## copd1                             -1.128**          
+##                                    (0.461)          
+##                                                     
+## heart_rate                        0.023***          
+##                                    (0.007)          
+##                                                     
+## diastolic_blood_pressure          -0.027**          
+##                                    (0.012)          
+##                                                     
+## respiratory_rate                    0.040           
+##                                    (0.028)          
+##                                                     
+## temperature                        -0.267           
+##                                    (0.178)          
+##                                                     
+## sp_o2                             -0.097**          
+##                                    (0.047)          
+##                                                     
+## urine_output                       -0.0002          
+##                                   (0.0001)          
+##                                                     
+## mch                                0.082*           
+##                                    (0.049)          
+##                                                     
+## mchc                               -0.203*          
+##                                    (0.107)          
+##                                                     
+## rdw                                0.104**          
+##                                    (0.052)          
+##                                                     
+## leucocyte                          0.049**          
+##                                    (0.020)          
+##                                                     
+## platelets                         -0.003***         
+##                                    (0.001)          
+##                                                     
+## lymphocyte                         -0.025           
+##                                    (0.016)          
+##                                                     
+## creatinine                        -0.471***         
+##                                    (0.182)          
+##                                                     
+## urea_nitrogen                     0.022***          
+##                                    (0.007)          
+##                                                     
+## blood_potassium                     0.413           
+##                                    (0.271)          
+##                                                     
+## blood_calcium                     -0.760***         
+##                                    (0.209)          
+##                                                     
+## anion_gap                         0.206***          
+##                                    (0.064)          
+##                                                     
+## magnesium_ion                      0.718*           
+##                                    (0.431)          
+##                                                     
+## bicarbonate                       -0.082**          
+##                                    (0.036)          
+##                                                     
+## pco2                              0.039***          
+##                                    (0.013)          
+##                                                     
+## Constant                          19.259**          
+##                                    (9.598)          
+##                                                     
+## ----------------------------------------------------
+## Observations                        1,176           
+## Log Likelihood                    -325.803          
+## Akaike Inf. Crit.                  701.606          
+## ====================================================
+## Note:                    *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</code></pre>
+<pre class="r"><code>summary(stepwise_complete)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = outcome ~ age + deficiencyanemias + renal_failure + 
+##     copd + heart_rate + diastolic_blood_pressure + respiratory_rate + 
+##     temperature + sp_o2 + urine_output + mch + mchc + rdw + leucocyte + 
+##     platelets + lymphocyte + creatinine + urea_nitrogen + blood_potassium + 
+##     blood_calcium + anion_gap + magnesium_ion + bicarbonate + 
+##     pco2, family = binomial(link = logit), data = mortality_complete)
+## 
+## Coefficients:
+##                            Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)              19.2590819  9.5976046   2.007 0.044786 *  
+## age                       0.0142918  0.0092707   1.542 0.123167    
+## deficiencyanemias1       -0.6541647  0.2460479  -2.659 0.007845 ** 
+## renal_failure1           -1.1423254  0.2764017  -4.133 3.58e-05 ***
+## copd1                    -1.1280987  0.4614429  -2.445 0.014496 *  
+## heart_rate                0.0233167  0.0074780   3.118 0.001821 ** 
+## diastolic_blood_pressure -0.0269256  0.0119484  -2.253 0.024228 *  
+## respiratory_rate          0.0398045  0.0276286   1.441 0.149671    
+## temperature              -0.2672547  0.1784731  -1.497 0.134276    
+## sp_o2                    -0.0974804  0.0470036  -2.074 0.038089 *  
+## urine_output             -0.0001652  0.0001068  -1.546 0.122030    
+## mch                       0.0818651  0.0494141   1.657 0.097577 .  
+## mchc                     -0.2032528  0.1071511  -1.897 0.057844 .  
+## rdw                       0.1040846  0.0515905   2.018 0.043642 *  
+## leucocyte                 0.0490760  0.0204623   2.398 0.016469 *  
+## platelets                -0.0032973  0.0010162  -3.245 0.001175 ** 
+## lymphocyte               -0.0252952  0.0163700  -1.545 0.122294    
+## creatinine               -0.4714431  0.1819376  -2.591 0.009563 ** 
+## urea_nitrogen             0.0218553  0.0072053   3.033 0.002420 ** 
+## blood_potassium           0.4128049  0.2706920   1.525 0.127259    
+## blood_calcium            -0.7597361  0.2087830  -3.639 0.000274 ***
+## anion_gap                 0.2062723  0.0640473   3.221 0.001279 ** 
+## magnesium_ion             0.7178665  0.4305826   1.667 0.095475 .  
+## bicarbonate              -0.0817167  0.0357449  -2.286 0.022248 *  
+## pco2                      0.0393260  0.0126945   3.098 0.001949 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 931.77  on 1175  degrees of freedom
+## Residual deviance: 651.61  on 1151  degrees of freedom
+## AIC: 701.61
+## 
+## Number of Fisher Scoring iterations: 6</code></pre>
+</div>
+<div id="generalized-linear-model-for-derivation-dataset-group1"
+class="section level2">
+<h2>Generalized linear model for derivation dataset (group1)</h2>
+<pre class="r"><code>mortality_derivation =
+  mortality_cleaned |&gt;
+  filter(group == 1) |&gt;
+  select(-group, -id) </code></pre>
+<pre class="r"><code>glm_derivation = glm(outcome ~ ., data = mortality_derivation, family = binomial(link = logit))</code></pre>
+<pre class="r"><code>stepwise_derivation = step(glm_derivation)</code></pre>
+<pre class="r"><code>stargazer(stepwise_derivation, type = &quot;text&quot;)</code></pre>
+<pre><code>## 
+## ====================================================
+##                              Dependent variable:    
+##                          ---------------------------
+##                                    outcome          
+## ----------------------------------------------------
+## age                                0.025**          
+##                                    (0.012)          
+##                                                     
+## gender2                            -0.377           
+##                                    (0.261)          
+##                                                     
+## hypertensive1                      -0.426           
+##                                    (0.279)          
+##                                                     
+## atrialfibrillation1                0.455*           
+##                                    (0.268)          
+##                                                     
+## diabetes1                          -0.479*          
+##                                    (0.278)          
+##                                                     
+## deficiencyanemias1                -0.634**          
+##                                    (0.298)          
+##                                                     
+## hyperlipemia1                      -0.441           
+##                                    (0.288)          
+##                                                     
+## renal_failure1                    -0.894***         
+##                                    (0.333)          
+##                                                     
+## copd1                             -1.513**          
+##                                    (0.617)          
+##                                                     
+## heart_rate                        0.026***          
+##                                    (0.008)          
+##                                                     
+## diastolic_blood_pressure          -0.037**          
+##                                    (0.015)          
+##                                                     
+## sp_o2                             -0.108**          
+##                                    (0.052)          
+##                                                     
+## mcv                                0.046**          
+##                                    (0.019)          
+##                                                     
+## rdw                                0.120**          
+##                                    (0.057)          
+##                                                     
+## platelets                         -0.002**          
+##                                    (0.001)          
+##                                                     
+## lymphocyte                        -0.042**          
+##                                    (0.020)          
+##                                                     
+## creatinine                        -0.646***         
+##                                    (0.217)          
+##                                                     
+## urea_nitrogen                     0.032***          
+##                                    (0.008)          
+##                                                     
+## blood_calcium                     -0.942***         
+##                                    (0.234)          
+##                                                     
+## anion_gap                         0.310***          
+##                                    (0.075)          
+##                                                     
+## lactic_acid                        0.277*           
+##                                    (0.145)          
+##                                                     
+## pco2                              0.037***          
+##                                    (0.013)          
+##                                                     
+## Constant                            3.672           
+##                                    (6.217)          
+##                                                     
+## ----------------------------------------------------
+## Observations                         825            
+## Log Likelihood                    -228.171          
+## Akaike Inf. Crit.                  502.343          
+## ====================================================
+## Note:                    *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</code></pre>
+<pre class="r"><code>summary(stepwise_derivation)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = outcome ~ age + gender + hypertensive + atrialfibrillation + 
+##     diabetes + deficiencyanemias + hyperlipemia + renal_failure + 
+##     copd + heart_rate + diastolic_blood_pressure + sp_o2 + mcv + 
+##     rdw + platelets + lymphocyte + creatinine + urea_nitrogen + 
+##     blood_calcium + anion_gap + lactic_acid + pco2, family = binomial(link = logit), 
+##     data = mortality_derivation)
+## 
+## Coefficients:
+##                           Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)               3.671841   6.216855   0.591  0.55477    
+## age                       0.024527   0.011691   2.098  0.03592 *  
+## gender2                  -0.377370   0.261083  -1.445  0.14835    
+## hypertensive1            -0.425550   0.279079  -1.525  0.12730    
+## atrialfibrillation1       0.454825   0.267560   1.700  0.08915 .  
+## diabetes1                -0.478653   0.278206  -1.720  0.08534 .  
+## deficiencyanemias1       -0.633530   0.297759  -2.128  0.03337 *  
+## hyperlipemia1            -0.440532   0.288308  -1.528  0.12652    
+## renal_failure1           -0.894474   0.333213  -2.684  0.00727 ** 
+## copd1                    -1.513432   0.617326  -2.452  0.01422 *  
+## heart_rate                0.025778   0.008322   3.098  0.00195 ** 
+## diastolic_blood_pressure -0.037489   0.014559  -2.575  0.01003 *  
+## sp_o2                    -0.107812   0.052481  -2.054  0.03994 *  
+## mcv                       0.045993   0.019129   2.404  0.01620 *  
+## rdw                       0.120262   0.056611   2.124  0.03364 *  
+## platelets                -0.002308   0.001173  -1.967  0.04916 *  
+## lymphocyte               -0.042492   0.019659  -2.161  0.03066 *  
+## creatinine               -0.646281   0.216766  -2.981  0.00287 ** 
+## urea_nitrogen             0.032267   0.008076   3.995 6.46e-05 ***
+## blood_calcium            -0.942475   0.234124  -4.026 5.68e-05 ***
+## anion_gap                 0.310417   0.075475   4.113 3.91e-05 ***
+## lactic_acid               0.276861   0.144762   1.913  0.05581 .  
+## pco2                      0.036983   0.013154   2.811  0.00493 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 670.00  on 824  degrees of freedom
+## Residual deviance: 456.34  on 802  degrees of freedom
+## AIC: 502.34
+## 
+## Number of Fisher Scoring iterations: 6</code></pre>
+</div>
+<div id="model-evaluation-in-validation-group-group2"
+class="section level2">
+<h2>Model evaluation in validation group (group2)</h2>
+<pre class="r"><code>mortality_validation =
+  mortality_cleaned |&gt;
+  filter(group == 2) |&gt;
+  select(-group, -id) </code></pre>
+<pre class="r"><code>predict = predict(stepwise_derivation, newdata = mortality_validation, type = &quot;response&quot;)</code></pre>
+<pre class="r"><code>pred = prediction(predictions = predict, labels = mortality_validation$outcome)
+roc = performance(pred, &quot;tpr&quot;, &quot;fpr&quot;)
+auc = performance(pred, measure = &quot;auc&quot;)@y.values[[1]]</code></pre>
+<pre class="r"><code>plot(roc, colorize = F)</code></pre>
+<p><img src="EDA_Zilly_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<pre class="r"><code>cat(&#39;AUC of the model on validation dataset:&#39;, auc)</code></pre>
+<pre><code>## AUC of the model on validation dataset: 0.7757475</code></pre>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

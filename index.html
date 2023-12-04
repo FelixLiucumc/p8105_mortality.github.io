@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<title>A Comprehensive Analysis of Hospital Data on Mortality Rates</title>
+
+		<!-- Meta tag Keywords -->
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta charset="utf-8">
+		<meta name="keywords" content="" />
+		<script type="application/x-javascript">
+			addEventListener("load", function() {
+				setTimeout(hideURLbar, 0);
+			}, false);
+
+			function hideURLbar() {
+				window.scrollTo(0, 1);
+			}
+		</script>
+		<!--// Meta tag Keywords -->
+
+		<!-- pop up box -->
+		<link href="css/popuo-box.css" rel="stylesheet" type="text/css" media="all" />
+		<!-- //pop up box -->
+
+		<link rel="stylesheet" href="css/jquery.desoslide.css">
+
+		<!-- css files -->
+		<link rel="stylesheet" href="css/bootstrap.css">
+		<!-- Bootstrap-Core-CSS -->
+		<link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
+		<!-- Style-CSS -->
+		<link rel="stylesheet" href="css/font-awesome.css">
+		<!-- Font-Awesome-Icons-CSS -->
+		<!-- //css files -->
+
+		<link rel="stylesheet" href="css/jquery-ui.css" />
+		<!-- web-fonts -->
+		<link href="http://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&amp;subset=latin-ext" rel="stylesheet">
+		<!-- //web-fonts -->
+
+	</head>
+
+	<body>
+
+		<!--Header-->
+		<header>
+			<div class="container agile-banner_nav">
+				<nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+			</button>
+
+					<div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
+						<ul class="navbar-nav ml-auto">
+							<li class="nav-item active">
+								<a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="https://youtube.com">Video</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="Introduction.html">Introduction</a>
+							</li>
+              <li class="nav-item">
+								<a class="nav-link" href="p8105_proposal.html">Proposal</a>
+							</li>
+							<li class="dropdown nav-item">
+								<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">Analysis
+									<b class="caret"></b>
+								</a>
+								<ul class="dropdown-menu agile_short_dropdown">
+									<li>
+										<a href="EDA.html">EDA</a>
+									</li>
+									<li>
+										<a href="Regression.html">Regression</a>
+									</li>
+								</ul>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="link of Shiny App">Shiny App</a>
+							</li>
+							<li class="nav-item pr-lg-0">
+								<a class="nav-link pr-lg-0" href="https://github.com/candicejiaruiyu/p8105_mortality.github.io" target="_blank"> 
+								  <img alt="github_icon" src="images/OIP.jpg">
+								</a>
+							</li>
+						</ul>
+					</div>
+
+				</nav>
+			</div>
+		</header>
+		<!--Header-->
+
+		<!-- banner-text -->
+		<div class="slider">
+			<div class="callbacks_container">
+				<ul class="rslides callbacks callbacks1" id="slider4">
+					<li>
+						<div class="banner-top">
+							<div class="layer">
+								<div class="container">
+									<div class="banner-info_agile_w3ls">
+										<h2>A Comprehensive Analysis of Hospital Data on <span> Mortality Rates</span>. </h2>
+										<p>We care about life</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</li>
+					<li>
+						<div class="banner-top1">
+							<div class="layer">
+								<div class="container">
+									<div class="banner-info_agile_w3ls">
+										<h3>Our <span> Motivation</span> </h3>
+										<p>To reveal the relationship between multiple factors and mortality</p>
+										<a href="p8105_proposal.html" class="mr-2">Learn more <i class="fa fa-caret-right" aria-hidden="true"></i></a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</li>
+					<li>
+						<div class="banner-top2">
+							<div class="layer">
+								<div class="container">
+									<div class="banner-info_agile_w3ls">
+										<h3>About Our <span>Data</span> Source.</h3>
+										<p>The foundation of research.</p>
+										<a href="Introduction.html" class="mr-2">Learn more <i class="fa fa-caret-right" aria-hidden="true"></i></a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</li>
+					<li>
+						<div class="banner-top3">
+							<div class="layer">
+								<div class="container">
+									<div class="banner-info_agile_w3ls">
+										<h3><span>Data Analysis</span>.</h3>
+										<p>EDA and regression.</p>
+										<a href="EDA.html" class="mr-2">EDA <i class="fa fa-caret-right" aria-hidden="true"></i></a>
+										<a href="Regression.html">Regression <i class="fa fa-caret-right" aria-hidden="true"></i></a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="clearfix"> </div>
+		</div>
+		<!--//Slider-->
+
+		<!-- booking bottom -->
+		<section class="bottom py-5">
+			<div class="container">
+				<div class="row bottom-grids">
+					<div class="col-md-6 grid1">
+						<h3 class="mb-4">You can get more information by watching this video</h3>
+					</div>
+					<div class="col-md-3 video-play">
+						<!-- video -->
+						<div class="video-grid1 mt-4">
+							<div class="demo-bg1">
+								<div class="pop-bg position-relative">
+									<div class="arrow-container animated fadeInDown">
+										<a href="#small-dialog1" class="arrow-2 popup-with-zoom-anim">
+											<i class="fa fa-play"></i>
+										</a>
+										<div class="arrow-1 animated hinge infinite zoomIn"></div>
+									</div>
+									<h4 class="mt-3">Watch video</h4>
+									<!--  video-button-popup -->
+									<div id="small-dialog1" class="mfp-hide">
+										<div class="agileits_modal_body">
+											<iframe width="560" height="315" src="https://www.youtube.com/embed/u1JB_opf2u8?si=cACXRKE0jAOCryfn" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+										</div>
+									</div>
+									<!-- // video-button-popup -->
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<div class="col-md-3 mt-md-0 mt-4">
+						<img src="images/off.jpg" alt="" class="img-fluid" />
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- //booking bottom -->
+
+		<!-- welcome -->
+		<section class="welcome py-5">
+			<div class="container py-3">
+				<h3 class="heading text-center mb-md-5 mb-4"> Proposal </h3>
+				<div class="row welcome-grids">
+					<div class="col-lg-6">
+						<h3>The motivation for this project:</h3>
+						<p class="my-4">Predictors of in-hospital mortality in patients with heart failure admitted to the intensive care unit (ICU) remain unclear. Aimed to lay a solid foundation for Survival Analysis, deepen our understanding of Mortality, we conducted a comprehensive research based on the patient's Mortality factors dataset. Although this dataset belongs to cross-sectional study, we still can dig out some key patterns that affect Mortality and detect abnormal characteristics that indicate the death sign at the early stage. </p>
+						<a href="p8105_proposal">Learn more</a>
+					</div>
+					<div class="col-lg-6 mt-lg-0 mt-5 welcome-grid3">
+						<div class="position">
+							<img src="images/banner1.jpg" alt="" class="img-fluid" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- //welcome -->
+
+		<!-- /services -->
+		<section class="featured_services py-5">
+			<div class="container py-3">
+				<h3 class="heading text-center mb-5">Analysis</h3>
+				<div class="row agile_inner_info">
+					<div class="col-lg-4 col-md-6 w3_agile_services_grid">
+						<div class="agile_services_grid">
+							<div class="hover06 column">
+								<div>
+									<figure><img src="images/EDA.jpg" alt=" " class="img-responsive"></figure>
+								</div>
+							</div>
+							<div class="agile_services_grid_pos">
+								<i class="fa fa-globe" aria-hidden="true"></i>
+							</div>
+						</div>
+						<h4>EDA</h4>
+						<p>A brief introduction to our EDA. A brief introduction to our EDA.</p>
+					</div>
+					<div class="col-lg-4 col-md-6 mt-md-0 mt-5 w3_agile_services_grid">
+						<div class="agile_services_grid">
+							<div class="hover06 column">
+								<div>
+									<figure><img src="images/Regression.jpg" alt=" " class="img-responsive"></figure>
+								</div>
+							</div>
+							<div class="agile_services_grid_pos">
+								<i class="fa fa-suitcase" aria-hidden="true"></i>
+							</div>
+						</div>
+						<h4>Regression</h4>
+						<p>A brief introduction to our regression. A brief introduction to our regression.</p>
+					</div>
+					<div class="col-lg-4 col-md-6 mt-lg-0 mt-5 w3_agile_services_grid">
+						<div class="agile_services_grid">
+							<div class="hover06 column">
+								<div>
+									<figure><img src="images/Shiny.jpg" alt=" " class="img-responsive"></figure>
+								</div>
+							</div>
+							<div class="agile_services_grid_pos">
+								<i class="fa fa-bed" aria-hidden="true"></i>
+							</div>
+						</div>
+						<h4>Shiny App</h4>
+						<p>A brief introduction to our Shiny App. A brief introduction to our Shiny App.</p>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- //services -->
+
+		<!-- team -->
+		<div class="team py-5">
+			<div class="agile_dot_info two">
+				<div class="container">
+					<h3 class="heading text-center mb-5">Our Team</h3>
+					<div class="row agileits_team_grids">
+						<div class="col-lg-3 col-sm-6 agileits_team_grid">
+							<div class="agileits_team_grid_figure">
+								<img src="images/b1.jpg" alt=" " class="img-responsive" />
+							</div>
+							<div class="agileits_team_grid_figure_social">
+								<ul class="w3ls_social">
+									<li>
+										<a href="#" class="w3_agile_facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+									</li>
+									<li>
+										<a href="#" class="w3_agile_qq"><i class="fa fa-qq" aria-hidden="true"></i></a>
+									</li>
+								</ul>
+							</div>
+							<div class="clearfix"> </div>
+							<h4> Candice Jiarui Yu <span></span></h4>
+							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati dolorem magnam natus inventore ea ad sequi sit et reiciendis eveniet possimus at suscipit rerum quae officiis consectetur ex laborum dolores.</p>
+						</div>
+						<div class="col-lg-3 col-sm-6 agileits_team_grid">
+							<div class="agileits_team_grid_figure">
+								<img src="images/b1.jpg" alt=" " class="img-responsive" />
+							</div>
+							<div class="agileits_team_grid_figure_social">
+								<ul class="w3ls_social">
+									<li>
+										<a href="#" class="w3_agile_facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+									</li>
+									<li>
+										<a href="#" class="w3_agile_qq"><i class="fa fa-qq" aria-hidden="true"></i></a>
+									</li>
+								</ul>
+							</div>
+							<div class="clearfix"> </div>
+							<h4>Cynthia Yangyang Chen <span></span></h4>
+							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum modi molestiae vel quo inventore dolore adipisci sint nesciunt cum beatae ullam incidunt consequatur perferendis delectus debitis nam at consequuntur ipsam? </p>
+						</div>
+						<div class="col-lg-3 col-sm-6 agileits_team_grid">
+							<div class="agileits_team_grid_figure">
+								<img src="images/b2.jpg" alt=" " class="img-responsive" />
+							</div>
+							<div class="agileits_team_grid_figure_social">
+								<ul class="w3ls_social">
+									<li>
+										<a href="#" class="w3_agile_facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+									</li>
+									<li>
+										<a href="#" class="w3_agile_qq"><i class="fa fa-qq" aria-hidden="true"></i></a>
+									</li>
+								</ul>
+							</div>
+							<div class="clearfix"> </div>
+							<h4>Felix Yifei Liu  <span></span></h4>
+							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Temporibus tenetur odio commodi mollitia sequi consectetur explicabo distinctio veritatis hic quos quia provident non dolore cumque voluptatem enim magnam reprehenderit omnis.</p>
+						</div>
+						<div class="col-lg-3 col-sm-6 agileits_team_grid">
+							<div class="agileits_team_grid_figure">
+								<img src="images/zilly.JPG" alt=" " class="img-responsive" />
+							</div>
+							<div class="agileits_team_grid_figure_social">
+								<ul class="w3ls_social">
+									<li>
+										<a href="#" class="w3_agile_facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+									</li>
+									<li>
+										<a href="#" class="w3_agile_qq"><i class="fa fa-qq" aria-hidden="true"></i></a>
+									</li>
+								</ul>
+							</div>
+							<div class="clearfix"> </div>
+							<h4> Longyu Zhang<span></span></h4>
+							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus quos sequi est minus quae assumenda ipsam debitis ullam dolorum natus animi iste maxime rem cumque voluptates beatae alias quibusdam corporis. </p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- //team -->
+
+		<!-- footer -->
+		<footer class="py-5">
+
+				<div class="subscribe-grid text-center">
+					<p class="para three mt-4">Presented by Candice, Cynthia, Felix and Longyu </p>
+					<h5>If you have any question,</h5>
+					<p>Feel free to contact us!</p>
+				</div>
+			</div>
+		</footer>
+		<!-- //footer -->
+
+		<!-- copyright -->
+		<section class="copyright py-4 text-center">
+			<div class="container">
+				<p>Nov,2023 Final Project of P8105 Data Science I
+				</p>
+			</div>
+		</section>
+		<!-- //copyright -->
+
+		<!-- js-scripts -->
+
+		<!-- js -->
+		<script type="text/javascript" src="js/jquery-2.2.3.min.js"></script>
+		<script type="text/javascript" src="js/bootstrap.js"></script>
+		<!-- Necessary-JavaScript-File-For-Bootstrap -->
+		<!-- //js -->
+
+		<!-- desoslide-JavaScript -->
+		<script src="js/jquery.desoslide.js"></script>
+		<script>
+			$('#demo1_thumbs').desoSlide({
+				main: {
+					container: '#demo1_main_image',
+					cssClass: 'img-responsive'
+				},
+				effect: 'sideFade',
+				caption: true
+			});
+		</script>
+
+		<!-- Calendar -->
+		<script src="js/jquery-ui.js"></script>
+		<script>
+			$(function() {
+				$("#datepicker,#datepicker1").datepicker();
+			});
+		</script>
+		<!-- //Calendar -->
+
+		<!-- banner slider -->
+		<script src="js/responsiveslides.min.js"></script>
+		<script>
+			$(function() {
+				$("#slider4").responsiveSlides({
+					auto: true,
+					pager: true,
+					nav: true,
+					speed: 1000,
+					namespace: "callbacks",
+					before: function() {
+						$('.events').append("<li>before event fired.</li>");
+					},
+					after: function() {
+						$('.events').append("<li>after event fired.</li>");
+					}
+				});
+			});
+		</script>
+		<!-- //banner slider -->
+
+		<!--pop-up-box -->
+		<script src="js/jquery.magnific-popup.js"></script>
+		<script>
+			$(document).ready(function() {
+				$('.popup-with-zoom-anim').magnificPopup({
+					type: 'inline',
+					fixedContentPos: false,
+					fixedBgPos: true,
+					overflowY: 'auto',
+					closeBtnInside: true,
+					preloader: false,
+					midClick: true,
+					removalDelay: 300,
+					mainClass: 'my-mfp-zoom-in'
+				});
+			});
+		</script>
+		<!-- //pop-up-box -->
+
+		<!-- start-smoth-scrolling -->
+		<script src="js/SmoothScroll.min.js"></script>
+		<script type="text/javascript" src="js/move-top.js"></script>
+		<script type="text/javascript" src="js/easing.js"></script>
+		<script type="text/javascript">
+			jQuery(document).ready(function($) {
+				$(".scroll").click(function(event) {
+					event.preventDefault();
+					$('html,body').animate({
+						scrollTop: $(this.hash).offset().top
+					}, 1000);
+				});
+			});
+		</script>
+		<!-- here stars scrolling icon -->
+		<script type="text/javascript">
+			$(document).ready(function() {
+				/*
+					var defaults = {
+					containerID: 'toTop', // fading element id
+					containerHoverID: 'toTopHover', // fading element hover id
+					scrollSpeed: 1200,
+					easingType: 'linear' 
+					};
+				*/
+
+				$().UItoTop({
+					easingType: 'easeOutQuart'
+				});
+
+			});
+		</script>
+		<!-- //here ends scrolling icon -->
+		<!-- start-smoth-scrolling -->
+
+		<!-- //js-scripts -->
+
+	</body>
+
+</html>

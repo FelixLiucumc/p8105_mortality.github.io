@@ -7,9 +7,10 @@ output:
     toc: true
     toc_float: true
     theme: cosmo
+    code_folding: hide
 ---
 
-```{r setup, message = FALSE}
+```{r setup, message = FALSE, warning = FALSE}
 library(tidyverse)
 library(modelr)
 library(purrr)
@@ -19,11 +20,14 @@ library(factoextra)
 library(rpart)
 library(rpart.plot)
 library(randomForest)
+library(party)
+library(plotly)
+
 set.seed(1)
 ```
 
 
-```{r}
+```{r include = FALSE}
 #load mortality dataset
 mort_data =
   read_csv("mortality_data_cleaned.csv") |> 
@@ -36,131 +40,219 @@ convert_to_factor <- function(df, columns) {
 }
 
 mort_tidy = 
-  read_csv("mortality_data_cleaned.csv") |>
-  janitor::clean_names()  |>
+  mort_data |>
+  mutate(outcome = recode(outcome, `0` = "Alive", `1` = "Death")) |>
   convert_to_factor(c("group", "gender", "outcome", "hypertensive", 
                       "atrialfibrillation", "chd_with_no_mi", "diabetes", 
                       "deficiencyanemias", "depression", "hyperlipemia", 
                       "renal_failure", "copd"))
-```
 
-
-
-
-```{r}
-#select patient outcome and complications
-com_data =
-  mort_data |>
-  select(hypertensive:copd)
-
+#select patient complications
 com_tidy =
   mort_tidy |>
   select(outcome, hypertensive:copd)
 
-#select patient outcome and vital signs
-sign_data =
-  mort_data |>
-  select(heart_rate:ef)
-
+#select patient vital signs
 sign_tidy =
   mort_tidy |>
   select(outcome, heart_rate:ef)
 ```
 
+\ \par
+## 1. Correlation between Vital Signs
 
 ```{r fig.width = 10, fig.height = 10}
 #show correlation
-corrplot(cor(com_data), type = "upper", diag = FALSE)
+corrplot(cor(sign_tidy |> select(-outcome)), type = "upper", diag = FALSE)
 ```
 
-Interpretation:\
- - `outcome` seems strongly connected with `deficiencyanemias`, `renal_failure`.\ 
- - `hypertensive` shows strong correlation with `hyperlipemia` and `renal_failure`.\
- - `diabetes` shows strong correlation with `renal_failure`.\
- - `hyperlipemia` also shows strong correlation with `renal_failure`.\
+  * The correlation plot illustrates the relationships between vital signs pairwise. 
+  
+  * Darker colors indicate stronger correlations, where blue signifies positive correlations and red signifies negative ones. 
+  
+  * Strong positive correlations were observed between variables such as `rbc` and `hematocrit`, `mcv` and `mch`, `inr` and `pt`, `pco2` and `bicarbonate`. Conversely, a strong negative correlation was found between `neutrophils` and `lymphocyte`. 
+  
+  * Strong positive correlations often suggest the potential for dimension reduction by merging these variables during selection. 
 
-```{r fig.width = 10, fig.height = 10}
-#show correlation
-corrplot(cor(sign_data), type = "upper", diag = FALSE)
-```
+\ \par
+## 2. CART and rf: Dimension Reduction and Core Variables Analysis
 
+\ \par
+### 2.1 Analysis of Patient Compllications Variables
 
 ```{r}
-#decision tree
-tree_model = rpart(outcome ~ ., data = sign_tidy, method = "class")
-print(tree_model)
-rpart.plot(tree_model)
-
-#rf
-rf_model = randomForest(outcome ~ ., data = sign_tidy)
-importance(rf_model)
-rfPermute::confusionMatrix(rf_model)
-summary(rf_model)
-varImpPlot(rf_model)
-
-
-library(party)
+#decision tree for complications
 tree_com = ctree(outcome ~ ., data = com_tidy)
 plot(tree_com)
-
-tree_sign = ctree(outcome ~ ., data = sign_tidy)
-plot(tree_sign)
-
 ```
 
+  * The decision tree employed variables `renal_failure` and `atrialfibrillation` to predict the outcome, showing strong evidence (p<0.05) for selecting these two variables. 
+
+  * However, the probability distribution at the nodes suggests that this decision-making approach might not be sufficiently reliable. This could be due to the similar effects of each variable, making it challenging to determine the next variable for refining the decision. Alternatively, it might indicate insufficient evidence to support the selection of other variables (p-values not meeting the criteria). 
+
+  * Furthermore, the binary nature of these patient complications variables posed certain challenges in constructing the classification tree, making characteristics of the variables hard to analyze. 
 
 ```{r}
-#pca for vital signs
-sign_names = 
-  sign_data |>
-  select(heart_rate:ef) |>
-  colnames()
+#random forest for complications
+rf_com = randomForest(outcome ~ ., data = com_tidy)
+importance(rf_com) |> 
+  as.data.frame() |> 
+  arrange(-MeanDecreaseGini) |> 
+  head(8) |> 
+  knitr::kable(digits = 3)
+varImpPlot(rf_com)
+```
 
+  * The random forest yielded a list of variables ranked by their importance based on `mean decrease in Gini index`, a parameter calculated by assessing the influence of variables on the nodes of the classification tree. 
+
+  * In descending order of importance, the top 5 variables are: `hyperlipemia`, `atrialfibrillation`, `renal_failure`, `deficiencyanemias`, `diabetes`. 
+
+\ \par
+### 2.2 Analysis of Patient Vital Signs Variables
+
+```{r fig.width = 10, fig.height = 10}
+#decision tree for vital signs
+tree_sign_r = rpart(outcome ~ ., data = sign_tidy, method = "class", control = rpart.control(cp = 0.02))
+print(tree_sign_r)
+rpart.plot(tree_sign_r)
+
+tree_sign_c = ctree(outcome ~ ., data = sign_tidy)
+plot(tree_sign_c)
+```
+
+  * The analysis of continuous variables related to vital signs resulted in the successful establishment of classification criteria by the decision tree, incorporating a total of 7 variables. It formed a 4-level classification structure with reasonably distributed probabilities across nodes.
+
+  * The primary level classification variable is `anion_gap`. 
+
+  * The secondary level classification variables are `blood_calcium`, `bicarbonate`. 
+
+  * The tertiary level classification variables are `lactic_acid`, `leucocyte`, `respiratory_rate`. 
+
+  * The forth level classification variable is `pt`. 
+
+```{r}
+#random forest for vital signs
+rf_sign = randomForest(outcome ~ ., data = sign_tidy)
+importance(rf_sign) |> 
+  as.data.frame() |> 
+  arrange(-MeanDecreaseGini) |> 
+  head(8) |> 
+  knitr::kable(digits = 3)
+varImpPlot(rf_sign)
+```
+
+  * Ranked by the `mean decrease gini`, the top 5 variables are: `anion_gap`, `bicarbonate`, `lactic_acid`, `lymphocyte`, `leucocyte`. 
+
+  * The results obtained from the random forest exhibit a overlap with the decision tree outcomes. In fact, random forest is an extension of decision trees that address over-fitting issues inherent in decision tree model. Therefore, we tend to prioritize the key variables identified by the random forest. 
+
+\ \par
+## 3. PCA: Dimension Reduction
+
+\ \par
+### Dimension Reduction for Patient Vital Signs Variables
+
+```{r}
 #pca using R build-in function prcomp()
-vars_sign = sign_data[, sign_names]
-pca_res_sign = prcomp(vars_sign, scale. = TRUE)
-summary(pca_res_sign)
+#pca_res_sign = prcomp(sign_tidy |> select(-outcome), scale. = TRUE)
+#summary(pca_res_sign)
 
 #pca using packages `FactoMineR`, `factoextra`
-res_pca_sign = PCA(sign_data, scale.unit = TRUE, graph = TRUE)
 #PCA() function would do the data standardization automatically.
 #keep 5 dimensions as result.
+res_pca_sign = PCA(sign_tidy |> select(-outcome), scale.unit = TRUE, graph = FALSE)
 
-get_eigenvalue(res_pca_sign)
 #`variance.percent` explains the percentage of change. 70% would be adequate.
+get_eigenvalue(res_pca_sign) |> 
+  as.data.frame() |> 
+  filter(cumulative.variance.percent < 61) |> 
+  knitr::kable(digits = 3)
+```
 
+  * The `eigenvalue` connects with the amount of data variance explained by each principal component (PC). A higher eigenvalue indicates a greater proportion of data variance that can be explained (`variance.percent`). 
+  
+  * The PCs are arranged in descending order based on the eigenvalues, indicating that the PCs positioned earlier correspond to the directions with the greatest data variation.
+
+  * Typically, we can limit the number of dimensions/PCs by controlling the `cumulative.variance.percent`. For instance, in this case, we aimed to explain 60% of the total data variance in the model, resulting in the selection of 10 dimensions.
+
+```{r}
 #scree plot
-fviz_eig(res_pca_sign, addlabels = TRUE, ylim = c(0, 20))
 #visualize the contributions of each dimension.
+fviz_screeplot(res_pca_sign, addlabels = TRUE, ylim = c(0, 20))
+```
 
+  * Another approach involves examining the **scree plot**, which visualizes the ability of each dimension to explain the overall variance in the data. When the explanatory power begins to decrease and flatten out, it suggests diminishing returns in terms of dimension reduction. This is often considered a bottleneck point, and it's generally reasonable to halt operations.
+
+  * In this instance, after introducing the third dimension, there's a limited change in the explanatory power as the dimensions increase. It might be considered to select the first three dimensions for subsequent model analysis. However, due to the relatively small absolute size of the overall explainable variance, the cumulative explained variance of the first three dimensions falls short of 50%. Therefore, in this case, this approach might not be suitable.
+
+```{r}
 #result
 var_sign <- get_pca_var(res_pca_sign) 
-var_sign$coord
-#shown by correlation
+var_sign$cos2 |> knitr::kable(digits = 3)
+```
 
-fviz_pca_var(res_pca_sign, col.var = "contrib", gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"))
+  * In a factor map, a higher `cos2` value close to 1 indicates a stronger relationship between the variable and the principal component, signifying higher quality.
+
+```{r}
+#shows the quality of variables.
+corrplot(var_sign$cos2, is.corr = FALSE)
+```
+
+  * The correlation plot visualizes the indicator `cos2`, representing the variable-PC correlation. The model selected 5 dimensions for plotting the correlation map. 
+  
+  * For `dim.1`, the variable with the highest correlation are `bicarbonate`, `anion_gap`, `urea_nitrogen`. 
+  
+  * For `dim.2`, the variable with the highest correlation are `mch`, `rbc`. 
+
+```{r}
+#result
+var_sign$contrib |> knitr::kable(digits = 3)
+```
+
+  * The `var$contrib` provides the contribution magnitude of variables to each PC. Subsequently, visualizations can be generated based on the contribution values of variables to PCs. 
+
+  * However, due to limitations in two-dimensional plotting, typically only the first two dimensions can be visualized. 
+
+```{r}
+#shows the contribution in different dimensions.
+corrplot(var_sign$contrib, is.corr = FALSE)
+```
+
+  * Correlation plot can draw emphasis on the highest contribution variables in each dimension. 
+
+```{r}
+fviz_contrib(res_pca_sign, choice = "var", axes = 1, top = 10)
+fviz_contrib(res_pca_sign, choice = "var", axes = 1:5, top = 10)
+```
+
+  * Generate bar charts displaying the contribution magnitude for each dimension, with a red dashed line indicating the expected average contribution. 
+
+  * For a given PC, if a variable's contribution exceeds this threshold, it can be considered important within that PC or group of PCs. 
+
+```{r}
 #based on above results (`var_com$coord`)
 #basically,
 #(a) positive correlated variables are grouped together,
 #(b) negative correlated variables are located on opposite sides of the origin,
 #(c) the distance between the variable and the origin measures the quality of the variable. Variables that are far from the origin are well represented.
+fviz_pca_var(res_pca_sign, col.var = "contrib", gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"))
+```
 
-corrplot(var_sign$cos2, is.corr=FALSE)
-#shows the quality of variables.
+  * We've created visualizations showcasing the importance of variables concerning the two most significant dimensions. 
 
-var_sign$contrib
-#shown by contribution
+  * `cos2` is used to assess the variables' importance, represented by the distance between the arrow endpoint and the origin of the plot. Variables closer to the correlation circle with r=1 indicate higher representation on the factor map, signifying greater importance. Variables closer to the center of the plot are less important for the selected principal components. 
 
-fviz_contrib(res_pca_sign, choice = "var", axes = 1, top = 10)
-fviz_contrib(res_pca_sign, choice = "var", axes = 1:5, top = 10)
+  * Additionally, variables with larger contributions can be highlighted on the correlation plot by coloring them based on the values from `var_sign$contrib`. 
 
+```{r}
 #colored individuals
 fviz_pca_ind(res_pca_sign,
              geom.ind = "point",
-             col.ind = as.character(mort_tidy$outcome),
+             col.ind = as.character(sign_tidy$outcome),
              palette = c("#00AFBB", "#FC4E07"),
              addEllipses = TRUE,
              legend.title = "Groups")
 ```
 
-
+  * Based on the outcome (`Alive` or `Death`), the data points were grouped and color-coded accordingly. 
+  
+  * Ellipses were generated to encapsulate the sample points for different groups (alive and death), showcasing the analysis using the two principal components. 
