@@ -520,10 +520,10 @@ print(tree_sign_r)</code></pre>
 ##         27) lymphocyte&lt; 10.25 23   7 Death (0.30434783 0.69565217) *
 ##      7) bicarbonate&lt; 19.68333 38  11 Death (0.28947368 0.71052632) *</code></pre>
 <pre class="r"><code>rpart.plot(tree_sign_r)</code></pre>
-<p><img src="preliminary_study_files/figure-html/unnamed-chunk-5-1.png" width="960" /></p>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-5-1.png" width="480" /></p>
 <pre class="r"><code>tree_sign_c = ctree(outcome ~ ., data = sign_tidy)
 plot(tree_sign_c)</code></pre>
-<p><img src="preliminary_study_files/figure-html/unnamed-chunk-5-2.png" width="960" /></p>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-6-1.png" width="1152" /></p>
 <p>The analysis of continuous variables related to vital signs resulted
 in the successful establishment of classification criteria by the
 decision tree, incorporating a total of 7 variables. It formed a 4-level
@@ -585,7 +585,7 @@ importance(rf_sign) |&gt;
 </tbody>
 </table>
 <pre class="r"><code>varImpPlot(rf_sign)</code></pre>
-<p><img src="preliminary_study_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-7-1.png" width="768" /></p>
 <p>Ranked by the <code>mean decrease gini</code>, the top 5 variables
 are: <code>anion_gap</code>, <code>bicarbonate</code>,
 <code>lactic_acid</code>, <code>lymphocyte</code>,
@@ -704,7 +704,7 @@ resulting in the selection of 10 dimensions.</p>
 <pre class="r"><code>#scree plot
 #visualize the contributions of each dimension.
 fviz_screeplot(res_pca_sign, addlabels = TRUE, ylim = c(0, 20))</code></pre>
-<p><img src="preliminary_study_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <p>Another approach involves examining the <strong>scree plot</strong>,
 which visualizes the ability of each dimension to explain the overall
 variance in the data. When the explanatory power begins to decrease and
@@ -720,7 +720,7 @@ the first three dimensions falls short of 50%. Therefore, in this case,
 this approach might not be suitable.</p>
 <pre class="r"><code>#result_cos2
 var_sign &lt;- get_pca_var(res_pca_sign) 
-var_sign$cos2 |&gt; as.data.frame() |&gt; arrange(-Dim.1) |&gt; knitr::kable(digits = 3)</code></pre>
+var_sign$cos2 |&gt; as.data.frame() |&gt; arrange(-Dim.1) |&gt; head(10) |&gt; knitr::kable(digits = 3)</code></pre>
 <table>
 <thead>
 <tr class="header">
@@ -813,214 +813,6 @@ var_sign$cos2 |&gt; as.data.frame() |&gt; arrange(-Dim.1) |&gt; knitr::kable(dig
 <td align="right">0.024</td>
 <td align="right">0.216</td>
 </tr>
-<tr class="odd">
-<td align="left">blood_potassium</td>
-<td align="right">0.110</td>
-<td align="right">0.066</td>
-<td align="right">0.143</td>
-<td align="right">0.001</td>
-<td align="right">0.023</td>
-</tr>
-<tr class="even">
-<td align="left">lactic_acid</td>
-<td align="right">0.092</td>
-<td align="right">0.051</td>
-<td align="right">0.038</td>
-<td align="right">0.154</td>
-<td align="right">0.007</td>
-</tr>
-<tr class="odd">
-<td align="left">pt</td>
-<td align="right">0.079</td>
-<td align="right">0.138</td>
-<td align="right">0.027</td>
-<td align="right">0.004</td>
-<td align="right">0.109</td>
-</tr>
-<tr class="even">
-<td align="left">inr</td>
-<td align="right">0.078</td>
-<td align="right">0.135</td>
-<td align="right">0.024</td>
-<td align="right">0.004</td>
-<td align="right">0.106</td>
-</tr>
-<tr class="odd">
-<td align="left">diastolic_blood_pressure</td>
-<td align="right">0.077</td>
-<td align="right">0.047</td>
-<td align="right">0.000</td>
-<td align="right">0.207</td>
-<td align="right">0.017</td>
-</tr>
-<tr class="even">
-<td align="left">systolic_blood_pressure</td>
-<td align="right">0.065</td>
-<td align="right">0.003</td>
-<td align="right">0.036</td>
-<td align="right">0.001</td>
-<td align="right">0.048</td>
-</tr>
-<tr class="odd">
-<td align="left">sp_o2</td>
-<td align="right">0.058</td>
-<td align="right">0.085</td>
-<td align="right">0.001</td>
-<td align="right">0.003</td>
-<td align="right">0.051</td>
-</tr>
-<tr class="even">
-<td align="left">blood_calcium</td>
-<td align="right">0.056</td>
-<td align="right">0.064</td>
-<td align="right">0.102</td>
-<td align="right">0.006</td>
-<td align="right">0.111</td>
-</tr>
-<tr class="odd">
-<td align="left">leucocyte</td>
-<td align="right">0.055</td>
-<td align="right">0.041</td>
-<td align="right">0.213</td>
-<td align="right">0.000</td>
-<td align="right">0.037</td>
-</tr>
-<tr class="even">
-<td align="left">lymphocyte</td>
-<td align="right">0.049</td>
-<td align="right">0.016</td>
-<td align="right">0.303</td>
-<td align="right">0.230</td>
-<td align="right">0.203</td>
-</tr>
-<tr class="odd">
-<td align="left">blood_sodium</td>
-<td align="right">0.044</td>
-<td align="right">0.017</td>
-<td align="right">0.000</td>
-<td align="right">0.088</td>
-<td align="right">0.002</td>
-</tr>
-<tr class="even">
-<td align="left">chloride</td>
-<td align="right">0.043</td>
-<td align="right">0.173</td>
-<td align="right">0.063</td>
-<td align="right">0.004</td>
-<td align="right">0.045</td>
-</tr>
-<tr class="odd">
-<td align="left">magnesium_ion</td>
-<td align="right">0.043</td>
-<td align="right">0.019</td>
-<td align="right">0.043</td>
-<td align="right">0.006</td>
-<td align="right">0.104</td>
-</tr>
-<tr class="even">
-<td align="left">ph</td>
-<td align="right">0.036</td>
-<td align="right">0.019</td>
-<td align="right">0.086</td>
-<td align="right">0.030</td>
-<td align="right">0.000</td>
-</tr>
-<tr class="odd">
-<td align="left">ef</td>
-<td align="right">0.034</td>
-<td align="right">0.072</td>
-<td align="right">0.000</td>
-<td align="right">0.089</td>
-<td align="right">0.005</td>
-</tr>
-<tr class="even">
-<td align="left">temperature</td>
-<td align="right">0.033</td>
-<td align="right">0.074</td>
-<td align="right">0.042</td>
-<td align="right">0.018</td>
-<td align="right">0.003</td>
-</tr>
-<tr class="odd">
-<td align="left">neutrophils</td>
-<td align="right">0.020</td>
-<td align="right">0.019</td>
-<td align="right">0.280</td>
-<td align="right">0.251</td>
-<td align="right">0.221</td>
-</tr>
-<tr class="even">
-<td align="left">basophils</td>
-<td align="right">0.014</td>
-<td align="right">0.002</td>
-<td align="right">0.103</td>
-<td align="right">0.121</td>
-<td align="right">0.094</td>
-</tr>
-<tr class="odd">
-<td align="left">platelets</td>
-<td align="right">0.012</td>
-<td align="right">0.052</td>
-<td align="right">0.078</td>
-<td align="right">0.008</td>
-<td align="right">0.000</td>
-</tr>
-<tr class="even">
-<td align="left">creatine_kinase</td>
-<td align="right">0.004</td>
-<td align="right">0.001</td>
-<td align="right">0.020</td>
-<td align="right">0.012</td>
-<td align="right">0.001</td>
-</tr>
-<tr class="odd">
-<td align="left">mcv</td>
-<td align="right">0.003</td>
-<td align="right">0.286</td>
-<td align="right">0.037</td>
-<td align="right">0.001</td>
-<td align="right">0.122</td>
-</tr>
-<tr class="even">
-<td align="left">mch</td>
-<td align="right">0.003</td>
-<td align="right">0.476</td>
-<td align="right">0.008</td>
-<td align="right">0.032</td>
-<td align="right">0.175</td>
-</tr>
-<tr class="odd">
-<td align="left">glucose</td>
-<td align="right">0.002</td>
-<td align="right">0.026</td>
-<td align="right">0.002</td>
-<td align="right">0.001</td>
-<td align="right">0.032</td>
-</tr>
-<tr class="even">
-<td align="left">respiratory_rate</td>
-<td align="right">0.001</td>
-<td align="right">0.032</td>
-<td align="right">0.113</td>
-<td align="right">0.071</td>
-<td align="right">0.006</td>
-</tr>
-<tr class="odd">
-<td align="left">mchc</td>
-<td align="right">0.001</td>
-<td align="right">0.307</td>
-<td align="right">0.020</td>
-<td align="right">0.116</td>
-<td align="right">0.086</td>
-</tr>
-<tr class="even">
-<td align="left">heart_rate</td>
-<td align="right">0.001</td>
-<td align="right">0.004</td>
-<td align="right">0.154</td>
-<td align="right">0.106</td>
-<td align="right">0.004</td>
-</tr>
 </tbody>
 </table>
 <p>In a factor map, a higher <code>cos2</code> value close to 1
@@ -1028,7 +820,7 @@ indicates a stronger relationship between the variable and the principal
 component, signifying higher quality.</p>
 <pre class="r"><code>#shows the quality of variables.
 corrplot(var_sign$cos2, is.corr = FALSE)</code></pre>
-<p><img src="preliminary_study_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-11-1.png" width="960" /></p>
 <p>The correlation plot visualizes the indicator <code>cos2</code>,
 representing the variable-PC correlation. The model selected 5
 dimensions for plotting the correlation map.</p>
@@ -1037,7 +829,7 @@ dimensions for plotting the correlation map.</p>
 <code>urea_nitrogen</code>. For <code>dim.2</code>, the variable with
 the highest correlation are <code>mch</code>, <code>rbc</code>.</p>
 <pre class="r"><code>#result_contri
-var_sign$contrib |&gt; as.data.frame() |&gt; arrange(-Dim.1) |&gt; knitr::kable(digits = 3)</code></pre>
+var_sign$contrib |&gt; as.data.frame() |&gt; arrange(-Dim.1) |&gt; head(10) |&gt; knitr::kable(digits = 3)</code></pre>
 <table>
 <thead>
 <tr class="header">
@@ -1130,214 +922,6 @@ var_sign$contrib |&gt; as.data.frame() |&gt; arrange(-Dim.1) |&gt; knitr::kable(
 <td align="right">1.005</td>
 <td align="right">9.736</td>
 </tr>
-<tr class="odd">
-<td align="left">blood_potassium</td>
-<td align="right">2.833</td>
-<td align="right">2.133</td>
-<td align="right">5.691</td>
-<td align="right">0.038</td>
-<td align="right">1.030</td>
-</tr>
-<tr class="even">
-<td align="left">lactic_acid</td>
-<td align="right">2.381</td>
-<td align="right">1.643</td>
-<td align="right">1.512</td>
-<td align="right">6.546</td>
-<td align="right">0.304</td>
-</tr>
-<tr class="odd">
-<td align="left">pt</td>
-<td align="right">2.028</td>
-<td align="right">4.490</td>
-<td align="right">1.077</td>
-<td align="right">0.163</td>
-<td align="right">4.911</td>
-</tr>
-<tr class="even">
-<td align="left">inr</td>
-<td align="right">2.004</td>
-<td align="right">4.388</td>
-<td align="right">0.958</td>
-<td align="right">0.180</td>
-<td align="right">4.800</td>
-</tr>
-<tr class="odd">
-<td align="left">diastolic_blood_pressure</td>
-<td align="right">1.992</td>
-<td align="right">1.541</td>
-<td align="right">0.009</td>
-<td align="right">8.800</td>
-<td align="right">0.763</td>
-</tr>
-<tr class="even">
-<td align="left">systolic_blood_pressure</td>
-<td align="right">1.683</td>
-<td align="right">0.085</td>
-<td align="right">1.435</td>
-<td align="right">0.049</td>
-<td align="right">2.179</td>
-</tr>
-<tr class="odd">
-<td align="left">sp_o2</td>
-<td align="right">1.484</td>
-<td align="right">2.759</td>
-<td align="right">0.040</td>
-<td align="right">0.109</td>
-<td align="right">2.314</td>
-</tr>
-<tr class="even">
-<td align="left">blood_calcium</td>
-<td align="right">1.435</td>
-<td align="right">2.062</td>
-<td align="right">4.035</td>
-<td align="right">0.264</td>
-<td align="right">4.985</td>
-</tr>
-<tr class="odd">
-<td align="left">leucocyte</td>
-<td align="right">1.418</td>
-<td align="right">1.322</td>
-<td align="right">8.445</td>
-<td align="right">0.000</td>
-<td align="right">1.654</td>
-</tr>
-<tr class="even">
-<td align="left">lymphocyte</td>
-<td align="right">1.255</td>
-<td align="right">0.518</td>
-<td align="right">12.006</td>
-<td align="right">9.758</td>
-<td align="right">9.150</td>
-</tr>
-<tr class="odd">
-<td align="left">blood_sodium</td>
-<td align="right">1.124</td>
-<td align="right">0.541</td>
-<td align="right">0.003</td>
-<td align="right">3.746</td>
-<td align="right">0.101</td>
-</tr>
-<tr class="even">
-<td align="left">chloride</td>
-<td align="right">1.120</td>
-<td align="right">5.627</td>
-<td align="right">2.504</td>
-<td align="right">0.167</td>
-<td align="right">2.051</td>
-</tr>
-<tr class="odd">
-<td align="left">magnesium_ion</td>
-<td align="right">1.113</td>
-<td align="right">0.606</td>
-<td align="right">1.704</td>
-<td align="right">0.274</td>
-<td align="right">4.710</td>
-</tr>
-<tr class="even">
-<td align="left">ph</td>
-<td align="right">0.921</td>
-<td align="right">0.624</td>
-<td align="right">3.419</td>
-<td align="right">1.254</td>
-<td align="right">0.012</td>
-</tr>
-<tr class="odd">
-<td align="left">ef</td>
-<td align="right">0.875</td>
-<td align="right">2.341</td>
-<td align="right">0.000</td>
-<td align="right">3.760</td>
-<td align="right">0.219</td>
-</tr>
-<tr class="even">
-<td align="left">temperature</td>
-<td align="right">0.841</td>
-<td align="right">2.400</td>
-<td align="right">1.682</td>
-<td align="right">0.769</td>
-<td align="right">0.130</td>
-</tr>
-<tr class="odd">
-<td align="left">neutrophils</td>
-<td align="right">0.524</td>
-<td align="right">0.627</td>
-<td align="right">11.087</td>
-<td align="right">10.640</td>
-<td align="right">9.978</td>
-</tr>
-<tr class="even">
-<td align="left">basophils</td>
-<td align="right">0.367</td>
-<td align="right">0.052</td>
-<td align="right">4.084</td>
-<td align="right">5.147</td>
-<td align="right">4.259</td>
-</tr>
-<tr class="odd">
-<td align="left">platelets</td>
-<td align="right">0.298</td>
-<td align="right">1.672</td>
-<td align="right">3.096</td>
-<td align="right">0.319</td>
-<td align="right">0.010</td>
-</tr>
-<tr class="even">
-<td align="left">creatine_kinase</td>
-<td align="right">0.115</td>
-<td align="right">0.032</td>
-<td align="right">0.790</td>
-<td align="right">0.514</td>
-<td align="right">0.038</td>
-</tr>
-<tr class="odd">
-<td align="left">mcv</td>
-<td align="right">0.076</td>
-<td align="right">9.275</td>
-<td align="right">1.459</td>
-<td align="right">0.023</td>
-<td align="right">5.521</td>
-</tr>
-<tr class="even">
-<td align="left">mch</td>
-<td align="right">0.075</td>
-<td align="right">15.466</td>
-<td align="right">0.303</td>
-<td align="right">1.374</td>
-<td align="right">7.883</td>
-</tr>
-<tr class="odd">
-<td align="left">glucose</td>
-<td align="right">0.060</td>
-<td align="right">0.857</td>
-<td align="right">0.088</td>
-<td align="right">0.025</td>
-<td align="right">1.430</td>
-</tr>
-<tr class="even">
-<td align="left">respiratory_rate</td>
-<td align="right">0.020</td>
-<td align="right">1.046</td>
-<td align="right">4.466</td>
-<td align="right">3.019</td>
-<td align="right">0.292</td>
-</tr>
-<tr class="odd">
-<td align="left">mchc</td>
-<td align="right">0.013</td>
-<td align="right">9.960</td>
-<td align="right">0.789</td>
-<td align="right">4.920</td>
-<td align="right">3.864</td>
-</tr>
-<tr class="even">
-<td align="left">heart_rate</td>
-<td align="right">0.013</td>
-<td align="right">0.120</td>
-<td align="right">6.111</td>
-<td align="right">4.512</td>
-<td align="right">0.171</td>
-</tr>
 </tbody>
 </table>
 <p>The <code>var$contrib</code> provides the contribution magnitude of
@@ -1347,13 +931,13 @@ limitations in two-dimensional plotting, typically only the first two
 dimensions can be visualized.</p>
 <pre class="r"><code>#shows the contribution in different dimensions.
 corrplot(var_sign$contrib, is.corr = FALSE)</code></pre>
-<p><img src="preliminary_study_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-13-1.png" width="960" /></p>
 <p>Correlation plot can draw emphasis on the highest contribution
 variables in each dimension.</p>
 <pre class="r"><code>fviz_contrib(res_pca_sign, choice = &quot;var&quot;, axes = 1, top = 10)</code></pre>
-<p><img src="preliminary_study_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 <pre class="r"><code>fviz_contrib(res_pca_sign, choice = &quot;var&quot;, axes = 1:5, top = 10)</code></pre>
-<p><img src="preliminary_study_files/figure-html/unnamed-chunk-13-2.png" width="672" /></p>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-14-2.png" width="672" /></p>
 <p>Generate bar charts displaying the contribution magnitude for each
 dimension, with a red dashed line indicating the expected average
 contribution.For a given PC, if a variable’s contribution exceeds this
@@ -1368,7 +952,7 @@ PCs.</p>
 pca_coord = PCA(sign_tidy |&gt; select(anion_gap, blood_calcium, bicarbonate, lactic_acid, leucocyte, lymphocyte, neutrophils, rbc, urea_nitrogen), scale.unit = TRUE, graph = FALSE)
 
 fviz_pca_var(pca_coord, col.var = &quot;contrib&quot;, gradient.cols = c(&quot;#00AFBB&quot;, &quot;#E7B800&quot;, &quot;#FC4E07&quot;))</code></pre>
-<p><img src="preliminary_study_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 <p>We’ve created visualizations showcasing the importance of variables
 concerning the two most significant dimensions.</p>
 <p><code>cos2</code> is used to assess the variables’ importance,
@@ -1387,7 +971,7 @@ fviz_pca_ind(res_pca_sign,
              palette = c(&quot;#00AFBB&quot;, &quot;#FC4E07&quot;),
              addEllipses = TRUE,
              legend.title = &quot;Groups&quot;)</code></pre>
-<p><img src="preliminary_study_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p><img src="preliminary_study_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
 <p>Based on the outcome (<code>Alive</code> or <code>Death</code>), the
 data points were grouped and color-coded accordingly. Ellipses were
 generated to encapsulate the sample points for different groups (alive

@@ -104,12 +104,15 @@ In descending order of importance, the top 5 variables are: `hyperlipemia`, `atr
 \ \par
 ### 2.2 Analysis of Patient Vital Signs Variables
 
-```{r fig.width = 10, fig.height = 10}
+```{r fig.width = 5, fig.height = 5}
 #decision tree for vital signs
 tree_sign_r = rpart(outcome ~ ., data = sign_tidy, method = "class", control = rpart.control(cp = 0.02))
 print(tree_sign_r)
 rpart.plot(tree_sign_r)
+```
 
+
+```{r fig.width = 12, fig.height = 8}
 tree_sign_c = ctree(outcome ~ ., data = sign_tidy)
 plot(tree_sign_c)
 ```
@@ -118,7 +121,7 @@ The analysis of continuous variables related to vital signs resulted in the succ
 
 The primary level classification variable is `anion_gap`. The secondary level classification variables are `blood_calcium`, `bicarbonate`. The tertiary level classification variables are `lactic_acid`, `leucocyte`, `respiratory_rate`. The forth level classification variable is `pt`.  
 
-```{r}
+```{r fig.width = 8, fig.height = 8}
 #random forest for vital signs
 rf_sign = randomForest(outcome ~ ., data = sign_tidy)
 importance(rf_sign) |> 
@@ -175,12 +178,12 @@ In this instance, after introducing the third dimension, there's a limited chang
 ```{r}
 #result_cos2
 var_sign <- get_pca_var(res_pca_sign) 
-var_sign$cos2 |> as.data.frame() |> arrange(-Dim.1) |> knitr::kable(digits = 3)
+var_sign$cos2 |> as.data.frame() |> arrange(-Dim.1) |> head(10) |> knitr::kable(digits = 3)
 ```
 
 In a factor map, a higher `cos2` value close to 1 indicates a stronger relationship between the variable and the principal component, signifying higher quality.  
 
-```{r}
+```{r fig.width = 10, fig.height = 15}
 #shows the quality of variables.
 corrplot(var_sign$cos2, is.corr = FALSE)
 ```
@@ -191,12 +194,12 @@ For `dim.1`, the variable with the highest correlation are `bicarbonate`, `anion
 
 ```{r}
 #result_contri
-var_sign$contrib |> as.data.frame() |> arrange(-Dim.1) |> knitr::kable(digits = 3)
+var_sign$contrib |> as.data.frame() |> arrange(-Dim.1) |> head(10) |> knitr::kable(digits = 3)
 ```
 
 The `var$contrib` provides the contribution magnitude of variables to each PC. Subsequently, visualizations can be generated based on the contribution values of variables to PCs. However, due to limitations in two-dimensional plotting, typically only the first two dimensions can be visualized.  
 
-```{r}
+```{r fig.width = 10, fig.height = 15}
 #shows the contribution in different dimensions.
 corrplot(var_sign$contrib, is.corr = FALSE)
 ```
