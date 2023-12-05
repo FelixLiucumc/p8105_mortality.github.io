@@ -88,7 +88,7 @@ Furthermore, the binary nature of these patient comorbidities variables posed ce
 rf_com = randomForest(outcome ~ ., data = com_tidy)
 importance(rf_com) |> 
   as.data.frame() |> 
-  mutate("Mean Decrease Gini" = MeanDecreaseGini) |>
+  mutate("Mean Decrease in Gini" = MeanDecreaseGini) |>
   arrange(-MeanDecreaseGini) |> 
   select(-MeanDecreaseGini) |>
   head(8) |> 
@@ -96,7 +96,7 @@ importance(rf_com) |>
 varImpPlot(rf_com, main = "Random Forests for Comorbidities")
 ```
 
-The random forest yielded a list of variables ranked by their importance based on `mean decrease in Gini index`, a parameter calculated by assessing the influence of variables on the nodes of the classification tree.  
+The random forest yielded a list of variables ranked by their importance based on `Mean Decrease in Gini`, a parameter calculated by assessing the influence of variables on the nodes of the classification tree.  
 
 In descending order of importance, the top 5 variables are: `hyperlipemia`, `atrialfibrillation`, `renal_failure`, `deficiencyanemias`, `diabetes`.  
 
@@ -117,7 +117,7 @@ The primary level classification variable is `anion_gap`. The secondary level cl
 rf_sign = randomForest(outcome ~ ., data = sign_tidy)
 importance(rf_sign) |> 
   as.data.frame() |>
-  mutate("Mean Decrease Gini" = MeanDecreaseGini) |>
+  mutate("Mean Decrease in Gini" = MeanDecreaseGini) |>
   arrange(-MeanDecreaseGini) |> 
   select(-MeanDecreaseGini) |>
   head(8) |> 
@@ -125,7 +125,7 @@ importance(rf_sign) |>
 varImpPlot(rf_sign, main = "Random Forests for Vital Signs")
 ```
 
-Ranked by the `mean decrease gini`, the top 5 variables are: `anion_gap`, `bicarbonate`, `lactic_acid`, `lymphocyte`, `leucocyte`.  
+Ranked by the `Mean Decrease in Gini`, the top 5 variables are: `anion_gap`, `bicarbonate`, `lactic_acid`, `lymphocyte`, `leucocyte`.  
 
 The results obtained from the random forest exhibit a overlap with the decision tree outcomes. In fact, random forest is an extension of decision trees that address over-fitting issues inherent in decision tree model. Therefore, we tend to prioritize the key variables identified by the random forest.  
 

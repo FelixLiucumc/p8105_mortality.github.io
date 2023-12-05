@@ -21,8 +21,8 @@ We categorized the dataset into following aspects:
 
 4. **Laboratory variables:** hematocrit, red blood cells, mean corpuscular hemoglobin MCH, mean corpuscular hemoglobin concentration MCHC, mean corpuscular volume MCV, red blood cell distribution width RDW, platelet count, white blood cells, neutrophils, basophils, lymphocytes, prothrombin time PT, international normalized ratio INR, NT-proBNP, creatine kinase, creatinine, blood urea nitrogen BUN glucose, potassium, sodium, calcium, chloride, magnesium, the anion gap, bicarbonate, lactate, hydrogen ion concentration pH, partial pressure of CO2 in arterial blood, and LVEF
 
-\ \par
-\ \par
+
+
 
 # Data Dictionary
 
@@ -503,11 +503,13 @@ Observations based on the plots include:
 
 # Preliminary Study
 
+
 ## Correlation between Vital Signs
 
-```{r fig.width = 10, fig.height = 10}
+
+```{r fig.width = 10, fig.height = 12}
 #show correlation
-corrplot(cor(sign_tidy |> select(-outcome)), type = "upper", diag = FALSE)
+corrplot(cor(sign_tidy |> select(-outcome)), type = "upper", order = "AOE", diag = FALSE, title = "Correlation Plot of Variables", cex.main = 1.5, mar = c(0, 0, 1, 0))
 ```
 
 The correlation plot illustrates the relationships between vital signs pairwise. Darker colors indicate stronger correlations, where blue signifies positive correlations and red signifies negative ones.  
@@ -520,10 +522,11 @@ Strong positive correlations were observed between variables such as `rbc` and `
 
 ### Analysis of Patient comorbidities Variables
 
+
 ```{r}
 #decision tree for comorbidities
 tree_com = ctree(outcome ~ ., data = com_tidy)
-plot(tree_com)
+plot(tree_com, main = "Decision Tree for Comorbidities")
 ```
 
 The decision tree employed variables `renal_failure` and `atrialfibrillation` to predict the outcome, showing strong evidence (p<0.05) for selecting these two variables.  
@@ -537,30 +540,25 @@ Furthermore, the binary nature of these patient comorbidities variables posed ce
 rf_com = randomForest(outcome ~ ., data = com_tidy)
 importance(rf_com) |> 
   as.data.frame() |> 
+  mutate("Mean Decrease in Gini" = MeanDecreaseGini) |>
   arrange(-MeanDecreaseGini) |> 
+  select(-MeanDecreaseGini) |>
   head(8) |> 
   knitr::kable(digits = 3)
-varImpPlot(rf_com)
+varImpPlot(rf_com, main = "Random Forests for Comorbidities")
 ```
 
-The random forest yielded a list of variables ranked by their importance based on `mean decrease in Gini index`, a parameter calculated by assessing the influence of variables on the nodes of the classification tree.  
+The random forest yielded a list of variables ranked by their importance based on `Mean Decrease in Gini`, a parameter calculated by assessing the influence of variables on the nodes of the classification tree.  
 
 In descending order of importance, the top 5 variables are: `hyperlipemia`, `atrialfibrillation`, `renal_failure`, `deficiencyanemias`, `diabetes`.  
 
 
 ### Analysis of Patient Vital Signs Variables
 
-```{r fig.width = 5, fig.height = 5}
-#decision tree for vital signs
-tree_sign_r = rpart(outcome ~ ., data = sign_tidy, method = "class", control = rpart.control(cp = 0.02))
-print(tree_sign_r)
-rpart.plot(tree_sign_r)
-```
-
 
 ```{r fig.width = 12, fig.height = 8}
-tree_sign_c = ctree(outcome ~ ., data = sign_tidy)
-plot(tree_sign_c)
+tree_sign = ctree(outcome ~ ., data = sign_tidy)
+plot(tree_sign, main = "Decision Tree for Vital Signs")
 ```
 
 The analysis of continuous variables related to vital signs resulted in the successful establishment of classification criteria by the decision tree, incorporating a total of 7 variables. It formed a 4-level classification structure with reasonably distributed probabilities across nodes.  
@@ -571,14 +569,16 @@ The primary level classification variable is `anion_gap`. The secondary level cl
 #random forest for vital signs
 rf_sign = randomForest(outcome ~ ., data = sign_tidy)
 importance(rf_sign) |> 
-  as.data.frame() |> 
+  as.data.frame() |>
+  mutate("Mean Decrease in Gini" = MeanDecreaseGini) |>
   arrange(-MeanDecreaseGini) |> 
+  select(-MeanDecreaseGini) |>
   head(8) |> 
   knitr::kable(digits = 3)
-varImpPlot(rf_sign)
+varImpPlot(rf_sign, main = "Random Forests for Vital Signs")
 ```
 
-Ranked by the `mean decrease gini`, the top 5 variables are: `anion_gap`, `bicarbonate`, `lactic_acid`, `lymphocyte`, `leucocyte`.  
+Ranked by the `Mean Decrease in Gini`, the top 5 variables are: `anion_gap`, `bicarbonate`, `lactic_acid`, `lymphocyte`, `leucocyte`.  
 
 The results obtained from the random forest exhibit a overlap with the decision tree outcomes. In fact, random forest is an extension of decision trees that address over-fitting issues inherent in decision tree model. Therefore, we tend to prioritize the key variables identified by the random forest.  
 
@@ -587,6 +587,7 @@ The results obtained from the random forest exhibit a overlap with the decision 
 
 
 ### Dimension Reduction for Patient Vital Signs Variables
+
 
 ```{r}
 #pca using R build-in function prcomp()
@@ -602,6 +603,12 @@ res_pca_sign = PCA(sign_tidy |> select(-outcome), scale.unit = TRUE, graph = FAL
 get_eigenvalue(res_pca_sign) |> 
   as.data.frame() |> 
   filter(cumulative.variance.percent < 61) |> 
+  mutate(
+    "Eigenvalue" = eigenvalue,
+    "Variance Percent" = variance.percent,
+    "Cumulative Variance Percent" = cumulative.variance.percent
+  ) |>
+  select(-eigenvalue, -variance.percent, -cumulative.variance.percent) |>
   knitr::kable(digits = 3)
 ```
 
@@ -614,7 +621,7 @@ Typically, we can limit the number of dimensions/PCs by controlling the `cumulat
 ```{r}
 #scree plot
 #visualize the contributions of each dimension.
-fviz_screeplot(res_pca_sign, addlabels = TRUE, ylim = c(0, 20))
+fviz_screeplot(res_pca_sign, addlabels = TRUE, ylim = c(0, 15), main = "Scree Plot of Dimension's Contributions", font.main = 15)
 ```
 
 Another approach involves examining the **scree plot**, which visualizes the ability of each dimension to explain the overall variance in the data. When the explanatory power begins to decrease and flatten out, it suggests diminishing returns in terms of dimension reduction. This is often considered a bottleneck point, and it's generally reasonable to halt operations.  
@@ -624,14 +631,19 @@ In this instance, after introducing the third dimension, there's a limited chang
 ```{r}
 #result_cos2
 var_sign <- get_pca_var(res_pca_sign) 
-var_sign$cos2 |> as.data.frame() |> arrange(-Dim.1) |> head(10) |> knitr::kable(digits = 3)
+var_sign$cos2 |>
+  #for pca_var object '$' is necessary for exacting results
+  as.data.frame() |> 
+  arrange(-Dim.1) |> 
+  head(10) |> 
+  knitr::kable(digits = 3)
 ```
 
 In a factor map, a higher `cos2` value close to 1 indicates a stronger relationship between the variable and the principal component, signifying higher quality.  
 
 ```{r fig.width = 10, fig.height = 15}
 #shows the quality of variables.
-corrplot(var_sign$cos2, is.corr = FALSE)
+corrplot(var_sign$cos2, is.corr = FALSE, title = "Variables Quality - PCs Correlation Plot", mar = c(0, 0, 1, 0), cl.align.text = "l")
 ```
 
 The correlation plot visualizes the indicator `cos2`, representing the variable-PC correlation. The model selected 5 dimensions for plotting the correlation map.  
@@ -640,21 +652,26 @@ For `dim.1`, the variable with the highest correlation are `bicarbonate`, `anion
 
 ```{r}
 #result_contri
-var_sign$contrib |> as.data.frame() |> arrange(-Dim.1) |> head(10) |> knitr::kable(digits = 3)
+var_sign$contrib |> 
+  #for pca_var object '$' is necessary for exacting results
+  as.data.frame() |> 
+  arrange(-Dim.1) |> 
+  head(10) |>
+  knitr::kable(digits = 3)
 ```
 
 The `var$contrib` provides the contribution magnitude of variables to each PC. Subsequently, visualizations can be generated based on the contribution values of variables to PCs. However, due to limitations in two-dimensional plotting, typically only the first two dimensions can be visualized.  
 
 ```{r fig.width = 10, fig.height = 15}
 #shows the contribution in different dimensions.
-corrplot(var_sign$contrib, is.corr = FALSE)
+corrplot(var_sign$contrib, is.corr = FALSE, title = "Contributions - PCs Correlation Plot", mar = c(0, 0, 1, 0), cl.align.text = "l")
 ```
 
 Correlation plot can draw emphasis on the highest contribution variables in each dimension.  
 
 ```{r}
-fviz_contrib(res_pca_sign, choice = "var", axes = 1, top = 10)
-fviz_contrib(res_pca_sign, choice = "var", axes = 1:5, top = 10)
+fviz_contrib(res_pca_sign, choice = "var", axes = 1, ylim = c(0, 15), top = 8)
+fviz_contrib(res_pca_sign, choice = "var", axes = 1:5, ylim = c(0, 7.5), top = 8)
 ```
 
 Generate bar charts displaying the contribution magnitude for each dimension, with a red dashed line indicating the expected average contribution.For a given PC, if a variable's contribution exceeds this threshold, it can be considered important within that PC or group of PCs.  
@@ -684,7 +701,12 @@ fviz_pca_ind(res_pca_sign,
              col.ind = as.character(sign_tidy$outcome),
              palette = c("#00AFBB", "#FC4E07"),
              addEllipses = TRUE,
-             legend.title = "Groups")
+             legend.title = "Outcome")
 ```
 
 Based on the outcome (`Alive` or `Death`), the data points were grouped and color-coded accordingly. Ellipses were generated to encapsulate the sample points for different groups (alive and death), showcasing the analysis using the two principal components.  
+
+
+
+
+
