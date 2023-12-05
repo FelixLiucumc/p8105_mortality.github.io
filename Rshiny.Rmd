@@ -15,6 +15,8 @@ library(shiny)
 library(data.table)
 library(reshape2)
 library(rsconnect)
+library(FactoMineR)
+library(factoextra)
 
 # read the data
 mortality_data <- 
@@ -62,6 +64,10 @@ formatVarName <- function(variable) {
   return(variable)
 }
 
+#select patient vital signs
+sign_tidy =
+  mortality_data_EDA |>
+  select(outcome, heart_rate:ef)
 ```
 
 
@@ -349,3 +355,49 @@ renderPlotly({
 })
 
 ```
+
+
+PCA
+===================================== 
+
+Column {.sidebar}
+-----------------------------------------------------------------------
+
+```{r}
+checkboxGroupInput(
+    inputId = "PCA",
+    label = h3("Select Index"),
+    choices = c(
+      "Anion Gap" = "anion_gap", 
+      "Blood Calcium" = "blood_calcium", 
+      "Bicarbonate" = "bicarbonate", 
+      "Lactic Acid" = "lactic_acid", 
+      "Leucocyte" = "leucocyte", 
+      "Lymphocyte" = "lymphocyte", 
+      "Neutrophils" = "neutrophils", 
+      "RBC" = "rbc", 
+      "MCH" = "mch", 
+      "Urea Nitrogen" = "urea_nitrogen", 
+      "Hematocrit" = "hematocrit", 
+      "Creatinine" = "creatinine"),
+    selected = c("anion_gap", "neutrophils", "bicarbonate", "leucocyte", "creatinine", "rbc")
+  )
+```
+
+
+Row{data-height=650}
+-----------------------------------------------------------------------
+
+### PCA
+
+```{r}
+renderPlotly({
+    variable <- input$PCA
+    formattedVarName <- formatVarName(variable)
+  
+    pca_coord = PCA(sign_tidy |> select(variable), scale.unit = TRUE, graph = FALSE)
+    
+    fviz_pca_var(pca_coord, col.var = "contrib", gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07")) |> ggplotly()
+  })
+```
+

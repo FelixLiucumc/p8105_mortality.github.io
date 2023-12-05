@@ -45,7 +45,7 @@ mort_tidy =
                       "deficiencyanemias", "depression", "hyperlipemia", 
                       "renal_failure", "copd"))
 
-#select patient complications
+#select patient comorbidities
 com_tidy =
   mort_tidy |>
   select(outcome, hypertensive:copd)
@@ -72,10 +72,10 @@ Strong positive correlations were observed between variables such as `rbc` and `
 ## 2. CART and rf: Dimension Reduction and Core Variables Analysis
 
 \ \par
-### 2.1 Analysis of Patient Compllications Variables
+### 2.1 Analysis of Patient comorbidities Variables
 
 ```{r}
-#decision tree for complications
+#decision tree for comorbidities
 tree_com = ctree(outcome ~ ., data = com_tidy)
 plot(tree_com)
 ```
@@ -84,10 +84,10 @@ The decision tree employed variables `renal_failure` and `atrialfibrillation` to
 
 However, the probability distribution at the nodes suggests that this decision-making approach might not be sufficiently reliable. This could be due to the similar effects of each variable, making it challenging to determine the next variable for refining the decision. Alternatively, it might indicate insufficient evidence to support the selection of other variables (p-values not meeting the criteria).  
 
-Furthermore, the binary nature of these patient complications variables posed certain challenges in constructing the classification tree, making characteristics of the variables hard to analyze.  
+Furthermore, the binary nature of these patient comorbidities variables posed certain challenges in constructing the classification tree, making characteristics of the variables hard to analyze.  
 
 ```{r}
-#random forest for complications
+#random forest for comorbidities
 rf_com = randomForest(outcome ~ ., data = com_tidy)
 importance(rf_com) |> 
   as.data.frame() |> 
@@ -173,9 +173,9 @@ Another approach involves examining the **scree plot**, which visualizes the abi
 In this instance, after introducing the third dimension, there's a limited change in the explanatory power as the dimensions increase. It might be considered to select the first three dimensions for subsequent model analysis. However, due to the relatively small absolute size of the overall explainable variance, the cumulative explained variance of the first three dimensions falls short of 50%. Therefore, in this case, this approach might not be suitable. 
 
 ```{r}
-#result
+#result_cos2
 var_sign <- get_pca_var(res_pca_sign) 
-var_sign$cos2 |> knitr::kable(digits = 3)
+var_sign$cos2 |> as.data.frame() |> arrange(-Dim.1) |> knitr::kable(digits = 3)
 ```
 
 In a factor map, a higher `cos2` value close to 1 indicates a stronger relationship between the variable and the principal component, signifying higher quality.  
@@ -190,8 +190,8 @@ The correlation plot visualizes the indicator `cos2`, representing the variable-
 For `dim.1`, the variable with the highest correlation are `bicarbonate`, `anion_gap`, `urea_nitrogen`. For `dim.2`, the variable with the highest correlation are `mch`, `rbc`.  
 
 ```{r}
-#result
-var_sign$contrib |> knitr::kable(digits = 3)
+#result_contri
+var_sign$contrib |> as.data.frame() |> arrange(-Dim.1) |> knitr::kable(digits = 3)
 ```
 
 The `var$contrib` provides the contribution magnitude of variables to each PC. Subsequently, visualizations can be generated based on the contribution values of variables to PCs. However, due to limitations in two-dimensional plotting, typically only the first two dimensions can be visualized.  
@@ -216,7 +216,10 @@ Generate bar charts displaying the contribution magnitude for each dimension, wi
 #(a) positive correlated variables are grouped together,
 #(b) negative correlated variables are located on opposite sides of the origin,
 #(c) the distance between the variable and the origin measures the quality of the variable. Variables that are far from the origin are well represented.
-fviz_pca_var(res_pca_sign, col.var = "contrib", gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"))
+
+pca_coord = PCA(sign_tidy |> select(anion_gap, blood_calcium, bicarbonate, lactic_acid, leucocyte, lymphocyte, neutrophils, rbc, urea_nitrogen), scale.unit = TRUE, graph = FALSE)
+
+fviz_pca_var(pca_coord, col.var = "contrib", gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"))
 ```
 
 We've created visualizations showcasing the importance of variables concerning the two most significant dimensions.  
