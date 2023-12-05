@@ -1102,7 +1102,7 @@ roc = performance(pred, &quot;tpr&quot;, &quot;fpr&quot;)
 auc = performance(pred, measure = &quot;auc&quot;)@y.values[[1]]
 
 plot(roc, colorize = F)
-title(main = &quot;The Receiver Operating Characteristic (ROC) Curve of Generalized Linear Model&quot;)</code></pre>
+title(main = &quot;The ROC Curve of Generalized Linear Model&quot;)</code></pre>
 <p><img src="regression_model_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p>The AUC of the model on validation dataset: 0.7757475. According to
 the ROC plot and AUC value, the predictive performance of the model on
