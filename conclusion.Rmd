@@ -35,3 +35,50 @@ This EDA underscores the importance of considering age and gender in predicting 
 The insights gained from this analysis can guide further detailed statistical analysis and predictive modeling. Especially, investigating the reasons behind the observed trends and how they interact to influence patient outcomes could be a valuable next step.
 
 This exploratory analysis sets the stage for more in-depth statistical analysis and modeling, aiming to enhance the understanding and prediction of mortality rates in heart failure patients admitted to the ICU.
+
+## Conclusion of Regression
+
+Due to the response variable being binary, we employed the logistic regression method. Before the regrassion process, the data types of categorical variables will be transformed to factor.
+
+### Generalized Linear Model for Complete Dataset 
+
+The complete model is fitted using patients data from both group1 (derivation group) and group2 (validation group). A stepwise method is conducted to select predictors to be included in the model.
+
+The expression of complete model is:
+
+$$
+outcome \sim age+deficiencyanemias1+renal\_failure1+copd1\\
++heart\_rate+diastolic\_blood\_pressure+respiratory\_rate\\
++temperature+sp\_o2+urine\_output+mch+mchc+rdw+leucocyte\\
++platelets+lymphocyte+creatinine+urea\_nitrogen\\
++blood\_potassium+blood\_calcium+anion\_gap+magnesium\_ion\\
++bicarbonate+pco2
+$$
+
+- It is worth noting that among the comorbidity variables, only deficiencyanemias, renal_failure, and copd are selected by model, and the estimates for all three are negative. This suggests that the occurrence of these three comorbidities is associated with a decrease in mortality, which is counterintuitive. This phenomenon may be attributed to the correlation between the onset of these diseases and early diagnosis and treatment. Early detection and treatment of these diseases might reduce the risk of death. Alternatively, the occurrence of these diseases may prompt patients to pay more attention to their health and take actions to improve their health conditions, thereby enhancing their survival rates.
+- In the remaining variables, the most significant six are blood_calcium, anion_gap, platelets, heart_rate, urea_nitrogen, and pco2. They may have the potential to be important physiological indicators worth monitoring closely in ICU patients.
+
+### Generalized Linear Model for Derivation Dataset
+
+The derivation model is fitted using patients data from group1 (derivation group). A stepwise method is conducted to select predictors to be included in the model.
+
+The expression of derivation model is:
+
+$$
+outcome\sim age+gender2+hypertensive1+atrialfibrillation1+diabetes1\\ +deficiencyanemias1+hyperlipemia1+renal\_failure1+copd1+heart\_rate\\
++diastolic\_blood\_pressure+sp\_o2+mcv+rdw+platelets+lymphocyte\\
++creatinine+urea\_nitrogen+blood\_calcium+anion\_gap+lactic\_acid+pco2
+$$
+
+- Among all the predictors selected, there are 7 comorbidity variables: hypertensive, atrialfibrillation, diabetes, deficiencyanemias, hyperlipemia, renal_failure and copd. All of them have negative estimates except for atrialfibrillation. This indicates that the occurrence of other complications leads to a decrease in mortality (as discussed in the complete model section), but the presence of atrial fibrillation is a noteworthy sign of mortality and should be closely monitored, especially in the ICU. 
+- In the remaining variables, the most significant five are blood_calcium, anion_gap, heart_rate, urea_nitrogen, and creatinine. All of them excapt for creatinine are also among the most significant factors in the complete model, and these four should be particularly noteworthy.
+
+### Model Evaluation on Validation Group
+
+The derivation model is validated on the validation group (group2) and a Receiver Operating Characteristic (ROC) Curve is plotted.
+
+The AUC of the model on validation dataset: 0.7757475. According to the ROC plot and AUC value, the predictive performance of the model on the validation group data is generally satisfactory.
+
+
+
+
