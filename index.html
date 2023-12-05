@@ -154,7 +154,7 @@
 										<h3><span>Data Analysis</span>.</h3>
 										<p>EDA and regression.</p>
 										<a href="EDA.html" class="mr-2">EDA <i class="fa fa-caret-right" aria-hidden="true"></i></a>
-										<a href="Regression.html">Regression <i class="fa fa-caret-right" aria-hidden="true"></i></a>
+										<a href="regression_model.html">Regression <i class="fa fa-caret-right" aria-hidden="true"></i></a>
 									</div>
 								</div>
 							</div>
@@ -208,10 +208,10 @@
 		<!-- welcome -->
 		<section class="welcome py-5">
 			<div class="container py-3">
-				<h3 class="heading text-center mb-md-5 mb-4"> Proposal </h3>
+				<h3 class="heading text-center mb-md-5 mb-4"> Motivation </h3>
 				<div class="row welcome-grids">
 					<div class="col-lg-6">
-						<h3>The motivation for this project:</h3>
+						<h3>The significance of this project:</h3>
 						<p class="my-4">Predictors of in-hospital mortality in patients with heart failure admitted to the intensive care unit (ICU) remain unclear. Aimed to lay a solid foundation for Survival Analysis, deepen our understanding of Mortality, we conducted a comprehensive research based on the patient's Mortality factors dataset. Although this dataset belongs to cross-sectional study, we still can dig out some key patterns that affect Mortality and detect abnormal characteristics that indicate the death sign at the early stage. </p>
 						<a href="p8105_proposal">Learn more</a>
 					</div>
@@ -242,7 +242,12 @@
 							</div>
 						</div>
 						<h4>EDA</h4>
-						<p>A brief introduction to our EDA. A brief introduction to our EDA.</p>
+						<p>Exploratory data analysis (EDA) includes three parts: <br />
+						<B>Demographic Characteristics</B>:The exploration of demographic factors such as gender and age provides critical insights into their potential impact on the outcomes of heart failure patients admitted to the Intensive Care Unit (ICU). This report section presents an analysis of in-hospital mortality rates categorized by gender and age groups.<br />
+						<B>Comorbidities Analysis</B>:Analyzing the distribution of comorbidities by outcome can identify factors that influence mortality in patients with heart failure. It helps to understand the impact of comorbid conditions on patient survival and could inform targeted interventions. The stacked bar chart below presents the distribution of various comorbidities among heart failure patients in the ICU, differentiated by patient outcomes of survival and death.<br />
+						<B>Lab Results Analysis</B>:This section offers a quantitative glimpse into potential biological markers that could contribute to our predictive model, thus enhancing our ability to conduct further analysis and understand mortality more deeply.<br />
+						<a href="EDA.html">About EDA</a>
+						</p>
 					</div>
 					<div class="col-lg-4 col-md-6 mt-md-0 mt-5 w3_agile_services_grid">
 						<div class="agile_services_grid">
@@ -256,7 +261,13 @@
 							</div>
 						</div>
 						<h4>Regression</h4>
-						<p>A brief introduction to our regression. A brief introduction to our regression.</p>
+						<p>In this section, we want to generate a generalized linear model to see the relationship between patients’ mortality status and predictive variables.Due to the response variable (outcome) is binary variable, a generalized linear model (GLM) is chosen for regression analysis.<br />
+						<B>Data Pre-processing</B>:To prepare the data for the regression, the data types of categorical variables will be transformed to factor. This subset of variables includes group, gender, outcome, and the remaining comorbidity variables.<br />
+						<B>Generalized Linear Model for Complete Dataset</B>:Fit a logistic regression model using all patients data (including both the derivation and validation groups) and use the stepwise method to select predictors to be included in the model.<br />
+						<B>Generalized Linear Model for Derivation Dataset</B>:Fit a logistic regression model using patients data from group1 (derivation group) and use the stepwise method to select predictors to be included in the model.<br />
+						<B>Model Evaluation on Validation Group</B>:For the model generated using derivation group data, validate it on the validation group and plot Receiver Operating Characteristic (ROC) Curve.<br />
+            <a href="regression_model.html">About regression</a>
+            </p>
 					</div>
 					<div class="col-lg-4 col-md-6 mt-lg-0 mt-5 w3_agile_services_grid">
 						<div class="agile_services_grid">
@@ -270,7 +281,13 @@
 							</div>
 						</div>
 						<h4>Shiny App</h4>
-						<p>A brief introduction to our Shiny App. A brief introduction to our Shiny App.</p>
+						<p>This section presents interactive dashboard for four parts:<br />
+						<B>Vital sign</B>: This is the density plot and boxplot showing the patient’s status (0 = alive, 1 = death) of each vital sign.<br />
+						<B>Comorbidities</B>: This is the stacked bar chart showing the patient’s status of each comorbities.<br />
+						<B>Lab Results Analysis</B>: This is the density plot and boxplot showing the patient’s status of each “lab result analysis” variable.<br />
+						<B>PCA Analysis</B>: This is the scatter plot with a color gradient legend, showing the significance contributions of each variable at two dimensions.<br />
+						<a href="https://cynthia-1688.shinyapps.io/p8105_mortality_Rshiny/#section-vital-sign">Go to dashboard</a>
+						</p>
 					</div>
 				</div>
 			</div>
