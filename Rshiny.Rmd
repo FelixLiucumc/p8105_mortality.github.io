@@ -183,7 +183,7 @@ selectInput(
                 "Hyperlipemia"= "hyperlipemia", 
                 "Renal Failure"= "renal_failure", 
                 "COPD"= "copd"),
-    selected = "depression"
+    selected = "hypertensive"
   )
 
 
@@ -256,7 +256,7 @@ Row {.tabset .tabset-fade}
 ### Description
 
 
-This is the density plot showing the patient's status (0 = alive, 1 = death) of each comorbities. 
+This is the stacked bar chart showing the patient's status (0 = alive, 1 = death) of each comorbities. 
 
 \ \par
 Take the comorbities "Hypertensive" as an example,
@@ -357,7 +357,7 @@ renderPlotly({
 ```
 
 
-PCA
+### PCA Analysis
 ===================================== 
 
 Column {.sidebar}
@@ -388,16 +388,36 @@ checkboxGroupInput(
 Row{data-height=650}
 -----------------------------------------------------------------------
 
-### PCA
+### PCA Analysis
 
 ```{r}
 renderPlotly({
     variable <- input$PCA
     formattedVarName <- formatVarName(variable)
   
-    pca_coord = PCA(sign_tidy |> select(variable), scale.unit = TRUE, graph = FALSE)
+    pca_coord = 
+      PCA(sign_tidy |> select(variable), scale.unit = TRUE, graph = FALSE)
     
     fviz_pca_var(pca_coord, col.var = "contrib", gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07")) |> ggplotly()
   })
 ```
 
+Row {.tabset .tabset-fade}
+-------------------------------------
+
+
+### Description
+
+This is the scatter plot with a color gradient legend, showing the significance contributions of each variable at two dimensions. 
+
+\ \par
+Take choosing "Anion Gap", "Bicarbonate", "Leucocyte", "Neutrophils", "RBC" and "Creatinine" as an example,
+
+\ \par
+  * Their contributions from significant to insignificant is: "Anion Gap" > "Bicarbonate" > "Leucocyte" > "Creatinine" > "Neutrophils" > "RBC".
+  
+\ \par
+  * Importantly, "Bicarbonate" contributed most at Dim2, up to 21.3%.
+  
+\ \par
+  * While "Neutrophils" has least contributions at Dim1 (33.8%).
