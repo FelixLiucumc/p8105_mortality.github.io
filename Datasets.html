@@ -33,6 +33,7 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
@@ -221,6 +222,9 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
 
 
@@ -360,6 +364,14 @@ div.tocify {
 
 <div id="header">
 
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
 
 
 <h1 class="title toc-ignore">Datasets</h1>
@@ -398,8 +410,7 @@ pressure of CO2 in arterial blood, and LVEF</p></li>
 <h1>Data Dictionary</h1>
 <p>We choose Hospital Mortality Dataset as our dataset in our study. The
 data can be accessed <a
-href="https://www.kaggle.com/datasets/saurabhshahane/in-hospital-mortality-prediction/data">here</a>.
-The code is read as following:</p>
+href="https://www.kaggle.com/datasets/saurabhshahane/in-hospital-mortality-prediction/data">here</a>.</p>
 <pre class="r"><code># Load the data and preprocess it
 mortality_data &lt;- read_csv(&quot;data/mortality_data.csv&quot;) %&gt;%
   janitor::clean_names() %&gt;%
@@ -538,13 +549,6 @@ mortality_data &lt;- read_csv(&quot;mortality_data.csv&quot;) %&gt;%
                          &quot;deficiencyanemias&quot;, &quot;depression&quot;, &quot;hyperlipemia&quot;, 
                          &quot;renal_failure&quot;, &quot;copd&quot;)) %&gt;%
   rename(gender = gendera)  # Rename gendera to gender after conversion</code></pre>
-<pre><code>## Rows: 1177 Columns: 51
-## ── Column specification ──────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## dbl (51): group, ID, outcome, age, gendera, BMI, hypertensive, atrialfibrill...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 <p>Algorithms that find association patterns require that the data be in
 the form of binary attributes. Thus, it is often necessary to transform
 a continuous attribute into a categorical attribute (discretization),
@@ -608,6 +612,11 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
 <script>
 $(document).ready(function ()  {

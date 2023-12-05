@@ -6,6 +6,7 @@ output:
     toc: true
     toc_float: true
     theme: cosmo
+    code_folding: hide
 ---
 
 
@@ -26,7 +27,7 @@ We extracted the following data:
 
 # Data Dictionary
 
-We choose Hospital Mortality Dataset as our dataset in our study. The data can be accessed [here](https://www.kaggle.com/datasets/saurabhshahane/in-hospital-mortality-prediction/data). The code is read as following:
+We choose Hospital Mortality Dataset as our dataset in our study. The data can be accessed [here](https://www.kaggle.com/datasets/saurabhshahane/in-hospital-mortality-prediction/data).
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -167,7 +168,7 @@ Hospital mortality datasets contains a total of ```r length(unique(mortality_dat
 
 * Dimensionality Reduction using Principle Component Analysis (PCA);
 
-```{r}
+```{r, message=FALSE}
 # Define a function to convert multiple columns to factors
 convert_to_factor <- function(df, columns) {
   df[columns] <- lapply(df[columns], factor)
