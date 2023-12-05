@@ -1,0 +1,153 @@
+---
+title: "Regeression"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: cosmo
+    code_folding: hide
+---
+
+```{r, message = FALSE}
+library(tidyverse)
+library(stargazer)
+library(ROCR)
+```
+
+# About Regression
+
+In this section, we want to generate a generalized linear model to see the relationship between patients' mortality status and predictive variables.
+
+# Data Pre-processing
+
+Firstly, to prepare the data for the regression, the data types of categorical variables will be transformed to factor. This subset of variables includes group (1 denoting the derivation group, 2 denoting the validation group), gender (1 denoting male, 2 denoting female), outcome (0 denoting alive, 1 denoting death), and the remaining comorbidity variables (0 denoting not having the disease, 1 denoting having the disease)
+
+```{r, message = FALSE}
+convert_to_factor <- function(df, columns) {
+  df[columns] <- lapply(df[columns], factor)
+  return(df)
+}
+
+mortality_cleaned = 
+  read_csv("mortality_data_cleaned.csv") |>
+  janitor::clean_names()  |>
+  convert_to_factor(c("group", "gender", "outcome", "hypertensive", 
+                      "atrialfibrillation", "chd_with_no_mi", "diabetes", 
+                      "deficiencyanemias", "depression", "hyperlipemia", 
+                      "renal_failure", "copd"))
+```
+
+# Generalized linear model
+
+Due to the response variable (outcome) is binary variable, a generalized linear model (GLM) is chosen for regression analysis.
+
+## Generalized Linear Model for Complete Dataset (Group1 and Group2)
+
+Fit a logistic regression model using all patients data (including both the derivation and validation groups) and use the stepwise method to select predictors to be included in the model.
+
+```{r, message = FALSE}
+mortality_complete = 
+  mortality_cleaned |>
+  select(-group, -id)
+```
+
+```{r, message = FALSE}
+glm_complete = glm(outcome ~ ., data = mortality_complete, family = binomial(link = logit))
+```
+
+```{r, results = "hide"}
+stepwise_complete = step(glm_complete)
+```
+
+```{r}
+stepwise_complete |>
+  broom::tidy() |>
+  select(term, estimate, p.value) |>
+  knitr::kable(
+    caption = "Estimate and P-value of Generalized Linear Model Using All Patients Data", 
+    col.names = c("Predictor", "Estimate", "P-value"),
+    digits = 3
+  )
+```
+
+The model fitted using data from all patients is:
+
+$$
+outcome \sim age+deficiencyanemias1+renal\_failure1+copd1\\
++heart\_rate+diastolic\_blood\_pressure+respiratory\_rate\\
++temperature+sp\_o2+urine\_output+mch+mchc+rdw+leucocyte\\
++platelets+lymphocyte+creatinine+urea\_nitrogen\\
++blood\_potassium+blood\_calcium+anion\_gap+magnesium\_ion\\
++bicarbonate+pco2
+$$
+
+It is worth noting that among the comorbidity variables, only deficiencyanemias, renal_failure, and copd are selected by model, and the estimates for all three are negative. 
+
+## Generalized Linear Model for Derivation Dataset (Group1)
+
+Fit a logistic regression model using patients data from group1 (derivation group) and use the stepwise method to select predictors to be included in the model.
+
+```{r, message = FALSE}
+mortality_derivation =
+  mortality_cleaned |>
+  filter(group == 1) |>
+  select(-group, -id) 
+```
+
+```{r, message = FALSE}
+glm_derivation = glm(outcome ~ ., data = mortality_derivation, family = binomial(link = logit))
+```
+
+```{r, results = "hide"}
+stepwise_derivation = step(glm_derivation)
+```
+
+```{r}
+stepwise_derivation |>
+  broom::tidy() |>
+  select(term, estimate, p.value) |>
+  knitr::kable(
+    caption = "Estimate and P-value of Generalized Linear Model Using Patients Data from Derivation Group", 
+    col.names = c("Predictor", "Estimate", "P-value"),
+    digits = 3
+  )
+```
+
+The model fitted using data from derivation group is:
+
+$$
+outcome\sim age+gender2+hypertensive1+atrialfibrillation1+diabetes1\\ +deficiencyanemias1+hyperlipemia1+renal\_failure1+copd1+heart\_rate\\
++diastolic\_blood\_pressure+sp\_o2+mcv+rdw+platelets+lymphocyte\\
++creatinine+urea\_nitrogen+blood\_calcium+anion\_gap+lactic\_acid+pco2
+$$
+
+Among all the predictors selected, there are 7 comorbidity variables: hypertensive, atrialfibrillation, diabetes, deficiencyanemias, hyperlipemia, renal_failure and copd.
+
+## Model Evaluation on Validation Group (Group2)
+
+For the model generated using derivation group data, validate it on the validation group and plot Receiver Operating Characteristic (ROC) Curve.
+
+```{r, massage = FALSE}
+mortality_validation =
+  mortality_cleaned |>
+  filter(group == 2) |>
+  select(-group, -id) 
+```
+
+```{r, massage = FALSE}
+predict = predict(stepwise_derivation, newdata = mortality_validation, type = "response")
+```
+
+```{r, massage = FALSE}
+pred = prediction(predictions = predict, labels = mortality_validation$outcome)
+roc = performance(pred, "tpr", "fpr")
+auc = performance(pred, measure = "auc")@y.values[[1]]
+```
+
+```{r}
+plot(roc, colorize = F)
+title(main = "The Receiver Operating Characteristic (ROC) Curve of Generalized Linear Model")
+cat('AUC of the model on validation dataset:', auc)
+```
+
+According to the ROC plot and AUC value, the predictive performance of generalized linear model generated using group1 is satisfactory.
