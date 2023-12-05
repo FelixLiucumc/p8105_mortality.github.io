@@ -7,10 +7,10 @@ navbar:
       href: Introduction.html
     - text: "Data"
       href: Datasets.html
-    - text: "Preliminary Analysis"
-      href: preliminary_study.html
     - text: "EDA"
       href: EDA.html
+    - text: "Preliminary Analysis"
+      href: preliminary_study.html
     - text: "Regression"
       href: regression_model.html
     - text: "Conclusion"
