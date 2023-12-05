@@ -381,8 +381,8 @@ div.tocify {
 
 <div id="background-information-of-the-datasets" class="section level1">
 <h1>Background Information of the datasets</h1>
-<p>We extracted the following data:</p>
-<ul>
+<p>We categorized the dataset into following aspects:</p>
+<ol style="list-style-type: decimal">
 <li><p><strong>Demographic characteristics:</strong> age at the time of
 hospital admission, sex, ethnicity, weight, and height;</p></li>
 <li><p><strong>Vital signs:</strong> heart rate, HR, systolic blood
@@ -402,7 +402,7 @@ ratio INR, NT-proBNP, creatine kinase, creatinine, blood urea nitrogen
 BUN glucose, potassium, sodium, calcium, chloride, magnesium, the anion
 gap, bicarbonate, lactate, hydrogen ion concentration pH, partial
 pressure of CO2 in arterial blood, and LVEF</p></li>
-</ul>
+</ol>
  
  
 </div>
@@ -412,7 +412,7 @@ pressure of CO2 in arterial blood, and LVEF</p></li>
 data can be accessed <a
 href="https://www.kaggle.com/datasets/saurabhshahane/in-hospital-mortality-prediction/data">here</a>.</p>
 <pre class="r"><code># Load the data and preprocess it
-mortality_data &lt;- read_csv(&quot;data/mortality_data.csv&quot;) %&gt;%
+  mortality_data &lt;- read_csv(&quot;mortality_data_cleaned.csv&quot;) %&gt;%
   janitor::clean_names() %&gt;%
   drop_na(outcome) </code></pre>
 <p>Hospital mortality datasets contains a total of <code>51</code>
@@ -425,26 +425,26 @@ Variable.</p>
 <p>*<code>outcome</code>: Patient’s outcome (death=1, alive = 0); Binary
 Variable.</p>
 <p>*<code>age</code>: Patient’s age; Continuoues Variable.</p>
-<p>*<code>gendera</code>: Patient’s gender (male=1, female = 2); Binary
+<p>*<code>gender</code>: Patient’s gender (male=1, female = 2); Binary
 Variable.</p>
 <p>*<code>bmi</code>: Patient’s BMI; Continuoues Variable.</p>
-<p>*<code>hypertensive</code>: Whather patient had high blood pressure
+<p>*<code>hypertensive</code>: Whether patient had high blood pressure
 (yes=1, no = 0); Binary Variable.</p>
-<p>*<code>atrialfibrillation</code>: Whather patient had heart rhythm
+<p>*<code>atrialfibrillation</code>: Whether patient had heart rhythm
 disorder (yes=1, no = 0); Binary Variable.</p>
-<p>*<code>chd_with_no_mi</code>: Whather patient had ischemic heart
+<p>*<code>chd_with_no_mi</code>: Whether patient had ischemic heart
 disease (yes=1, no = 0); Binary Variable.</p>
-<p>*<code>diabetes</code>: Whather patient had diabetes mellitus (yes=1,
+<p>*<code>diabetes</code>: Whether patient had diabetes mellitus (yes=1,
 no = 0); Binary Variable.</p>
-<p>*<code>deficiencyanemias</code>: Whather patient had deficiency of
+<p>*<code>deficiencyanemias</code>: Whether patient had deficiency of
 anemias (yes=1, no = 0); Binary Variable.</p>
-<p>*<code>depression</code>: Whather patient had depression (yes=1, no =
+<p>*<code>depression</code>: Whether patient had depression (yes=1, no =
 0); Binary Variable.</p>
-<p>*<code>hyperlipemia</code>: Whather patient had hyperlipidemia
+<p>*<code>hyperlipemia</code>: Whether patient had hyperlipidemia
 (yes=1, no = 0); Binary Variable.</p>
-<p>*<code>renal_failure</code>: Whather patient had renal failure
+<p>*<code>renal_failure</code>: Whether patient had renal failure
 (yes=1, no = 0); Binary Variable.</p>
-<p>*<code>copd</code>: Whather patient had chronic obstructive pulmonary
+<p>*<code>copd</code>: Whether patient had chronic obstructive pulmonary
 disease (yes=1, no = 0); Binary Variable.</p>
 <p>*<code>heart_rate</code>: Patient’s heart rate; Continuous
 variable.</p>
@@ -478,7 +478,8 @@ variable.</p>
 variable.</p>
 <p>*<code>neutrophils</code>: Patient’s neutrophils; Continuous
 variable.</p>
-<p>*<code>NA</code>: Patient’s basophils; Continuous variable.</p>
+<p>*<code>basophils</code>: Patient’s basophils; Continuous
+variable.</p>
 <p>*<code>lymphocyte</code>: Patient’s lymphocyte; Continuous
 variable.</p>
 <p>*<code>pt</code>: Patient’s prothrombin time; Continuous
@@ -522,18 +523,27 @@ Continuous variable.</p>
 <div id="imputation" class="section level1">
 <h1>Imputation</h1>
 <p><strong>Data cleaning problems:</strong></p>
-<ul>
-<li><p>Too many NA values;</p></li>
-<li><p>Too many categorical variables/ binary variables;</p></li>
-<li><p>High demensionality;</p></li>
-</ul>
+<ol style="list-style-type: decimal">
+<li><p>Too many NA values: This issue introduces a layer of complexity,
+demanding meticulous scrutiny to discern patterns, trends, and potential
+biases.</p></li>
+<li><p>Too many categorical variables/ binary variables: Similar to an
+intricate cast of characters in a narrative, these variables contribute
+to the richness of the data but also pose challenges for
+analysis.</p></li>
+<li><p>Multidimensionality: A dataset with numerous dimensions can
+overwhelm analytical processes.</p></li>
+</ol>
 <p><strong>Our solutions:</strong></p>
-<ul>
+<ol style="list-style-type: decimal">
 <li><p>Change NA values to the mean value of each variables;</p></li>
-<li><p>Binarization;</p></li>
+<li><p>Binarization: This process involves transforming numerical or
+categorical variables into a binary representation, typically consisting
+of 0s and 1s.</p></li>
 <li><p>Dimensionality Reduction using Principle Component Analysis
-(PCA);</p></li>
-</ul>
+(PCA); Or feature selection, become essential to distill the dataset
+into its most salient components.</p></li>
+</ol>
 <pre class="r"><code># Define a function to convert multiple columns to factors
 convert_to_factor &lt;- function(df, columns) {
   df[columns] &lt;- lapply(df[columns], factor)
@@ -569,12 +579,18 @@ mortality_data[numerical_columns] &lt;- lapply(mortality_data[numerical_columns]
 write_csv(mortality_data, &quot;mortality_data_cleaned.csv&quot;)</code></pre>
 <p>After data cleaning, our dataset change into high quality data,
 with:</p>
-<ul>
-<li><p>No duplicates;</p></li>
-<li><p>No missing values;</p></li>
-<li><p>No noise and outliers;</p></li>
-<li><p>Inconsistency;</p></li>
-</ul>
+<ol style="list-style-type: decimal">
+<li><p>No duplicates, ensuring that there are no duplicates is a
+fundamental aspect of data quality and integrity;</p></li>
+<li><p>No missing values, guaranteeing there are no missing values
+involves thorough data cleaning and preprocessing steps;</p></li>
+<li><p>No noise and outliers, contributing to the robustness and
+reliability of statistical models, machine learning algorithms, and
+other data-driven analyses;</p></li>
+<li><p>Consistency, ensuring data consistency is essential for making
+reliable interpretations, conducting meaningful analyses, and supporting
+effective decision-making.</p></li>
+</ol>
 </div>
 
 

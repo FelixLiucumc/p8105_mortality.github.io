@@ -15,14 +15,12 @@ knitr::opts_chunk$set(echo = TRUE)
 \ \par
 # Motivation
 
-Predictors of in-hospital mortality in patients with heart failure admitted to the intensive care unit (ICU) remain unclear. Aimed to lay a solid foundation for Survival Analysis, deepen our understanding of Mortality, we conducted a comprehensive research based on the patient's Mortality factors dataset. Although this dataset belongs to cross-sectional study, we still can dig out some key patterns that affect Mortality and detect abnormal characteristics that indicate the death sign at the early stage. 
+Predictors of in-hospital mortality in patients with heart failure admitted to the intensive care unit (ICU) remain unclear. Aimed to lay a solid foundation for Data Science and deepen our understanding of mortality, we conducted a comprehensive research based on the patient's mortality factors dataset. Although this dataset belongs to cross-sectional study, we still can dig out some key patterns that affect mortality and detect abnormal characteristics that indicate the death sign at the early stage. 
 
 
 \ \par
 \ \par
 # Initial Question
-
-Initial questions:
 
 What factors have a significant impact on mortality?
 

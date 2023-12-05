@@ -12,15 +12,15 @@ output:
 
 # Background Information of the datasets
 
-We extracted the following data: 
+We categorized the dataset into following aspects: 
 
-* **Demographic characteristics:** age at the time of hospital admission, sex, ethnicity, weight, and height; 
+1. **Demographic characteristics:** age at the time of hospital admission, sex, ethnicity, weight, and height; 
 
-* **Vital signs:** heart rate, HR, systolic blood pressure SBP, diastolic blood pressure DBP, mean blood pressure, respiratory rate, body temperature, saturation pulse oxygen SPO2, urine output in first 24 h; 
+2. **Vital signs:** heart rate, HR, systolic blood pressure SBP, diastolic blood pressure DBP, mean blood pressure, respiratory rate, body temperature, saturation pulse oxygen SPO2, urine output in first 24 h; 
 
-* **Comorbidities:** hypertension, atrial fibrillation, ischemic heart disease, diabetes mellitus, depression, hypoferric anemia, hyperlipidemia, chronic kidney disease CKD, and chronic obstructive pulmonary disease COPD; 
+3. **Comorbidities:** hypertension, atrial fibrillation, ischemic heart disease, diabetes mellitus, depression, hypoferric anemia, hyperlipidemia, chronic kidney disease CKD, and chronic obstructive pulmonary disease COPD; 
 
-* **Laboratory variables:** hematocrit, red blood cells, mean corpuscular hemoglobin MCH, mean corpuscular hemoglobin concentration MCHC, mean corpuscular volume MCV, red blood cell distribution width RDW, platelet count, white blood cells, neutrophils, basophils, lymphocytes, prothrombin time PT, international normalized ratio INR, NT-proBNP, creatine kinase, creatinine, blood urea nitrogen BUN glucose, potassium, sodium, calcium, chloride, magnesium, the anion gap, bicarbonate, lactate, hydrogen ion concentration pH, partial pressure of CO2 in arterial blood, and LVEF
+4. **Laboratory variables:** hematocrit, red blood cells, mean corpuscular hemoglobin MCH, mean corpuscular hemoglobin concentration MCHC, mean corpuscular volume MCV, red blood cell distribution width RDW, platelet count, white blood cells, neutrophils, basophils, lymphocytes, prothrombin time PT, international normalized ratio INR, NT-proBNP, creatine kinase, creatinine, blood urea nitrogen BUN glucose, potassium, sodium, calcium, chloride, magnesium, the anion gap, bicarbonate, lactate, hydrogen ion concentration pH, partial pressure of CO2 in arterial blood, and LVEF
 
 \ \par
 \ \par
@@ -36,7 +36,7 @@ library(tidyverse)
 
 ```{r,message=FALSE, warning=FALSE}
 # Load the data and preprocess it
-mortality_data <- read_csv("data/mortality_data.csv") %>%
+  mortality_data <- read_csv("mortality_data_cleaned.csv") %>%
   janitor::clean_names() %>%
   drop_na(outcome) 
 
@@ -57,23 +57,23 @@ Hospital mortality datasets contains a total of ```r length(unique(mortality_dat
 
 *```r colnames(mortality_data)[6]```: Patient's BMI; Continuoues Variable.
 
-*```r colnames(mortality_data)[7]```: Whather patient had high blood pressure (yes=1, no = 0); Binary Variable.
+*```r colnames(mortality_data)[7]```: Whether patient had high blood pressure (yes=1, no = 0); Binary Variable.
 
-*```r colnames(mortality_data)[8]```: Whather patient had heart rhythm disorder (yes=1, no = 0); Binary Variable.
+*```r colnames(mortality_data)[8]```: Whether patient had heart rhythm disorder (yes=1, no = 0); Binary Variable.
 
-*```r colnames(mortality_data)[9]```: Whather patient had ischemic heart disease (yes=1, no = 0); Binary Variable.
+*```r colnames(mortality_data)[9]```: Whether patient had ischemic heart disease (yes=1, no = 0); Binary Variable.
 
-*```r colnames(mortality_data)[10]```: Whather patient had diabetes mellitus (yes=1, no = 0); Binary Variable.
+*```r colnames(mortality_data)[10]```: Whether patient had diabetes mellitus (yes=1, no = 0); Binary Variable.
 
-*```r colnames(mortality_data)[11]```: Whather patient had deficiency of anemias (yes=1, no = 0); Binary Variable.
+*```r colnames(mortality_data)[11]```: Whether patient had deficiency of anemias (yes=1, no = 0); Binary Variable.
 
-*```r colnames(mortality_data)[12]```:  Whather patient had depression (yes=1, no = 0); Binary Variable.
+*```r colnames(mortality_data)[12]```:  Whether patient had depression (yes=1, no = 0); Binary Variable.
 
-*```r colnames(mortality_data)[13]```: Whather patient had hyperlipidemia (yes=1, no = 0); Binary Variable.
+*```r colnames(mortality_data)[13]```: Whether patient had hyperlipidemia (yes=1, no = 0); Binary Variable.
 
-*```r colnames(mortality_data)[14]```: Whather patient had renal failure (yes=1, no = 0); Binary Variable.
+*```r colnames(mortality_data)[14]```: Whether patient had renal failure (yes=1, no = 0); Binary Variable.
 
-*```r colnames(mortality_data)[15]```: Whather patient had chronic obstructive pulmonary disease (yes=1, no = 0); Binary Variable.
+*```r colnames(mortality_data)[15]```: Whether patient had chronic obstructive pulmonary disease (yes=1, no = 0); Binary Variable.
 
 *```r colnames(mortality_data)[16]```: Patient's heart rate; Continuous variable.
 
@@ -107,7 +107,7 @@ Hospital mortality datasets contains a total of ```r length(unique(mortality_dat
 
 *```r colnames(mortality_data)[31]```: Patient's neutrophils; Continuous variable.
 
-*```r colnames(mortality_data)[321]```: Patient's basophils; Continuous variable.
+*```r colnames(mortality_data)[32]```: Patient's basophils; Continuous variable.
 
 *```r colnames(mortality_data)[33]```: Patient's lymphocyte; Continuous variable.
 
@@ -154,19 +154,19 @@ Hospital mortality datasets contains a total of ```r length(unique(mortality_dat
 
 **Data cleaning problems:**
 
-* Too many NA values;
+1. Too many NA values: This issue introduces a layer of complexity, demanding meticulous scrutiny to discern patterns, trends, and potential biases. 
 
-* Too many categorical variables/ binary variables;
+2. Too many categorical variables/ binary variables: Similar to an intricate cast of characters in a narrative, these variables contribute to the richness of the data but also pose challenges for analysis. 
 
-* High demensionality;
+3. Multidimensionality: A dataset with numerous dimensions can overwhelm analytical processes.
 
 **Our solutions:**
 
-* Change NA values to the mean value of each variables;
+1. Change NA values to the mean value of each variables;
 
-* Binarization;
+2. Binarization: This process involves transforming numerical or categorical variables into a binary representation, typically consisting of 0s and 1s.
 
-* Dimensionality Reduction using Principle Component Analysis (PCA);
+3. Dimensionality Reduction using Principle Component Analysis (PCA); Or feature selection, become essential to distill the dataset into its most salient components.
 
 ```{r, message=FALSE}
 # Define a function to convert multiple columns to factors
@@ -204,10 +204,10 @@ write_csv(mortality_data, "mortality_data_cleaned.csv")
 
 After data cleaning, our dataset change into high quality data, with:
 
-* No duplicates;
+1. No duplicates, ensuring that there are no duplicates is a fundamental aspect of data quality and integrity;
 
-* No missing values;
+2. No missing values, guaranteeing there are no missing values involves thorough data cleaning and preprocessing steps;
 
-* No noise and outliers;
+3. No noise and outliers, contributing to the robustness and reliability of statistical models, machine learning algorithms, and other data-driven analyses;
 
-* Inconsistency;
+4. Consistency, ensuring data consistency is essential for making reliable interpretations, conducting meaningful analyses, and supporting effective decision-making. 
