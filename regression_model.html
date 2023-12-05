@@ -36,6 +36,8 @@
 <script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
@@ -424,9 +426,9 @@ both the derivation and validation groups) and use the stepwise method
 to select predictors to be included in the model.</p>
 <pre class="r"><code>mortality_complete = 
   mortality_cleaned |&gt;
-  select(-group, -id)</code></pre>
-<pre class="r"><code>glm_complete = glm(outcome ~ ., data = mortality_complete, family = binomial(link = logit))</code></pre>
-<pre class="r"><code>stepwise_complete = step(glm_complete)</code></pre>
+  select(-group, -id)
+glm_complete = glm(outcome ~ ., data = mortality_complete, family = binomial(link = logit))
+stepwise_complete = step(glm_complete)</code></pre>
 <pre class="r"><code>stepwise_complete |&gt;
   broom::tidy() |&gt;
   select(term, estimate, p.value) |&gt;
@@ -434,142 +436,307 @@ to select predictors to be included in the model.</p>
     caption = &quot;Estimate and P-value of Generalized Linear Model Using All Patients Data&quot;, 
     col.names = c(&quot;Predictor&quot;, &quot;Estimate&quot;, &quot;P-value&quot;),
     digits = 3
+  ) |&gt;
+    kableExtra::kable_styling(
+    &quot;basic&quot;,
+    full_width = FALSE,
+    bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;),
+    position = &quot;center&quot;, 
+    font_size = 16, 
+    latex_options = c(&quot;hold_position&quot;)
   )</code></pre>
-<table>
-<caption>Estimate and P-value of Generalized Linear Model Using All
-Patients Data</caption>
+<table class="table table-striped table-hover table-condensed table-responsive" style="font-size: 16px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+Estimate and P-value of Generalized Linear Model Using All Patients Data
+</caption>
 <thead>
-<tr class="header">
-<th align="left">Predictor</th>
-<th align="right">Estimate</th>
-<th align="right">P-value</th>
+<tr>
+<th style="text-align:left;">
+Predictor
+</th>
+<th style="text-align:right;">
+Estimate
+</th>
+<th style="text-align:right;">
+P-value
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td align="left">(Intercept)</td>
-<td align="right">19.259</td>
-<td align="right">0.045</td>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+19.259
+</td>
+<td style="text-align:right;">
+0.045
+</td>
 </tr>
-<tr class="even">
-<td align="left">age</td>
-<td align="right">0.014</td>
-<td align="right">0.123</td>
+<tr>
+<td style="text-align:left;">
+age
+</td>
+<td style="text-align:right;">
+0.014
+</td>
+<td style="text-align:right;">
+0.123
+</td>
 </tr>
-<tr class="odd">
-<td align="left">deficiencyanemias1</td>
-<td align="right">-0.654</td>
-<td align="right">0.008</td>
+<tr>
+<td style="text-align:left;">
+deficiencyanemias1
+</td>
+<td style="text-align:right;">
+-0.654
+</td>
+<td style="text-align:right;">
+0.008
+</td>
 </tr>
-<tr class="even">
-<td align="left">renal_failure1</td>
-<td align="right">-1.142</td>
-<td align="right">0.000</td>
+<tr>
+<td style="text-align:left;">
+renal_failure1
+</td>
+<td style="text-align:right;">
+-1.142
+</td>
+<td style="text-align:right;">
+0.000
+</td>
 </tr>
-<tr class="odd">
-<td align="left">copd1</td>
-<td align="right">-1.128</td>
-<td align="right">0.014</td>
+<tr>
+<td style="text-align:left;">
+copd1
+</td>
+<td style="text-align:right;">
+-1.128
+</td>
+<td style="text-align:right;">
+0.014
+</td>
 </tr>
-<tr class="even">
-<td align="left">heart_rate</td>
-<td align="right">0.023</td>
-<td align="right">0.002</td>
+<tr>
+<td style="text-align:left;">
+heart_rate
+</td>
+<td style="text-align:right;">
+0.023
+</td>
+<td style="text-align:right;">
+0.002
+</td>
 </tr>
-<tr class="odd">
-<td align="left">diastolic_blood_pressure</td>
-<td align="right">-0.027</td>
-<td align="right">0.024</td>
+<tr>
+<td style="text-align:left;">
+diastolic_blood_pressure
+</td>
+<td style="text-align:right;">
+-0.027
+</td>
+<td style="text-align:right;">
+0.024
+</td>
 </tr>
-<tr class="even">
-<td align="left">respiratory_rate</td>
-<td align="right">0.040</td>
-<td align="right">0.150</td>
+<tr>
+<td style="text-align:left;">
+respiratory_rate
+</td>
+<td style="text-align:right;">
+0.040
+</td>
+<td style="text-align:right;">
+0.150
+</td>
 </tr>
-<tr class="odd">
-<td align="left">temperature</td>
-<td align="right">-0.267</td>
-<td align="right">0.134</td>
+<tr>
+<td style="text-align:left;">
+temperature
+</td>
+<td style="text-align:right;">
+-0.267
+</td>
+<td style="text-align:right;">
+0.134
+</td>
 </tr>
-<tr class="even">
-<td align="left">sp_o2</td>
-<td align="right">-0.097</td>
-<td align="right">0.038</td>
+<tr>
+<td style="text-align:left;">
+sp_o2
+</td>
+<td style="text-align:right;">
+-0.097
+</td>
+<td style="text-align:right;">
+0.038
+</td>
 </tr>
-<tr class="odd">
-<td align="left">urine_output</td>
-<td align="right">0.000</td>
-<td align="right">0.122</td>
+<tr>
+<td style="text-align:left;">
+urine_output
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.122
+</td>
 </tr>
-<tr class="even">
-<td align="left">mch</td>
-<td align="right">0.082</td>
-<td align="right">0.098</td>
+<tr>
+<td style="text-align:left;">
+mch
+</td>
+<td style="text-align:right;">
+0.082
+</td>
+<td style="text-align:right;">
+0.098
+</td>
 </tr>
-<tr class="odd">
-<td align="left">mchc</td>
-<td align="right">-0.203</td>
-<td align="right">0.058</td>
+<tr>
+<td style="text-align:left;">
+mchc
+</td>
+<td style="text-align:right;">
+-0.203
+</td>
+<td style="text-align:right;">
+0.058
+</td>
 </tr>
-<tr class="even">
-<td align="left">rdw</td>
-<td align="right">0.104</td>
-<td align="right">0.044</td>
+<tr>
+<td style="text-align:left;">
+rdw
+</td>
+<td style="text-align:right;">
+0.104
+</td>
+<td style="text-align:right;">
+0.044
+</td>
 </tr>
-<tr class="odd">
-<td align="left">leucocyte</td>
-<td align="right">0.049</td>
-<td align="right">0.016</td>
+<tr>
+<td style="text-align:left;">
+leucocyte
+</td>
+<td style="text-align:right;">
+0.049
+</td>
+<td style="text-align:right;">
+0.016
+</td>
 </tr>
-<tr class="even">
-<td align="left">platelets</td>
-<td align="right">-0.003</td>
-<td align="right">0.001</td>
+<tr>
+<td style="text-align:left;">
+platelets
+</td>
+<td style="text-align:right;">
+-0.003
+</td>
+<td style="text-align:right;">
+0.001
+</td>
 </tr>
-<tr class="odd">
-<td align="left">lymphocyte</td>
-<td align="right">-0.025</td>
-<td align="right">0.122</td>
+<tr>
+<td style="text-align:left;">
+lymphocyte
+</td>
+<td style="text-align:right;">
+-0.025
+</td>
+<td style="text-align:right;">
+0.122
+</td>
 </tr>
-<tr class="even">
-<td align="left">creatinine</td>
-<td align="right">-0.471</td>
-<td align="right">0.010</td>
+<tr>
+<td style="text-align:left;">
+creatinine
+</td>
+<td style="text-align:right;">
+-0.471
+</td>
+<td style="text-align:right;">
+0.010
+</td>
 </tr>
-<tr class="odd">
-<td align="left">urea_nitrogen</td>
-<td align="right">0.022</td>
-<td align="right">0.002</td>
+<tr>
+<td style="text-align:left;">
+urea_nitrogen
+</td>
+<td style="text-align:right;">
+0.022
+</td>
+<td style="text-align:right;">
+0.002
+</td>
 </tr>
-<tr class="even">
-<td align="left">blood_potassium</td>
-<td align="right">0.413</td>
-<td align="right">0.127</td>
+<tr>
+<td style="text-align:left;">
+blood_potassium
+</td>
+<td style="text-align:right;">
+0.413
+</td>
+<td style="text-align:right;">
+0.127
+</td>
 </tr>
-<tr class="odd">
-<td align="left">blood_calcium</td>
-<td align="right">-0.760</td>
-<td align="right">0.000</td>
+<tr>
+<td style="text-align:left;">
+blood_calcium
+</td>
+<td style="text-align:right;">
+-0.760
+</td>
+<td style="text-align:right;">
+0.000
+</td>
 </tr>
-<tr class="even">
-<td align="left">anion_gap</td>
-<td align="right">0.206</td>
-<td align="right">0.001</td>
+<tr>
+<td style="text-align:left;">
+anion_gap
+</td>
+<td style="text-align:right;">
+0.206
+</td>
+<td style="text-align:right;">
+0.001
+</td>
 </tr>
-<tr class="odd">
-<td align="left">magnesium_ion</td>
-<td align="right">0.718</td>
-<td align="right">0.095</td>
+<tr>
+<td style="text-align:left;">
+magnesium_ion
+</td>
+<td style="text-align:right;">
+0.718
+</td>
+<td style="text-align:right;">
+0.095
+</td>
 </tr>
-<tr class="even">
-<td align="left">bicarbonate</td>
-<td align="right">-0.082</td>
-<td align="right">0.022</td>
+<tr>
+<td style="text-align:left;">
+bicarbonate
+</td>
+<td style="text-align:right;">
+-0.082
+</td>
+<td style="text-align:right;">
+0.022
+</td>
 </tr>
-<tr class="odd">
-<td align="left">pco2</td>
-<td align="right">0.039</td>
-<td align="right">0.002</td>
+<tr>
+<td style="text-align:left;">
+pco2
+</td>
+<td style="text-align:right;">
+0.039
+</td>
+<td style="text-align:right;">
+0.002
+</td>
 </tr>
 </tbody>
 </table>
@@ -584,7 +751,18 @@ outcome \sim age+deficiencyanemias1+renal\_failure1+copd1\\
 \]</span></p>
 <p>It is worth noting that among the comorbidity variables, only
 deficiencyanemias, renal_failure, and copd are selected by model, and
-the estimates for all three are negative.</p>
+the estimates for all three are negative. This suggests that the
+occurrence of these three comorbidities is associated with a decrease in
+mortality, which is counterintuitive. This phenomenon may be attributed
+to the correlation between the onset of these diseases and early
+diagnosis and treatment. Early detection and treatment of these diseases
+might reduce the risk of death. Alternatively, the occurrence of these
+diseases may prompt patients to pay more attention to their health and
+take actions to improve their health conditions, thereby enhancing their
+survival rates. In the remaining variables, the most significant six are
+blood_calcium, anion_gap, platelets, heart_rate, urea_nitrogen, and
+pco2. They may have the potential to be important physiological
+indicators worth monitoring closely in ICU patients.</p>
 </div>
 <div id="generalized-linear-model-for-derivation-dataset-group1"
 class="section level2">
@@ -595,9 +773,9 @@ be included in the model.</p>
 <pre class="r"><code>mortality_derivation =
   mortality_cleaned |&gt;
   filter(group == 1) |&gt;
-  select(-group, -id) </code></pre>
-<pre class="r"><code>glm_derivation = glm(outcome ~ ., data = mortality_derivation, family = binomial(link = logit))</code></pre>
-<pre class="r"><code>stepwise_derivation = step(glm_derivation)</code></pre>
+  select(-group, -id) 
+glm_derivation = glm(outcome ~ ., data = mortality_derivation, family = binomial(link = logit))
+stepwise_derivation = step(glm_derivation)</code></pre>
 <pre class="r"><code>stepwise_derivation |&gt;
   broom::tidy() |&gt;
   select(term, estimate, p.value) |&gt;
@@ -605,132 +783,286 @@ be included in the model.</p>
     caption = &quot;Estimate and P-value of Generalized Linear Model Using Patients Data from Derivation Group&quot;, 
     col.names = c(&quot;Predictor&quot;, &quot;Estimate&quot;, &quot;P-value&quot;),
     digits = 3
+  ) |&gt;
+    kableExtra::kable_styling(
+    &quot;basic&quot;,
+    full_width = FALSE,
+    bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;),
+    position = &quot;center&quot;, 
+    font_size = 16, 
+    latex_options = c(&quot;hold_position&quot;)
   )</code></pre>
-<table>
-<caption>Estimate and P-value of Generalized Linear Model Using Patients
-Data from Derivation Group</caption>
+<table class="table table-striped table-hover table-condensed table-responsive" style="font-size: 16px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+Estimate and P-value of Generalized Linear Model Using Patients Data
+from Derivation Group
+</caption>
 <thead>
-<tr class="header">
-<th align="left">Predictor</th>
-<th align="right">Estimate</th>
-<th align="right">P-value</th>
+<tr>
+<th style="text-align:left;">
+Predictor
+</th>
+<th style="text-align:right;">
+Estimate
+</th>
+<th style="text-align:right;">
+P-value
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td align="left">(Intercept)</td>
-<td align="right">3.672</td>
-<td align="right">0.555</td>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+3.672
+</td>
+<td style="text-align:right;">
+0.555
+</td>
 </tr>
-<tr class="even">
-<td align="left">age</td>
-<td align="right">0.025</td>
-<td align="right">0.036</td>
+<tr>
+<td style="text-align:left;">
+age
+</td>
+<td style="text-align:right;">
+0.025
+</td>
+<td style="text-align:right;">
+0.036
+</td>
 </tr>
-<tr class="odd">
-<td align="left">gender2</td>
-<td align="right">-0.377</td>
-<td align="right">0.148</td>
+<tr>
+<td style="text-align:left;">
+gender2
+</td>
+<td style="text-align:right;">
+-0.377
+</td>
+<td style="text-align:right;">
+0.148
+</td>
 </tr>
-<tr class="even">
-<td align="left">hypertensive1</td>
-<td align="right">-0.426</td>
-<td align="right">0.127</td>
+<tr>
+<td style="text-align:left;">
+hypertensive1
+</td>
+<td style="text-align:right;">
+-0.426
+</td>
+<td style="text-align:right;">
+0.127
+</td>
 </tr>
-<tr class="odd">
-<td align="left">atrialfibrillation1</td>
-<td align="right">0.455</td>
-<td align="right">0.089</td>
+<tr>
+<td style="text-align:left;">
+atrialfibrillation1
+</td>
+<td style="text-align:right;">
+0.455
+</td>
+<td style="text-align:right;">
+0.089
+</td>
 </tr>
-<tr class="even">
-<td align="left">diabetes1</td>
-<td align="right">-0.479</td>
-<td align="right">0.085</td>
+<tr>
+<td style="text-align:left;">
+diabetes1
+</td>
+<td style="text-align:right;">
+-0.479
+</td>
+<td style="text-align:right;">
+0.085
+</td>
 </tr>
-<tr class="odd">
-<td align="left">deficiencyanemias1</td>
-<td align="right">-0.634</td>
-<td align="right">0.033</td>
+<tr>
+<td style="text-align:left;">
+deficiencyanemias1
+</td>
+<td style="text-align:right;">
+-0.634
+</td>
+<td style="text-align:right;">
+0.033
+</td>
 </tr>
-<tr class="even">
-<td align="left">hyperlipemia1</td>
-<td align="right">-0.441</td>
-<td align="right">0.127</td>
+<tr>
+<td style="text-align:left;">
+hyperlipemia1
+</td>
+<td style="text-align:right;">
+-0.441
+</td>
+<td style="text-align:right;">
+0.127
+</td>
 </tr>
-<tr class="odd">
-<td align="left">renal_failure1</td>
-<td align="right">-0.894</td>
-<td align="right">0.007</td>
+<tr>
+<td style="text-align:left;">
+renal_failure1
+</td>
+<td style="text-align:right;">
+-0.894
+</td>
+<td style="text-align:right;">
+0.007
+</td>
 </tr>
-<tr class="even">
-<td align="left">copd1</td>
-<td align="right">-1.513</td>
-<td align="right">0.014</td>
+<tr>
+<td style="text-align:left;">
+copd1
+</td>
+<td style="text-align:right;">
+-1.513
+</td>
+<td style="text-align:right;">
+0.014
+</td>
 </tr>
-<tr class="odd">
-<td align="left">heart_rate</td>
-<td align="right">0.026</td>
-<td align="right">0.002</td>
+<tr>
+<td style="text-align:left;">
+heart_rate
+</td>
+<td style="text-align:right;">
+0.026
+</td>
+<td style="text-align:right;">
+0.002
+</td>
 </tr>
-<tr class="even">
-<td align="left">diastolic_blood_pressure</td>
-<td align="right">-0.037</td>
-<td align="right">0.010</td>
+<tr>
+<td style="text-align:left;">
+diastolic_blood_pressure
+</td>
+<td style="text-align:right;">
+-0.037
+</td>
+<td style="text-align:right;">
+0.010
+</td>
 </tr>
-<tr class="odd">
-<td align="left">sp_o2</td>
-<td align="right">-0.108</td>
-<td align="right">0.040</td>
+<tr>
+<td style="text-align:left;">
+sp_o2
+</td>
+<td style="text-align:right;">
+-0.108
+</td>
+<td style="text-align:right;">
+0.040
+</td>
 </tr>
-<tr class="even">
-<td align="left">mcv</td>
-<td align="right">0.046</td>
-<td align="right">0.016</td>
+<tr>
+<td style="text-align:left;">
+mcv
+</td>
+<td style="text-align:right;">
+0.046
+</td>
+<td style="text-align:right;">
+0.016
+</td>
 </tr>
-<tr class="odd">
-<td align="left">rdw</td>
-<td align="right">0.120</td>
-<td align="right">0.034</td>
+<tr>
+<td style="text-align:left;">
+rdw
+</td>
+<td style="text-align:right;">
+0.120
+</td>
+<td style="text-align:right;">
+0.034
+</td>
 </tr>
-<tr class="even">
-<td align="left">platelets</td>
-<td align="right">-0.002</td>
-<td align="right">0.049</td>
+<tr>
+<td style="text-align:left;">
+platelets
+</td>
+<td style="text-align:right;">
+-0.002
+</td>
+<td style="text-align:right;">
+0.049
+</td>
 </tr>
-<tr class="odd">
-<td align="left">lymphocyte</td>
-<td align="right">-0.042</td>
-<td align="right">0.031</td>
+<tr>
+<td style="text-align:left;">
+lymphocyte
+</td>
+<td style="text-align:right;">
+-0.042
+</td>
+<td style="text-align:right;">
+0.031
+</td>
 </tr>
-<tr class="even">
-<td align="left">creatinine</td>
-<td align="right">-0.646</td>
-<td align="right">0.003</td>
+<tr>
+<td style="text-align:left;">
+creatinine
+</td>
+<td style="text-align:right;">
+-0.646
+</td>
+<td style="text-align:right;">
+0.003
+</td>
 </tr>
-<tr class="odd">
-<td align="left">urea_nitrogen</td>
-<td align="right">0.032</td>
-<td align="right">0.000</td>
+<tr>
+<td style="text-align:left;">
+urea_nitrogen
+</td>
+<td style="text-align:right;">
+0.032
+</td>
+<td style="text-align:right;">
+0.000
+</td>
 </tr>
-<tr class="even">
-<td align="left">blood_calcium</td>
-<td align="right">-0.942</td>
-<td align="right">0.000</td>
+<tr>
+<td style="text-align:left;">
+blood_calcium
+</td>
+<td style="text-align:right;">
+-0.942
+</td>
+<td style="text-align:right;">
+0.000
+</td>
 </tr>
-<tr class="odd">
-<td align="left">anion_gap</td>
-<td align="right">0.310</td>
-<td align="right">0.000</td>
+<tr>
+<td style="text-align:left;">
+anion_gap
+</td>
+<td style="text-align:right;">
+0.310
+</td>
+<td style="text-align:right;">
+0.000
+</td>
 </tr>
-<tr class="even">
-<td align="left">lactic_acid</td>
-<td align="right">0.277</td>
-<td align="right">0.056</td>
+<tr>
+<td style="text-align:left;">
+lactic_acid
+</td>
+<td style="text-align:right;">
+0.277
+</td>
+<td style="text-align:right;">
+0.056
+</td>
 </tr>
-<tr class="odd">
-<td align="left">pco2</td>
-<td align="right">0.037</td>
-<td align="right">0.005</td>
+<tr>
+<td style="text-align:left;">
+pco2
+</td>
+<td style="text-align:right;">
+0.037
+</td>
+<td style="text-align:right;">
+0.005
+</td>
 </tr>
 </tbody>
 </table>
@@ -743,7 +1075,16 @@ outcome\sim age+gender2+hypertensive1+atrialfibrillation1+diabetes1\\
 \]</span></p>
 <p>Among all the predictors selected, there are 7 comorbidity variables:
 hypertensive, atrialfibrillation, diabetes, deficiencyanemias,
-hyperlipemia, renal_failure and copd.</p>
+hyperlipemia, renal_failure and copd. All of them have negative
+estimates except for atrialfibrillation. This indicates that the
+occurrence of other complications leads to a decrease in mortality (as
+discussed in the complete model section), but the presence of atrial
+fibrillation is a noteworthy sign of mortality and should be closely
+monitored, especially in the ICU. In the remaining variables, the most
+significant five are blood_calcium, anion_gap, heart_rate,
+urea_nitrogen, and creatinine. All of them excapt for creatinine are
+also among the most significant factors in the complete model, and these
+four should be particularly noteworthy.</p>
 </div>
 <div id="model-evaluation-on-validation-group-group2"
 class="section level2">
@@ -754,18 +1095,18 @@ Curve.</p>
 <pre class="r"><code>mortality_validation =
   mortality_cleaned |&gt;
   filter(group == 2) |&gt;
-  select(-group, -id) </code></pre>
-<pre class="r"><code>predict = predict(stepwise_derivation, newdata = mortality_validation, type = &quot;response&quot;)</code></pre>
-<pre class="r"><code>pred = prediction(predictions = predict, labels = mortality_validation$outcome)
+  select(-group, -id) 
+predict = predict(stepwise_derivation, newdata = mortality_validation, type = &quot;response&quot;)
+pred = prediction(predictions = predict, labels = mortality_validation$outcome)
 roc = performance(pred, &quot;tpr&quot;, &quot;fpr&quot;)
-auc = performance(pred, measure = &quot;auc&quot;)@y.values[[1]]</code></pre>
-<pre class="r"><code>plot(roc, colorize = F)
+auc = performance(pred, measure = &quot;auc&quot;)@y.values[[1]]
+
+plot(roc, colorize = F)
 title(main = &quot;The Receiver Operating Characteristic (ROC) Curve of Generalized Linear Model&quot;)</code></pre>
-<p><img src="regression_model_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
-<pre class="r"><code>cat(&#39;AUC of the model on validation dataset:&#39;, auc)</code></pre>
-<pre><code>## AUC of the model on validation dataset: 0.7757475</code></pre>
-<p>According to the ROC plot and AUC value, the predictive performance
-of generalized linear model generated using group1 is satisfactory.</p>
+<p><img src="regression_model_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>The AUC of the model on validation dataset: 0.7757475. According to
+the ROC plot and AUC value, the predictive performance of the model on
+the validation group data is generally satisfactory.</p>
 </div>
 </div>
 
