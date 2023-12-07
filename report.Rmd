@@ -232,11 +232,11 @@ sign_tidy =
 
 The EDA conducted on heart failure patients in the Intensive Care Unit (ICU) provides valuable insights into the demographic, physiological, and clinical factors influencing mortality rates.
 
-## Demographic Characteristics 
+### Demographic Characteristics 
 
 The exploration of demographic factors such as gender and age provides critical insights into their potential impact on the outcomes of heart failure patients admitted to the Intensive Care Unit (ICU). This report section presents an analysis of in-hospital mortality rates categorized by gender and age groups. 
 
-### Gender-Based Mortality Analysis
+#### Gender-Based Mortality Analysis
 
 ```{r}
 mortality_data_EDA %>%
@@ -253,7 +253,7 @@ mortality_data_EDA %>%
 The dataset comprised 618 females and 558 males. The mortality rate among female patients was 12.8%, while the mortality rate for male patients was slightly higher at 14.3%. 
 
 
-### Age-Based Mortality Analysis
+#### Age-Based Mortality Analysis
 
 ```{r}
 # Define age intervals
@@ -284,7 +284,7 @@ ggplot(mortality_data_EDA, aes(x = age)) +
 
 The histogram shows the age distribution of patients with heart failure admitted to the ICU, and it is highly left-skewed. It shows that the bulk of patients falls within the middle-aged to elderly category, with a significant concentration between ages 70 and 90. This suggests that heart failure is more prevalent or more severe, warranting ICU admission, in this age demographic.
 
-### Gender & Age Bivariate Analysis
+#### Gender & Age Bivariate Analysis
 
 ```{r}
 # Bivariate Analysis
@@ -296,7 +296,7 @@ ggplot(mortality_data_EDA, aes(x = gender, y = age, fill = outcome)) +
 
 The boxplots show the age distribution for different genders and outcomes. We see that for both genders, the age distribution for patients who did not survive (outcome 1) is slightly higher. This could indicate that older age is a risk factor for mortality in this patient group.
 
-### BMI by Gender and Outcome
+#### BMI by Gender and Outcome
 
 The histogram below illustrates the distribution of Body Mass Index (BMI) across patients with heart failure, categorized by gender and outcome (Alive vs. Death).
 
@@ -311,7 +311,7 @@ ggplot(mortality_data_EDA %>% drop_na(bmi), aes(x = bmi, fill = as.factor(outcom
 
 It shows a wide range of BMI values for both genders, with no clear pattern indicating that BMI is distinctly associated with the outcome. However, there are more data points for BMI for outcome "Alive", which may suggest a higher survival rate for patients with a lower BMI, but further statistical analysis is needed.
 
-## Comorbidities Analysis
+### Comorbidities Analysis
 
 Analyzing the distribution of comorbidities by outcome can identify factors that influence mortality in patients with heart failure. It helps to understand the impact of comorbid conditions on patient survival and could inform targeted interventions. The stacked bar chart below presents the distribution of various comorbidities among heart failure patients in the ICU, differentiated by patient outcomes of survival and death. 
 
@@ -345,11 +345,11 @@ Observations based on the chart include:
 3. **Variable Significance**: The difference between two groups underscores the importance of considering comorbidities in predictive modeling for mortality. Further analysis could involve investigating the reasons behind the survival rates of patients with specific comorbidities. 
 
 
-## Lab Results Analysis
+### Lab Results Analysis
 
 This section offers a quantitative glimpse into potential biological markers that could contribute to our predictive model, thus enhancing our ability to conduct further analysis and understand mortality more deeply. 
 
-### Hematocrit Levels by Outcome
+#### Hematocrit Levels by Outcome
 
 ```{r}
 # Visualize Hematocrit Levels by Outcome with a violin plot
@@ -362,7 +362,7 @@ ggplot(mortality_data_EDA, aes(x = outcome, y = hematocrit, color = outcome)) +
 
 The plot illustrates a comparison of hematocrit levels in patients who were admitted to the ICU with heart failure and subsequently either survived (Alive) or did not (Death). There doesn't seem to be a clear separation between the two outcomes based on hematocrit levels alone. The peak of the distribution for the deceased patients appears to be slightly lower than that of the survivors. 
 
-### Heart Rate Distribution by Outcome
+#### Heart Rate Distribution by Outcome
 
 The density plot below illustrates the distribution of heart rate among patients with heart failure, categorized by the outcome of either survival (Alive) or death (Death). 
 
@@ -376,7 +376,8 @@ ggplot(mortality_data_EDA, aes(x = heart_rate, fill = as.factor(outcome))) +
 
 The density plot for heart rate shows that the distribution of heart rates for patients who did not survive is slightly shifted towards the higher end compared to those who survived. This could suggest that a higher heart rate is associated with a higher risk of mortality.
 
-### Blood Pressure by Outcome
+#### Blood Pressure by Outcome
+
 ```{r}
 # Blood Pressure by Outcome
 ggplot(mortality_data_EDA, aes(x = systolic_blood_pressure, y = diastolic_blood_pressure, color = as.factor(outcome))) +
@@ -387,7 +388,7 @@ ggplot(mortality_data_EDA, aes(x = systolic_blood_pressure, y = diastolic_blood_
 
 This scatterplot shows systolic vs. diastolic blood pressure colored by outcome. The points are widely spread, indicating variability in blood pressure readings across the patient population. There doesn't seem to be a clear separation between the two outcomes based on blood pressure alone.
 
-### Other Lab Results Analysis
+#### Other Lab Results Analysis
 
 This section contains the visualization for some other lab results, like the distributions for creatinine and BUN levels. More visualization can be found in the shiny app section. 
 
@@ -427,15 +428,12 @@ Observations based on the plots include:
 - **Leucocyte Count by Outcome**: The density plot shows a higher peak for leucocyte count among survivors (outcome 0) compared to non-survivors (outcome 1). However, there is a long tail in the distribution for non-survivors, suggesting that some patients who did not survive had very high leucocyte counts, which could indicate severe infection or systemic stress.
 
 
+### Conclusion
 
-
-
-
-
+The EDA section provides a crucial step towards understanding the multifaceted nature of mortality in heart failure patients within ICUs. Age and gender are affirmed as key demographic factors, while the role of comorbidities and physiological indicators is complex and necessitates further investigation. The counterintuitive findings regarding certain comorbidities invite a deeper examination of patient histories and treatment efficacy.
 
 
 ## Preliminary Study
-
 
 ### Correlation between Vital Signs
 
@@ -516,7 +514,7 @@ Ranked by the `Mean Decrease in Gini`, the top 5 variables are: `anion_gap`, `bi
 The results obtained from the random forest exhibit a overlap with the decision tree outcomes. In fact, random forest is an extension of decision trees that address over-fitting issues inherent in decision tree model. Therefore, we tend to prioritize the key variables identified by the random forest.  
 
 
-## PCA: Dimension Reduction
+### PCA: Dimension Reduction
 
 
 #### Dimension Reduction for Patient Vital Signs Variables
@@ -652,7 +650,11 @@ Based on the outcome (`Alive` or `Death`), the data points were grouped and colo
 
 In this section, we want to generate a generalized linear model to see the relationship between patients' mortality status and predictive variables.
 
-## Data Pre-processing
+### Generalized linear model
+
+Due to the response variable (outcome) is binary variable, a generalized linear model (GLM) is chosen for regression analysis.
+
+#### Data Pre-processing
 
 Firstly, to prepare the data for the regression, the data types of categorical variables will be transformed to factor. This subset of variables includes group (1 denoting the derivation group, 2 denoting the validation group), gender (1 denoting male, 2 denoting female), outcome (0 denoting alive, 1 denoting death), and the remaining comorbidity variables (0 denoting not having the disease, 1 denoting having the disease)
 
@@ -675,11 +677,8 @@ mortality_cleaned =
                       "renal_failure", "copd"))
 ```
 
-### Generalized linear model
 
-Due to the response variable (outcome) is binary variable, a generalized linear model (GLM) is chosen for regression analysis.
-
-#### Generalized Linear Model for Complete Dataset (Group1 and Group2)
+#### Generalized Linear Model for Complete Dataset (Group 1 and Group 2)
 
 Fit a logistic regression model using all patients data (including both the derivation and validation groups) and use the stepwise method to select predictors to be included in the model.
 
@@ -722,9 +721,10 @@ outcome \sim age+deficiencyanemias1+renal\_failure1+copd1\\
 $$
 
 It is worth noting that among the comorbidity variables, only deficiencyanemias, renal_failure, and copd are selected by model, and the estimates for all three are negative. This suggests that the occurrence of these three comorbidities is associated with a decrease in mortality, which is counterintuitive. This phenomenon may be attributed to the correlation between the onset of these diseases and early diagnosis and treatment. Early detection and treatment of these diseases might reduce the risk of death. Alternatively, the occurrence of these diseases may prompt patients to pay more attention to their health and take actions to improve their health conditions, thereby enhancing their survival rates.
+
 In the remaining variables, the most significant six are blood_calcium, anion_gap, platelets, heart_rate, urea_nitrogen, and pco2. They may have the potential to be important physiological indicators worth monitoring closely in ICU patients.
 
-#### Generalized Linear Model for Derivation Dataset (Group1)
+#### Generalized Linear Model for Derivation Dataset (Group 1)
 
 Fit a logistic regression model using patients data from group1 (derivation group) and use the stepwise method to select predictors to be included in the model.
 
@@ -766,7 +766,7 @@ $$
 
 Among all the predictors selected, there are 7 comorbidity variables: hypertensive, atrialfibrillation, diabetes, deficiencyanemias, hyperlipemia, renal_failure and copd. All of them have negative estimates except for atrialfibrillation. This indicates that the occurrence of other complications leads to a decrease in mortality (as discussed in the complete model section), but the presence of atrial fibrillation is a noteworthy sign of mortality and should be closely monitored, especially in the ICU. In the remaining variables, the most significant five are blood_calcium, anion_gap, heart_rate, urea_nitrogen, and creatinine. All of them excapt for creatinine are also among the most significant factors in the complete model, and these four should be particularly noteworthy.
 
-#### Model Evaluation on Validation Group (Group2)
+#### Model Evaluation on Validation Group (Group 2)
 
 For the model generated using derivation group data, validate it on the validation group and plot Receiver Operating Characteristic (ROC) Curve.
 
@@ -786,57 +786,13 @@ title(main = "The ROC Curve of Generalized Linear Model")
 
 The AUC of the model on validation dataset: 0.7757475. According to the ROC plot and AUC value, the predictive performance of the model on the validation group data is generally satisfactory.
 
+#### Conclusion
+
+The regression models, with reasonable predictive performance, underscore the potential for developing more sophisticated predictive tools. Future research should expand upon this work with larger datasets and consider the integration of machine learning approaches to enhance predictive accuracy. This could ultimately lead to improved patient stratification and personalized treatment protocols in critical care environments.
+
+
 # Discussion
 
-## 1. Findings
+This study’s exploratory data analysis (EDA) on ICU heart failure patients highlights several factors influencing mortality rates. We observed a higher mortality rate in males and a significant vulnerability among the elderly. Comorbidities like hypertension and diabetes, although prevalent, did not exhibit a clear impact on mortality. However, certain lab results, such as hematocrit and blood urea nitrogen levels, emerged as potential biomarkers for mortality.
 
-### 1) Generalized Linear Model for Complete Dataset 
-
-The complete model is fitted using patients data from both group1 (derivation group) and group2 (validation group). A stepwise method is conducted to select predictors to be included in the model.
-
-The expression of complete model is:
-
-$$
-outcome \sim age+deficiencyanemias1+renal\_failure1+copd1\\
-+heart\_rate+diastolic\_blood\_pressure+respiratory\_rate\\
-+temperature+sp\_o2+urine\_output+mch+mchc+rdw+leucocyte\\
-+platelets+lymphocyte+creatinine+urea\_nitrogen\\
-+blood\_potassium+blood\_calcium+anion\_gap+magnesium\_ion\\
-+bicarbonate+pco2
-$$
-
-- It is worth noting that among the comorbidity variables, only deficiencyanemias, renal_failure, and copd are selected by model, and the estimates for all three are negative. This suggests that the occurrence of these three comorbidities is associated with a decrease in mortality, which is counterintuitive. This phenomenon may be attributed to the correlation between the onset of these diseases and early diagnosis and treatment. Early detection and treatment of these diseases might reduce the risk of death. Alternatively, the occurrence of these diseases may prompt patients to pay more attention to their health and take actions to improve their health conditions, thereby enhancing their survival rates.
-- In the remaining variables, the most significant six are blood_calcium, anion_gap, platelets, heart_rate, urea_nitrogen, and pco2. They may have the potential to be important physiological indicators worth monitoring closely in ICU patients.
-
-### 2) Generalized Linear Model for Derivation Dataset
-
-The derivation model is fitted using patients data from group1 (derivation group). A stepwise method is conducted to select predictors to be included in the model.
-
-The expression of derivation model is:
-
-$$
-outcome\sim age+gender2+hypertensive1+atrialfibrillation1+diabetes1\\ +deficiencyanemias1+hyperlipemia1+renal\_failure1+copd1+heart\_rate\\
-+diastolic\_blood\_pressure+sp\_o2+mcv+rdw+platelets+lymphocyte\\
-+creatinine+urea\_nitrogen+blood\_calcium+anion\_gap+lactic\_acid+pco2
-$$
-
-- Among all the predictors selected, there are 7 comorbidity variables: hypertensive, atrialfibrillation, diabetes, deficiencyanemias, hyperlipemia, renal_failure and copd. All of them have negative estimates except for atrialfibrillation. This indicates that the occurrence of other complications leads to a decrease in mortality (as discussed in the complete model section), but the presence of atrial fibrillation is a noteworthy sign of mortality and should be closely monitored, especially in the ICU. 
-- In the remaining variables, the most significant five are blood_calcium, anion_gap, heart_rate, urea_nitrogen, and creatinine. All of them excapt for creatinine are also among the most significant factors in the complete model, and these four should be particularly noteworthy.
-
-### 3) Model Evaluation on Validation Group
-
-The derivation model is validated on the validation group (group2) and a Receiver Operating Characteristic (ROC) Curve is plotted.
-
-The AUC of the model on validation dataset: 0.7757475. According to the ROC plot and AUC value, the predictive performance of the model on the validation group data is generally satisfactory.
-
-
-
-## 2. Demographic Insights
-
-The gender-based mortality analysis revealed a slightly higher mortality rate in male patients (14.3%) compared to females (12.8%). Age-wise, the highest mortality rate was observed in patients over 80 years (15.9%), highlighting the increased vulnerability among the elderly.
-
-## 3. Future Directions
-
-The insights gained from this analysis can guide further detailed statistical analysis and predictive modeling. Especially, investigating the reasons behind the observed trends and how they interact to influence patient outcomes could be a valuable next step.
-
-This exploratory analysis sets the stage for more in-depth statistical analysis and modeling, aiming to enhance the understanding and prediction of mortality rates in heart failure patients admitted to the ICU.
+The logistic regression analysis further refined our understanding. Surprisingly, comorbidities such as deficiency anemias, renal failure, and COPD were inversely associated with mortality. This counterintuitive finding might reflect the benefits of early diagnosis and management. Key physiological indicators, including blood calcium and anion gap, were identified, and their significance was reinforced in both complete and derivation datasets.
