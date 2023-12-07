@@ -388,8 +388,96 @@ div.tocify {
 </div>
 
 
-<div id="background-information-of-the-datasets" class="section level1">
-<h1>Background Information of the datasets</h1>
+<div id="motivation" class="section level1">
+<h1>Motivation</h1>
+<p>Predictors of in-hospital mortality in patients with heart failure
+admitted to the intensive care unit (ICU) remain unclear. Aimed to lay a
+solid foundation for Data Science, deepen our understanding of
+mortality, we conducted a comprehensive research based on the patient’s
+mortality factors dataset. Although this dataset belongs to
+cross-sectional study, we still can dig out some key patterns that
+affect mortality and detect abnormal characteristics that indicate the
+death sign at the early stage.</p>
+</div>
+<div id="related-work" class="section level1">
+<h1>Related work</h1>
+<p>Here are some key areas and examples of related published work:</p>
+<ol style="list-style-type: decimal">
+<li><p>“Trends in Hospital Mortality Between 1999 and 2017”: Studies
+analyzing long-term trends in hospital mortality rates can provide
+insights into improvements or challenges in healthcare outcomes over
+time. Such research often involves large-scale data analysis to identify
+patterns and changes.</p></li>
+<li><p>“Risk Factors for Hospital Mortality in Critically Ill Patients”:
+Research that focuses on identifying and understanding specific risk
+factors associated with increased hospital mortality can inform targeted
+interventions. This may involve studying critically ill populations and
+factors such as comorbidities, severity of illness, and response to
+treatment.</p></li>
+<li><p>“Effectiveness of Early Warning Systems in Reducing Hospital
+Mortality”: Investigating the impact of early warning systems and rapid
+response teams on hospital mortality is a common area of interest. This
+research often assesses the effectiveness of these systems in
+identifying deteriorating patients and facilitating timely
+interventions.</p></li>
+<li><p>“Quality Improvement Initiatives and Their Impact on Hospital
+Mortality”: Published work on quality improvement initiatives explores
+how hospitals implement changes to improve patient outcomes. This may
+involve the introduction of new protocols, guidelines, or patient safety
+measures.</p></li>
+<li><p>“Role of Health Information Technology in Predicting and
+Preventing Hospital Mortality”: Research examining the integration of
+health information technology, predictive modeling, and artificial
+intelligence in predicting and preventing hospital mortality is an
+evolving field. These studies often assess the accuracy and clinical
+utility of predictive models.</p></li>
+<li><p>“Ethical Considerations in End-of-Life Decision-Making and
+Hospital Mortality”: Ethical considerations surrounding end-of-life
+care, decision-making processes, and their impact on hospital mortality
+are important topics. Studies in this area may explore the perspectives
+of healthcare professionals, patients, and families.</p></li>
+<li><p>“Interdisciplinary Collaboration and its Influence on Hospital
+Mortality”: Research that investigates the role of effective
+communication and collaboration among healthcare teams in reducing
+hospital mortality is essential. This may include studies on teamwork,
+communication strategies, and interdisciplinary approaches to patient
+care.</p></li>
+<li><p>“Comparative Effectiveness Research in Hospital Mortality”:
+Comparative effectiveness research aims to compare different treatment
+modalities and strategies to determine their impact on patient outcomes.
+Published work in this area may assess the effectiveness of various
+medical interventions and healthcare delivery models.</p></li>
+</ol>
+ 
+ 
+</div>
+<div id="initial-questions" class="section level1">
+<h1>Initial questions</h1>
+<p>What factors have a significant impact on mortality?</p>
+<p>What factors account for independent risk factors of in-hospital
+mortality?</p>
+<p>What potential clinical implications are the top three biomedical
+indices that make the most significant contributions to the specific
+disease?</p>
+</div>
+<div id="data" class="section level1">
+<h1>Data</h1>
+<div id="sources" class="section level2">
+<h2>Sources</h2>
+<p>We choose Hospital Mortality Dataset as our dataset in our study. The
+data can be accessed <a
+href="https://www.kaggle.com/datasets/saurabhshahane/in-hospital-mortality-prediction/data">here</a>.</p>
+</div>
+<div id="scaping-method" class="section level2">
+<h2>Scaping method</h2>
+<p>Our main datasets is Zhou, Jingmin et al. (2021), Prediction model of
+in-hospital mortality in intensive care unit patients with heart
+failure: machine learning-based, retrospective analysis of the MIMIC-III
+database, Dryad, Dataset, <a
+href="https://doi.org/10.5061/dryad.0p2ngf1zd"
+class="uri">https://doi.org/10.5061/dryad.0p2ngf1zd</a>, which covers
+the patients’ various indexes comprehensively, including 51 variables
+such as Blood Pressure and BMI.</p>
 <p>We categorized the dataset into following aspects:</p>
 <ol style="list-style-type: decimal">
 <li><p><strong>Demographic characteristics:</strong> age at the time of
@@ -412,123 +500,13 @@ BUN glucose, potassium, sodium, calcium, chloride, magnesium, the anion
 gap, bicarbonate, lactate, hydrogen ion concentration pH, partial
 pressure of CO2 in arterial blood, and LVEF</p></li>
 </ol>
-</div>
-<div id="data-dictionary" class="section level1">
-<h1>Data Dictionary</h1>
-<p>We choose Hospital Mortality Dataset as our dataset in our study. The
-data can be accessed <a
-href="https://www.kaggle.com/datasets/saurabhshahane/in-hospital-mortality-prediction/data">here</a>.</p>
 <pre class="r"><code># Load the data and preprocess it
   mortality_data &lt;- read_csv(&quot;mortality_data_cleaned.csv&quot;) %&gt;%
   janitor::clean_names() %&gt;%
   drop_na(outcome) </code></pre>
-<p>Hospital mortality datasets contains a total of <code>51</code>
-patients with age ranging from <code>19</code> to <code>99</code>. There
-are a total of <code>51</code> variables. Out of which, we consider the
-variables and description is listed below:</p>
-<p>*<code>group</code>: Patient’s group (group_1=1, group_2 = 2); Binary
-Variable.</p>
-<p>*<code>id</code>: Patient’s id; Continuoues Variable.</p>
-<p>*<code>outcome</code>: Patient’s outcome (death=1, alive = 0); Binary
-Variable.</p>
-<p>*<code>age</code>: Patient’s age; Continuoues Variable.</p>
-<p>*<code>gender</code>: Patient’s gender (male=1, female = 2); Binary
-Variable.</p>
-<p>*<code>bmi</code>: Patient’s BMI; Continuoues Variable.</p>
-<p>*<code>hypertensive</code>: Whether patient had high blood pressure
-(yes=1, no = 0); Binary Variable.</p>
-<p>*<code>atrialfibrillation</code>: Whether patient had heart rhythm
-disorder (yes=1, no = 0); Binary Variable.</p>
-<p>*<code>chd_with_no_mi</code>: Whether patient had ischemic heart
-disease (yes=1, no = 0); Binary Variable.</p>
-<p>*<code>diabetes</code>: Whether patient had diabetes mellitus (yes=1,
-no = 0); Binary Variable.</p>
-<p>*<code>deficiencyanemias</code>: Whether patient had deficiency of
-anemias (yes=1, no = 0); Binary Variable.</p>
-<p>*<code>depression</code>: Whether patient had depression (yes=1, no =
-0); Binary Variable.</p>
-<p>*<code>hyperlipemia</code>: Whether patient had hyperlipidemia
-(yes=1, no = 0); Binary Variable.</p>
-<p>*<code>renal_failure</code>: Whether patient had renal failure
-(yes=1, no = 0); Binary Variable.</p>
-<p>*<code>copd</code>: Whether patient had chronic obstructive pulmonary
-disease (yes=1, no = 0); Binary Variable.</p>
-<p>*<code>heart_rate</code>: Patient’s heart rate; Continuous
-variable.</p>
-<p>*<code>systolic_blood_pressure</code>: Patient’s systolic blood
-pressure; Continuous variable.</p>
-<p>*<code>diastolic_blood_pressure</code>: Patient’s diasystolic blood
-pressure; Continuous variable.</p>
-<p>*<code>respiratory_rate</code>: Patient’s respiratory rate;
-Continuous variable.</p>
-<p>*<code>temperature</code>: Patient’s temperature; Continuous
-variable.</p>
-<p>*<code>sp_o2</code>: Patient’s saturation pulse oxygen; Continuous
-variable.</p>
-<p>*<code>urine_output</code>: Patient’s urine output - first 24 h;
-Continuous variable.</p>
-<p>*<code>hematocrit</code>: Patient’s hematocrit; Continuous
-variable.</p>
-<p>*<code>rbc</code>: Patient’s volume percentage of red blood cells
-(RBCs) in blood; Continuous variable.</p>
-<p>*<code>mch</code>: Patient’s mean corpuscular hemoglobin; Continuous
-variable.</p>
-<p>*<code>mchc</code>: Patient’s mean corpuscular hemoglobin
-concentration; Continuous variable.</p>
-<p>*<code>mcv</code>: Patient’s mean corpuscular volume; Continuous
-variable.</p>
-<p>*<code>rdw</code>: Patient’s red blood cell distribution width;
-Continuous variable.</p>
-<p>*<code>leucocyte</code>: Patient’s leucocyte; Continuous
-variable.</p>
-<p>*<code>platelets</code>: Patient’s platelet count; Continuous
-variable.</p>
-<p>*<code>neutrophils</code>: Patient’s neutrophils; Continuous
-variable.</p>
-<p>*<code>basophils</code>: Patient’s basophils; Continuous
-variable.</p>
-<p>*<code>lymphocyte</code>: Patient’s lymphocyte; Continuous
-variable.</p>
-<p>*<code>pt</code>: Patient’s prothrombin time; Continuous
-variable.</p>
-<p>*<code>inr</code>: Patient’s international normalized ratio;
-Continuous variable.</p>
-<p>*<code>nt_pro_bnp</code>: Patient’s NT-proBNP; Continuous
-variable.</p>
-<p>*<code>creatine_kinase</code>: Patient’s creatine kinase; Continuous
-variable.</p>
-<p>*<code>creatinine</code>: Patient’s creatinine; Continuous
-variable.</p>
-<p>*<code>urea_nitrogen</code>: Patient’s blood urea nitrogen ;
-Continuous variable.</p>
-<p>*<code>glucose</code>: Patient’s glucose contents; Continuous
-variable.</p>
-<p>*<code>blood_potassium</code>: Patient’s potassium contents;
-Continuous variable.</p>
-<p>*<code>blood_sodium</code>: Patient’s sodium contents; Continuous
-variable.</p>
-<p>*<code>blood_calcium</code>: Patient’s calcium contents; Continuous
-variable.</p>
-<p>*<code>chloride</code>: Patient’s chloride contents; Continuous
-variable.</p>
-<p>*<code>anion_gap</code>: Patient’s anion gap; Continuous
-variable.</p>
-<p>*<code>magnesium_ion</code>: Patient’s magnesium (ion) contents;
-Continuous variable.</p>
-<p>*<code>ph</code>: Patient’s hydrogen ion concentration; Continuous
-variable.</p>
-<p>*<code>bicarbonate</code>: Patient’s bicarbonate contents; Continuous
-variable.</p>
-<p>*<code>lactic_acid</code>: Patient’s lactic acid contents; Continuous
-variable.</p>
-<p>*<code>pco2</code>: Patient’s partial pressure of CO2 in arterial
-blood; Continuous variable.</p>
-<p>*<code>ef</code>: Patient’s Left Ventricular Ejection Fraction;
-Continuous variable.</p>
-<p><br> <br></p>
 </div>
-<div id="imputation" class="section level1">
-<h1>Imputation</h1>
+<div id="cleaning" class="section level2">
+<h2>Cleaning</h2>
 <p><strong>Data cleaning problems:</strong></p>
 <ol style="list-style-type: decimal">
 <li><p>Too many NA values: This issue introduces a layer of complexity,
@@ -599,11 +577,15 @@ reliable interpretations, conducting meaningful analyses, and supporting
 effective decision-making.</p></li>
 </ol>
 </div>
-<div id="exploratory-data-analysis" class="section level1">
-<h1>Exploratory Data Analysis</h1>
+</div>
+<div id="additional-analysis" class="section level1">
+<h1>Additional analysis</h1>
+<div id="exploratory-data-analysis" class="section level2">
+<h2>Exploratory Data Analysis</h2>
 <p>The EDA conducted on heart failure patients in the Intensive Care
 Unit (ICU) provides valuable insights into the demographic,
 physiological, and clinical factors influencing mortality rates.</p>
+</div>
 <div id="demographic-characteristics" class="section level2">
 <h2>Demographic Characteristics</h2>
 <p>The exploration of demographic factors such as gender and age
@@ -624,58 +606,28 @@ categorized by gender and age groups.</p>
   knitr::kable(digits = 3)  </code></pre>
 <table>
 <thead>
-<tr>
-<th style="text-align:left;">
-gender
-</th>
-<th style="text-align:right;">
-Count
-</th>
-<th style="text-align:right;">
-Alive
-</th>
-<th style="text-align:right;">
-Death
-</th>
-<th style="text-align:right;">
-Percentage
-</th>
+<tr class="header">
+<th align="left">gender</th>
+<th align="right">Count</th>
+<th align="right">Alive</th>
+<th align="right">Death</th>
+<th align="right">Percentage</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-Female
-</td>
-<td style="text-align:right;">
-618
-</td>
-<td style="text-align:right;">
-539
-</td>
-<td style="text-align:right;">
-79
-</td>
-<td style="text-align:right;">
-0.128
-</td>
+<tr class="odd">
+<td align="left">Female</td>
+<td align="right">618</td>
+<td align="right">539</td>
+<td align="right">79</td>
+<td align="right">0.128</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Male
-</td>
-<td style="text-align:right;">
-558
-</td>
-<td style="text-align:right;">
-478
-</td>
-<td style="text-align:right;">
-80
-</td>
-<td style="text-align:right;">
-0.143
-</td>
+<tr class="even">
+<td align="left">Male</td>
+<td align="right">558</td>
+<td align="right">478</td>
+<td align="right">80</td>
+<td align="right">0.143</td>
 </tr>
 </tbody>
 </table>
@@ -700,109 +652,49 @@ mortality_data_EDA %&gt;%
   knitr::kable(digits = 3)  </code></pre>
 <table>
 <thead>
-<tr>
-<th style="text-align:left;">
-Age_group
-</th>
-<th style="text-align:right;">
-Count
-</th>
-<th style="text-align:right;">
-Alive
-</th>
-<th style="text-align:right;">
-Death
-</th>
-<th style="text-align:right;">
-Percentage
-</th>
+<tr class="header">
+<th align="left">Age_group</th>
+<th align="right">Count</th>
+<th align="right">Alive</th>
+<th align="right">Death</th>
+<th align="right">Percentage</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-Under 20
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0.000
-</td>
+<tr class="odd">
+<td align="left">Under 20</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">0.000</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-20-40
-</td>
-<td style="text-align:right;">
-16
-</td>
-<td style="text-align:right;">
-15
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0.062
-</td>
+<tr class="even">
+<td align="left">20-40</td>
+<td align="right">16</td>
+<td align="right">15</td>
+<td align="right">1</td>
+<td align="right">0.062</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-40-60
-</td>
-<td style="text-align:right;">
-158
-</td>
-<td style="text-align:right;">
-138
-</td>
-<td style="text-align:right;">
-20
-</td>
-<td style="text-align:right;">
-0.127
-</td>
+<tr class="odd">
+<td align="left">40-60</td>
+<td align="right">158</td>
+<td align="right">138</td>
+<td align="right">20</td>
+<td align="right">0.127</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-60-80
-</td>
-<td style="text-align:right;">
-492
-</td>
-<td style="text-align:right;">
-435
-</td>
-<td style="text-align:right;">
-57
-</td>
-<td style="text-align:right;">
-0.116
-</td>
+<tr class="even">
+<td align="left">60-80</td>
+<td align="right">492</td>
+<td align="right">435</td>
+<td align="right">57</td>
+<td align="right">0.116</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Over 80
-</td>
-<td style="text-align:right;">
-508
-</td>
-<td style="text-align:right;">
-427
-</td>
-<td style="text-align:right;">
-81
-</td>
-<td style="text-align:right;">
-0.159
-</td>
+<tr class="odd">
+<td align="left">Over 80</td>
+<td align="right">508</td>
+<td align="right">427</td>
+<td align="right">81</td>
+<td align="right">0.159</td>
 </tr>
 </tbody>
 </table>
@@ -882,8 +774,8 @@ comorbidity_plot &lt;- ggplot(mortality_long, aes(x = variable, fill = as.factor
 interactive_plot &lt;- ggplotly(comorbidity_plot)
 
 interactive_plot</code></pre>
-<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-98a3bb12ed9beb128e0d" style="width:864px;height:576px;"></div>
-<script type="application/json" data-for="htmlwidget-98a3bb12ed9beb128e0d">{"x":{"data":[{"orientation":"v","width":[0.89999999999999991,0.90000000000000013,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036],"base":[0.73058013765978369,0.43067846607669619,0.35791543756145527,0.12684365781710916,0.3854473942969518,0.080629301868239925,0.39036381514257623],"x":[1,2,3,4,5,6,7],"y":[0.26941986234021631,0.56932153392330376,0.64208456243854473,0.87315634218289084,0.61455260570304815,0.91937069813176009,0.60963618485742377],"text":["count: 0.26941986<br />variable: hypertensive<br />as.factor(value): No","count: 0.56932153<br />variable: diabetes<br />as.factor(value): No","count: 0.64208456<br />variable: deficiencyanemias<br />as.factor(value): No","count: 0.87315634<br />variable: depression<br />as.factor(value): No","count: 0.61455261<br />variable: renal_failure<br />as.factor(value): No","count: 0.91937070<br />variable: copd<br />as.factor(value): No","count: 0.60963618<br />variable: hyperlipemia<br />as.factor(value): No"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(248,118,109,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"No","legendgroup":"No","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.89999999999999991,0.90000000000000013,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036],"base":[0.63522012578616349,0.35849056603773582,0.22012578616352202,0.069182389937106917,0.23270440251572327,0.0440251572327044,0.31446540880503143],"x":[1,2,3,4,5,6,7],"y":[0.36477987421383651,0.64150943396226423,0.77987421383647804,0.9308176100628931,0.76729559748427678,0.95597484276729561,0.68553459119496862],"text":["count: 0.36477987<br />variable: hypertensive<br />as.factor(value): No","count: 0.64150943<br />variable: diabetes<br />as.factor(value): No","count: 0.77987421<br />variable: deficiencyanemias<br />as.factor(value): No","count: 0.93081761<br />variable: depression<br />as.factor(value): No","count: 0.76729560<br />variable: renal_failure<br />as.factor(value): No","count: 0.95597484<br />variable: copd<br />as.factor(value): No","count: 0.68553459<br />variable: hyperlipemia<br />as.factor(value): No"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(248,118,109,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"No","legendgroup":"No","showlegend":false,"xaxis":"x2","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.89999999999999991,0.90000000000000013,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036],"base":[0,0,0,0,0,0,0],"x":[1,2,3,4,5,6,7],"y":[0.73058013765978369,0.43067846607669619,0.35791543756145527,0.12684365781710916,0.3854473942969518,0.080629301868239925,0.39036381514257623],"text":["count: 0.73058014<br />variable: hypertensive<br />as.factor(value): Yes","count: 0.43067847<br />variable: diabetes<br />as.factor(value): Yes","count: 0.35791544<br />variable: deficiencyanemias<br />as.factor(value): Yes","count: 0.12684366<br />variable: depression<br />as.factor(value): Yes","count: 0.38544739<br />variable: renal_failure<br />as.factor(value): Yes","count: 0.08062930<br />variable: copd<br />as.factor(value): Yes","count: 0.39036382<br />variable: hyperlipemia<br />as.factor(value): Yes"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(0,191,196,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Yes","legendgroup":"Yes","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.89999999999999991,0.90000000000000013,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036],"base":[0,0,0,0,0,0,0],"x":[1,2,3,4,5,6,7],"y":[0.63522012578616349,0.35849056603773582,0.22012578616352202,0.069182389937106917,0.23270440251572327,0.0440251572327044,0.31446540880503143],"text":["count: 0.63522013<br />variable: hypertensive<br />as.factor(value): Yes","count: 0.35849057<br />variable: diabetes<br />as.factor(value): Yes","count: 0.22012579<br />variable: deficiencyanemias<br />as.factor(value): Yes","count: 0.06918239<br />variable: depression<br />as.factor(value): Yes","count: 0.23270440<br />variable: renal_failure<br />as.factor(value): Yes","count: 0.04402516<br />variable: copd<br />as.factor(value): Yes","count: 0.31446541<br />variable: hyperlipemia<br />as.factor(value): Yes"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(0,191,196,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Yes","legendgroup":"Yes","showlegend":false,"xaxis":"x2","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":56.182648401826484,"r":7.3059360730593621,"b":40.913242009132425,"l":48.949771689497723},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"title":{"text":"Distribution of Comorbidities by Outcome","font":{"color":"rgba(0,0,0,1)","family":"","size":17.534246575342465},"x":0,"xref":"paper"},"xaxis":{"domain":[0,0.49154405547099611],"automargin":true,"type":"linear","autorange":false,"range":[0.40000000000000002,7.5999999999999996],"tickmode":"array","ticktext":["hypertensive","diabetes","deficiencyanemias","depression","renal_failure","copd","hyperlipemia"],"tickvals":[1,2,3,4.0000000000000009,5,6,7],"categoryorder":"array","categoryarray":["hypertensive","diabetes","deficiencyanemias","depression","renal_failure","copd","hyperlipemia"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-50,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"annotations":[{"text":" ","x":0.5,"y":0,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"top","annotationType":"axis","yshift":-21.917808219178088},{"text":"Count","x":0,"y":0.5,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xref":"paper","yref":"paper","textangle":-90,"xanchor":"right","yanchor":"center","annotationType":"axis","xshift":-33.607305936073061},{"text":"Alive","x":0.24577202773549806,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"Death","x":0.754227972264502,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"}],"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-0.050000000000000003,1.05],"tickmode":"array","ticktext":["0%","25%","50%","75%","100%"],"tickvals":[0,0.25,0.5,0.75,1],"categoryorder":"array","categoryarray":["0%","25%","50%","75%","100%"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":0.49154405547099611,"y0":0,"y1":1},{"type":"rect","fillcolor":"rgba(217,217,217,1)","line":{"color":"transparent","width":0.66417600664176002,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0,"x1":0.49154405547099611,"y0":0,"y1":23.37899543378996,"yanchor":1,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.50845594452900389,"x1":1,"y0":0,"y1":1},{"type":"rect","fillcolor":"rgba(217,217,217,1)","line":{"color":"transparent","width":0.66417600664176002,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0.50845594452900389,"x1":1,"y0":0,"y1":23.37899543378996,"yanchor":1,"ysizemode":"pixel"}],"xaxis2":{"type":"linear","autorange":false,"range":[0.40000000000000002,7.5999999999999996],"tickmode":"array","ticktext":["hypertensive","diabetes","deficiencyanemias","depression","renal_failure","copd","hyperlipemia"],"tickvals":[1,2,3,4.0000000000000009,5,6,7],"categoryorder":"array","categoryarray":["hypertensive","diabetes","deficiencyanemias","depression","renal_failure","copd","hyperlipemia"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-50,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0.50845594452900389,1],"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.8897637795275593,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"title":{"text":"Presence","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"f25c52b83f89":{"x":{},"fill":{},"type":"bar"}},"cur_data":"f25c52b83f89","visdat":{"f25c52b83f89":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-5f5d7c26df354a3834d4" style="width:864px;height:576px;"></div>
+<script type="application/json" data-for="htmlwidget-5f5d7c26df354a3834d4">{"x":{"data":[{"orientation":"v","width":[0.89999999999999991,0.90000000000000013,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036],"base":[0.73058013765978369,0.43067846607669619,0.35791543756145527,0.12684365781710916,0.3854473942969518,0.080629301868239925,0.39036381514257623],"x":[1,2,3,4,5,6,7],"y":[0.26941986234021631,0.56932153392330376,0.64208456243854473,0.87315634218289084,0.61455260570304815,0.91937069813176009,0.60963618485742377],"text":["count: 0.26941986<br />variable: hypertensive<br />as.factor(value): No","count: 0.56932153<br />variable: diabetes<br />as.factor(value): No","count: 0.64208456<br />variable: deficiencyanemias<br />as.factor(value): No","count: 0.87315634<br />variable: depression<br />as.factor(value): No","count: 0.61455261<br />variable: renal_failure<br />as.factor(value): No","count: 0.91937070<br />variable: copd<br />as.factor(value): No","count: 0.60963618<br />variable: hyperlipemia<br />as.factor(value): No"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(248,118,109,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"No","legendgroup":"No","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.89999999999999991,0.90000000000000013,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036],"base":[0.63522012578616349,0.35849056603773582,0.22012578616352202,0.069182389937106917,0.23270440251572327,0.0440251572327044,0.31446540880503143],"x":[1,2,3,4,5,6,7],"y":[0.36477987421383651,0.64150943396226423,0.77987421383647804,0.9308176100628931,0.76729559748427678,0.95597484276729561,0.68553459119496862],"text":["count: 0.36477987<br />variable: hypertensive<br />as.factor(value): No","count: 0.64150943<br />variable: diabetes<br />as.factor(value): No","count: 0.77987421<br />variable: deficiencyanemias<br />as.factor(value): No","count: 0.93081761<br />variable: depression<br />as.factor(value): No","count: 0.76729560<br />variable: renal_failure<br />as.factor(value): No","count: 0.95597484<br />variable: copd<br />as.factor(value): No","count: 0.68553459<br />variable: hyperlipemia<br />as.factor(value): No"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(248,118,109,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"No","legendgroup":"No","showlegend":false,"xaxis":"x2","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.89999999999999991,0.90000000000000013,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036],"base":[0,0,0,0,0,0,0],"x":[1,2,3,4,5,6,7],"y":[0.73058013765978369,0.43067846607669619,0.35791543756145527,0.12684365781710916,0.3854473942969518,0.080629301868239925,0.39036381514257623],"text":["count: 0.73058014<br />variable: hypertensive<br />as.factor(value): Yes","count: 0.43067847<br />variable: diabetes<br />as.factor(value): Yes","count: 0.35791544<br />variable: deficiencyanemias<br />as.factor(value): Yes","count: 0.12684366<br />variable: depression<br />as.factor(value): Yes","count: 0.38544739<br />variable: renal_failure<br />as.factor(value): Yes","count: 0.08062930<br />variable: copd<br />as.factor(value): Yes","count: 0.39036382<br />variable: hyperlipemia<br />as.factor(value): Yes"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(0,191,196,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Yes","legendgroup":"Yes","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.89999999999999991,0.90000000000000013,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036],"base":[0,0,0,0,0,0,0],"x":[1,2,3,4,5,6,7],"y":[0.63522012578616349,0.35849056603773582,0.22012578616352202,0.069182389937106917,0.23270440251572327,0.0440251572327044,0.31446540880503143],"text":["count: 0.63522013<br />variable: hypertensive<br />as.factor(value): Yes","count: 0.35849057<br />variable: diabetes<br />as.factor(value): Yes","count: 0.22012579<br />variable: deficiencyanemias<br />as.factor(value): Yes","count: 0.06918239<br />variable: depression<br />as.factor(value): Yes","count: 0.23270440<br />variable: renal_failure<br />as.factor(value): Yes","count: 0.04402516<br />variable: copd<br />as.factor(value): Yes","count: 0.31446541<br />variable: hyperlipemia<br />as.factor(value): Yes"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(0,191,196,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Yes","legendgroup":"Yes","showlegend":false,"xaxis":"x2","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":56.182648401826484,"r":7.3059360730593621,"b":40.913242009132425,"l":48.949771689497723},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"title":{"text":"Distribution of Comorbidities by Outcome","font":{"color":"rgba(0,0,0,1)","family":"","size":17.534246575342465},"x":0,"xref":"paper"},"xaxis":{"domain":[0,0.49154405547099611],"automargin":true,"type":"linear","autorange":false,"range":[0.40000000000000002,7.5999999999999996],"tickmode":"array","ticktext":["hypertensive","diabetes","deficiencyanemias","depression","renal_failure","copd","hyperlipemia"],"tickvals":[1,2,3,4.0000000000000009,5,6,7],"categoryorder":"array","categoryarray":["hypertensive","diabetes","deficiencyanemias","depression","renal_failure","copd","hyperlipemia"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-50,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"annotations":[{"text":" ","x":0.5,"y":0,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"top","annotationType":"axis","yshift":-21.917808219178088},{"text":"Count","x":0,"y":0.5,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xref":"paper","yref":"paper","textangle":-90,"xanchor":"right","yanchor":"center","annotationType":"axis","xshift":-33.607305936073061},{"text":"Alive","x":0.24577202773549806,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"Death","x":0.754227972264502,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"}],"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-0.050000000000000003,1.05],"tickmode":"array","ticktext":["0%","25%","50%","75%","100%"],"tickvals":[0,0.25,0.5,0.75,1],"categoryorder":"array","categoryarray":["0%","25%","50%","75%","100%"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":0.49154405547099611,"y0":0,"y1":1},{"type":"rect","fillcolor":"rgba(217,217,217,1)","line":{"color":"transparent","width":0.66417600664176002,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0,"x1":0.49154405547099611,"y0":0,"y1":23.37899543378996,"yanchor":1,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.50845594452900389,"x1":1,"y0":0,"y1":1},{"type":"rect","fillcolor":"rgba(217,217,217,1)","line":{"color":"transparent","width":0.66417600664176002,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0.50845594452900389,"x1":1,"y0":0,"y1":23.37899543378996,"yanchor":1,"ysizemode":"pixel"}],"xaxis2":{"type":"linear","autorange":false,"range":[0.40000000000000002,7.5999999999999996],"tickmode":"array","ticktext":["hypertensive","diabetes","deficiencyanemias","depression","renal_failure","copd","hyperlipemia"],"tickvals":[1,2,3,4.0000000000000009,5,6,7],"categoryorder":"array","categoryarray":["hypertensive","diabetes","deficiencyanemias","depression","renal_failure","copd","hyperlipemia"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-50,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0.50845594452900389,1],"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.8897637795275593,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"title":{"text":"Presence","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"a35a2463baf1":{"x":{},"fill":{},"type":"bar"}},"cur_data":"a35a2463baf1","visdat":{"a35a2463baf1":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 <p>Observations based on the chart include:</p>
 <ol style="list-style-type: decimal">
 <li><p><strong>Prevalence of Comorbidities</strong>: The chart shows
@@ -1001,11 +893,10 @@ infection or systemic stress.</li>
 </ul>
 </div>
 </div>
-</div>
-<div id="preliminary-study" class="section level1">
-<h1>Preliminary Study</h1>
-<div id="correlation-between-vital-signs" class="section level2">
-<h2>Correlation between Vital Signs</h2>
+<div id="preliminary-study" class="section level2">
+<h2>Preliminary Study</h2>
+<div id="correlation-between-vital-signs" class="section level3">
+<h3>Correlation between Vital Signs</h3>
 <pre class="r"><code>#show correlation
 corrplot(cor(sign_tidy |&gt; select(-outcome)), type = &quot;upper&quot;, order = &quot;AOE&quot;, diag = FALSE, title = &quot;Correlation Plot of Variables&quot;, cex.main = 1.5, mar = c(0, 0, 1, 0))</code></pre>
 <p><img src="report_files/figure-html/unnamed-chunk-14-1.png" width="960" /></p>
@@ -1022,11 +913,11 @@ potential for dimension reduction by merging these variables during
 selection.</p>
 </div>
 <div id="cart-and-rf-dimension-reduction-and-core-variables-analysis"
-class="section level2">
-<h2>CART and rf: Dimension Reduction and Core Variables Analysis</h2>
-<div id="analysis-of-patient-comorbidities-variables"
 class="section level3">
-<h3>Analysis of Patient comorbidities Variables</h3>
+<h3>CART and rf: Dimension Reduction and Core Variables Analysis</h3>
+<div id="analysis-of-patient-comorbidities-variables"
+class="section level4">
+<h4>Analysis of Patient comorbidities Variables</h4>
 <pre class="r"><code>#decision tree for comorbidities
 tree_com = ctree(outcome ~ ., data = com_tidy)
 plot(tree_com, main = &quot;Decision Tree for Comorbidities&quot;)</code></pre>
@@ -1054,78 +945,43 @@ importance(rf_com) |&gt;
   knitr::kable(digits = 3)</code></pre>
 <table>
 <thead>
-<tr>
-<th style="text-align:left;">
-</th>
-<th style="text-align:right;">
-Mean Decrease in Gini
-</th>
+<tr class="header">
+<th align="left"></th>
+<th align="right">Mean Decrease in Gini</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-atrialfibrillation
-</td>
-<td style="text-align:right;">
-5.500
-</td>
+<tr class="odd">
+<td align="left">atrialfibrillation</td>
+<td align="right">5.478</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-hyperlipemia
-</td>
-<td style="text-align:right;">
-5.283
-</td>
+<tr class="even">
+<td align="left">hyperlipemia</td>
+<td align="right">5.313</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-renal_failure
-</td>
-<td style="text-align:right;">
-4.793
-</td>
+<tr class="odd">
+<td align="left">renal_failure</td>
+<td align="right">4.770</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-deficiencyanemias
-</td>
-<td style="text-align:right;">
-4.736
-</td>
+<tr class="even">
+<td align="left">deficiencyanemias</td>
+<td align="right">4.661</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-diabetes
-</td>
-<td style="text-align:right;">
-4.022
-</td>
+<tr class="odd">
+<td align="left">diabetes</td>
+<td align="right">4.103</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-chd_with_no_mi
-</td>
-<td style="text-align:right;">
-4.005
-</td>
+<tr class="even">
+<td align="left">chd_with_no_mi</td>
+<td align="right">3.968</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-hypertensive
-</td>
-<td style="text-align:right;">
-3.921
-</td>
+<tr class="odd">
+<td align="left">depression</td>
+<td align="right">3.678</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-depression
-</td>
-<td style="text-align:right;">
-3.759
-</td>
+<tr class="even">
+<td align="left">hypertensive</td>
+<td align="right">3.626</td>
 </tr>
 </tbody>
 </table>
@@ -1141,8 +997,8 @@ classification tree.</p>
 <code>diabetes</code>.</p>
 </div>
 <div id="analysis-of-patient-vital-signs-variables"
-class="section level3">
-<h3>Analysis of Patient Vital Signs Variables</h3>
+class="section level4">
+<h4>Analysis of Patient Vital Signs Variables</h4>
 <pre class="r"><code>tree_sign = ctree(outcome ~ ., data = sign_tidy)
 plot(tree_sign, main = &quot;Decision Tree for Vital Signs&quot;)</code></pre>
 <p><img src="report_files/figure-html/unnamed-chunk-17-1.png" width="1152" /></p>
@@ -1168,78 +1024,43 @@ importance(rf_sign) |&gt;
   knitr::kable(digits = 3)</code></pre>
 <table>
 <thead>
-<tr>
-<th style="text-align:left;">
-</th>
-<th style="text-align:right;">
-Mean Decrease in Gini
-</th>
+<tr class="header">
+<th align="left"></th>
+<th align="right">Mean Decrease in Gini</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-anion_gap
-</td>
-<td style="text-align:right;">
-14.304
-</td>
+<tr class="odd">
+<td align="left">anion_gap</td>
+<td align="right">15.077</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-bicarbonate
-</td>
-<td style="text-align:right;">
-14.180
-</td>
+<tr class="even">
+<td align="left">bicarbonate</td>
+<td align="right">13.526</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-lactic_acid
-</td>
-<td style="text-align:right;">
-13.244
-</td>
+<tr class="odd">
+<td align="left">lactic_acid</td>
+<td align="right">12.505</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-lymphocyte
-</td>
-<td style="text-align:right;">
-11.344
-</td>
+<tr class="even">
+<td align="left">leucocyte</td>
+<td align="right">11.669</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-leucocyte
-</td>
-<td style="text-align:right;">
-11.050
-</td>
+<tr class="odd">
+<td align="left">lymphocyte</td>
+<td align="right">11.473</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-urine_output
-</td>
-<td style="text-align:right;">
-10.492
-</td>
+<tr class="even">
+<td align="left">urine_output</td>
+<td align="right">10.346</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-blood_calcium
-</td>
-<td style="text-align:right;">
-10.401
-</td>
+<tr class="odd">
+<td align="left">blood_calcium</td>
+<td align="right">9.740</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-platelets
-</td>
-<td style="text-align:right;">
-9.246
-</td>
+<tr class="even">
+<td align="left">urea_nitrogen</td>
+<td align="right">9.142</td>
 </tr>
 </tbody>
 </table>
@@ -1256,11 +1077,12 @@ tree model. Therefore, we tend to prioritize the key variables
 identified by the random forest.</p>
 </div>
 </div>
+</div>
 <div id="pca-dimension-reduction" class="section level2">
 <h2>PCA: Dimension Reduction</h2>
 <div id="dimension-reduction-for-patient-vital-signs-variables"
-class="section level3">
-<h3>Dimension Reduction for Patient Vital Signs Variables</h3>
+class="section level4">
+<h4>Dimension Reduction for Patient Vital Signs Variables</h4>
 <pre class="r"><code>#pca using R build-in function prcomp()
 #pca_res_sign = prcomp(sign_tidy |&gt; select(-outcome), scale. = TRUE)
 #summary(pca_res_sign)
@@ -1283,160 +1105,73 @@ get_eigenvalue(res_pca_sign) |&gt;
   knitr::kable(digits = 3)</code></pre>
 <table>
 <thead>
-<tr>
-<th style="text-align:left;">
-</th>
-<th style="text-align:right;">
-Eigenvalue
-</th>
-<th style="text-align:right;">
-Variance Percent
-</th>
-<th style="text-align:right;">
-Cumulative Variance Percent
-</th>
+<tr class="header">
+<th align="left"></th>
+<th align="right">Eigenvalue</th>
+<th align="right">Variance Percent</th>
+<th align="right">Cumulative Variance Percent</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-Dim.1
-</td>
-<td style="text-align:right;">
-3.882
-</td>
-<td style="text-align:right;">
-10.784
-</td>
-<td style="text-align:right;">
-10.784
-</td>
+<tr class="odd">
+<td align="left">Dim.1</td>
+<td align="right">3.882</td>
+<td align="right">10.784</td>
+<td align="right">10.784</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Dim.2
-</td>
-<td style="text-align:right;">
-3.081
-</td>
-<td style="text-align:right;">
-8.557
-</td>
-<td style="text-align:right;">
-19.342
-</td>
+<tr class="even">
+<td align="left">Dim.2</td>
+<td align="right">3.081</td>
+<td align="right">8.557</td>
+<td align="right">19.342</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Dim.3
-</td>
-<td style="text-align:right;">
-2.521
-</td>
-<td style="text-align:right;">
-7.004
-</td>
-<td style="text-align:right;">
-26.346
-</td>
+<tr class="odd">
+<td align="left">Dim.3</td>
+<td align="right">2.521</td>
+<td align="right">7.004</td>
+<td align="right">26.346</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Dim.4
-</td>
-<td style="text-align:right;">
-2.356
-</td>
-<td style="text-align:right;">
-6.543
-</td>
-<td style="text-align:right;">
-32.889
-</td>
+<tr class="even">
+<td align="left">Dim.4</td>
+<td align="right">2.356</td>
+<td align="right">6.543</td>
+<td align="right">32.889</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Dim.5
-</td>
-<td style="text-align:right;">
-2.217
-</td>
-<td style="text-align:right;">
-6.159
-</td>
-<td style="text-align:right;">
-39.048
-</td>
+<tr class="odd">
+<td align="left">Dim.5</td>
+<td align="right">2.217</td>
+<td align="right">6.159</td>
+<td align="right">39.048</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Dim.6
-</td>
-<td style="text-align:right;">
-1.974
-</td>
-<td style="text-align:right;">
-5.485
-</td>
-<td style="text-align:right;">
-44.532
-</td>
+<tr class="even">
+<td align="left">Dim.6</td>
+<td align="right">1.974</td>
+<td align="right">5.485</td>
+<td align="right">44.532</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Dim.7
-</td>
-<td style="text-align:right;">
-1.697
-</td>
-<td style="text-align:right;">
-4.713
-</td>
-<td style="text-align:right;">
-49.246
-</td>
+<tr class="odd">
+<td align="left">Dim.7</td>
+<td align="right">1.697</td>
+<td align="right">4.713</td>
+<td align="right">49.246</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Dim.8
-</td>
-<td style="text-align:right;">
-1.575
-</td>
-<td style="text-align:right;">
-4.375
-</td>
-<td style="text-align:right;">
-53.621
-</td>
+<tr class="even">
+<td align="left">Dim.8</td>
+<td align="right">1.575</td>
+<td align="right">4.375</td>
+<td align="right">53.621</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Dim.9
-</td>
-<td style="text-align:right;">
-1.394
-</td>
-<td style="text-align:right;">
-3.871
-</td>
-<td style="text-align:right;">
-57.492
-</td>
+<tr class="odd">
+<td align="left">Dim.9</td>
+<td align="right">1.394</td>
+<td align="right">3.871</td>
+<td align="right">57.492</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Dim.10
-</td>
-<td style="text-align:right;">
-1.258
-</td>
-<td style="text-align:right;">
-3.494
-</td>
-<td style="text-align:right;">
-60.986
-</td>
+<tr class="even">
+<td align="left">Dim.10</td>
+<td align="right">1.258</td>
+<td align="right">3.494</td>
+<td align="right">60.986</td>
 </tr>
 </tbody>
 </table>
@@ -1478,226 +1213,95 @@ var_sign$cos2 |&gt;
   knitr::kable(digits = 3)</code></pre>
 <table>
 <thead>
-<tr>
-<th style="text-align:left;">
-</th>
-<th style="text-align:right;">
-Dim.1
-</th>
-<th style="text-align:right;">
-Dim.2
-</th>
-<th style="text-align:right;">
-Dim.3
-</th>
-<th style="text-align:right;">
-Dim.4
-</th>
-<th style="text-align:right;">
-Dim.5
-</th>
+<tr class="header">
+<th align="left"></th>
+<th align="right">Dim.1</th>
+<th align="right">Dim.2</th>
+<th align="right">Dim.3</th>
+<th align="right">Dim.4</th>
+<th align="right">Dim.5</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-bicarbonate
-</td>
-<td style="text-align:right;">
-0.497
-</td>
-<td style="text-align:right;">
-0.057
-</td>
-<td style="text-align:right;">
-0.053
-</td>
-<td style="text-align:right;">
-0.134
-</td>
-<td style="text-align:right;">
-0.004
-</td>
+<tr class="odd">
+<td align="left">bicarbonate</td>
+<td align="right">0.497</td>
+<td align="right">0.057</td>
+<td align="right">0.053</td>
+<td align="right">0.134</td>
+<td align="right">0.004</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-anion_gap
-</td>
-<td style="text-align:right;">
-0.471
-</td>
-<td style="text-align:right;">
-0.042
-</td>
-<td style="text-align:right;">
-0.009
-</td>
-<td style="text-align:right;">
-0.147
-</td>
-<td style="text-align:right;">
-0.068
-</td>
+<tr class="even">
+<td align="left">anion_gap</td>
+<td align="right">0.471</td>
+<td align="right">0.042</td>
+<td align="right">0.009</td>
+<td align="right">0.147</td>
+<td align="right">0.068</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-urea_nitrogen
-</td>
-<td style="text-align:right;">
-0.424
-</td>
-<td style="text-align:right;">
-0.037
-</td>
-<td style="text-align:right;">
-0.117
-</td>
-<td style="text-align:right;">
-0.018
-</td>
-<td style="text-align:right;">
-0.081
-</td>
+<tr class="odd">
+<td align="left">urea_nitrogen</td>
+<td align="right">0.424</td>
+<td align="right">0.037</td>
+<td align="right">0.117</td>
+<td align="right">0.018</td>
+<td align="right">0.081</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-creatinine
-</td>
-<td style="text-align:right;">
-0.325
-</td>
-<td style="text-align:right;">
-0.016
-</td>
-<td style="text-align:right;">
-0.201
-</td>
-<td style="text-align:right;">
-0.001
-</td>
-<td style="text-align:right;">
-0.049
-</td>
+<tr class="even">
+<td align="left">creatinine</td>
+<td align="right">0.325</td>
+<td align="right">0.016</td>
+<td align="right">0.201</td>
+<td align="right">0.001</td>
+<td align="right">0.049</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-nt_pro_bnp
-</td>
-<td style="text-align:right;">
-0.307
-</td>
-<td style="text-align:right;">
-0.010
-</td>
-<td style="text-align:right;">
-0.014
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
-0.004
-</td>
+<tr class="odd">
+<td align="left">nt_pro_bnp</td>
+<td align="right">0.307</td>
+<td align="right">0.010</td>
+<td align="right">0.014</td>
+<td align="right">0.000</td>
+<td align="right">0.004</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-urine_output
-</td>
-<td style="text-align:right;">
-0.191
-</td>
-<td style="text-align:right;">
-0.007
-</td>
-<td style="text-align:right;">
-0.001
-</td>
-<td style="text-align:right;">
-0.046
-</td>
-<td style="text-align:right;">
-0.001
-</td>
+<tr class="even">
+<td align="left">urine_output</td>
+<td align="right">0.191</td>
+<td align="right">0.007</td>
+<td align="right">0.001</td>
+<td align="right">0.046</td>
+<td align="right">0.001</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-pco2
-</td>
-<td style="text-align:right;">
-0.191
-</td>
-<td style="text-align:right;">
-0.066
-</td>
-<td style="text-align:right;">
-0.163
-</td>
-<td style="text-align:right;">
-0.217
-</td>
-<td style="text-align:right;">
-0.004
-</td>
+<tr class="odd">
+<td align="left">pco2</td>
+<td align="right">0.191</td>
+<td align="right">0.066</td>
+<td align="right">0.163</td>
+<td align="right">0.217</td>
+<td align="right">0.004</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-hematocrit
-</td>
-<td style="text-align:right;">
-0.181
-</td>
-<td style="text-align:right;">
-0.174
-</td>
-<td style="text-align:right;">
-0.001
-</td>
-<td style="text-align:right;">
-0.115
-</td>
-<td style="text-align:right;">
-0.141
-</td>
+<tr class="even">
+<td align="left">hematocrit</td>
+<td align="right">0.181</td>
+<td align="right">0.174</td>
+<td align="right">0.001</td>
+<td align="right">0.115</td>
+<td align="right">0.141</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-rbc
-</td>
-<td style="text-align:right;">
-0.170
-</td>
-<td style="text-align:right;">
-0.389
-</td>
-<td style="text-align:right;">
-0.013
-</td>
-<td style="text-align:right;">
-0.092
-</td>
-<td style="text-align:right;">
-0.037
-</td>
+<tr class="odd">
+<td align="left">rbc</td>
+<td align="right">0.170</td>
+<td align="right">0.389</td>
+<td align="right">0.013</td>
+<td align="right">0.092</td>
+<td align="right">0.037</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-rdw
-</td>
-<td style="text-align:right;">
-0.114
-</td>
-<td style="text-align:right;">
-0.060
-</td>
-<td style="text-align:right;">
-0.014
-</td>
-<td style="text-align:right;">
-0.024
-</td>
-<td style="text-align:right;">
-0.216
-</td>
+<tr class="even">
+<td align="left">rdw</td>
+<td align="right">0.114</td>
+<td align="right">0.060</td>
+<td align="right">0.014</td>
+<td align="right">0.024</td>
+<td align="right">0.216</td>
 </tr>
 </tbody>
 </table>
@@ -1723,226 +1327,95 @@ var_sign$contrib |&gt;
   knitr::kable(digits = 3)</code></pre>
 <table>
 <thead>
-<tr>
-<th style="text-align:left;">
-</th>
-<th style="text-align:right;">
-Dim.1
-</th>
-<th style="text-align:right;">
-Dim.2
-</th>
-<th style="text-align:right;">
-Dim.3
-</th>
-<th style="text-align:right;">
-Dim.4
-</th>
-<th style="text-align:right;">
-Dim.5
-</th>
+<tr class="header">
+<th align="left"></th>
+<th align="right">Dim.1</th>
+<th align="right">Dim.2</th>
+<th align="right">Dim.3</th>
+<th align="right">Dim.4</th>
+<th align="right">Dim.5</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-bicarbonate
-</td>
-<td style="text-align:right;">
-12.803
-</td>
-<td style="text-align:right;">
-1.852
-</td>
-<td style="text-align:right;">
-2.106
-</td>
-<td style="text-align:right;">
-5.675
-</td>
-<td style="text-align:right;">
-0.174
-</td>
+<tr class="odd">
+<td align="left">bicarbonate</td>
+<td align="right">12.803</td>
+<td align="right">1.852</td>
+<td align="right">2.106</td>
+<td align="right">5.675</td>
+<td align="right">0.174</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-anion_gap
-</td>
-<td style="text-align:right;">
-12.132
-</td>
-<td style="text-align:right;">
-1.376
-</td>
-<td style="text-align:right;">
-0.375
-</td>
-<td style="text-align:right;">
-6.224
-</td>
-<td style="text-align:right;">
-3.050
-</td>
+<tr class="even">
+<td align="left">anion_gap</td>
+<td align="right">12.132</td>
+<td align="right">1.376</td>
+<td align="right">0.375</td>
+<td align="right">6.224</td>
+<td align="right">3.050</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-urea_nitrogen
-</td>
-<td style="text-align:right;">
-10.911
-</td>
-<td style="text-align:right;">
-1.194
-</td>
-<td style="text-align:right;">
-4.637
-</td>
-<td style="text-align:right;">
-0.755
-</td>
-<td style="text-align:right;">
-3.650
-</td>
+<tr class="odd">
+<td align="left">urea_nitrogen</td>
+<td align="right">10.911</td>
+<td align="right">1.194</td>
+<td align="right">4.637</td>
+<td align="right">0.755</td>
+<td align="right">3.650</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-creatinine
-</td>
-<td style="text-align:right;">
-8.359
-</td>
-<td style="text-align:right;">
-0.513
-</td>
-<td style="text-align:right;">
-7.957
-</td>
-<td style="text-align:right;">
-0.058
-</td>
-<td style="text-align:right;">
-2.215
-</td>
+<tr class="even">
+<td align="left">creatinine</td>
+<td align="right">8.359</td>
+<td align="right">0.513</td>
+<td align="right">7.957</td>
+<td align="right">0.058</td>
+<td align="right">2.215</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-nt_pro_bnp
-</td>
-<td style="text-align:right;">
-7.905
-</td>
-<td style="text-align:right;">
-0.310
-</td>
-<td style="text-align:right;">
-0.536
-</td>
-<td style="text-align:right;">
-0.002
-</td>
-<td style="text-align:right;">
-0.182
-</td>
+<tr class="odd">
+<td align="left">nt_pro_bnp</td>
+<td align="right">7.905</td>
+<td align="right">0.310</td>
+<td align="right">0.536</td>
+<td align="right">0.002</td>
+<td align="right">0.182</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-urine_output
-</td>
-<td style="text-align:right;">
-4.925
-</td>
-<td style="text-align:right;">
-0.213
-</td>
-<td style="text-align:right;">
-0.049
-</td>
-<td style="text-align:right;">
-1.950
-</td>
-<td style="text-align:right;">
-0.026
-</td>
+<tr class="even">
+<td align="left">urine_output</td>
+<td align="right">4.925</td>
+<td align="right">0.213</td>
+<td align="right">0.049</td>
+<td align="right">1.950</td>
+<td align="right">0.026</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-pco2
-</td>
-<td style="text-align:right;">
-4.918
-</td>
-<td style="text-align:right;">
-2.154
-</td>
-<td style="text-align:right;">
-6.449
-</td>
-<td style="text-align:right;">
-9.191
-</td>
-<td style="text-align:right;">
-0.188
-</td>
+<tr class="odd">
+<td align="left">pco2</td>
+<td align="right">4.918</td>
+<td align="right">2.154</td>
+<td align="right">6.449</td>
+<td align="right">9.191</td>
+<td align="right">0.188</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-hematocrit
-</td>
-<td style="text-align:right;">
-4.668
-</td>
-<td style="text-align:right;">
-5.635
-</td>
-<td style="text-align:right;">
-0.029
-</td>
-<td style="text-align:right;">
-4.878
-</td>
-<td style="text-align:right;">
-6.339
-</td>
+<tr class="even">
+<td align="left">hematocrit</td>
+<td align="right">4.668</td>
+<td align="right">5.635</td>
+<td align="right">0.029</td>
+<td align="right">4.878</td>
+<td align="right">6.339</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-rbc
-</td>
-<td style="text-align:right;">
-4.380
-</td>
-<td style="text-align:right;">
-12.633
-</td>
-<td style="text-align:right;">
-0.506
-</td>
-<td style="text-align:right;">
-3.893
-</td>
-<td style="text-align:right;">
-1.682
-</td>
+<tr class="odd">
+<td align="left">rbc</td>
+<td align="right">4.380</td>
+<td align="right">12.633</td>
+<td align="right">0.506</td>
+<td align="right">3.893</td>
+<td align="right">1.682</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-rdw
-</td>
-<td style="text-align:right;">
-2.933
-</td>
-<td style="text-align:right;">
-1.934
-</td>
-<td style="text-align:right;">
-0.564
-</td>
-<td style="text-align:right;">
-1.005
-</td>
-<td style="text-align:right;">
-9.736
-</td>
+<tr class="even">
+<td align="left">rdw</td>
+<td align="right">2.933</td>
+<td align="right">1.934</td>
+<td align="right">0.564</td>
+<td align="right">1.005</td>
+<td align="right">9.736</td>
 </tr>
 </tbody>
 </table>
@@ -1974,8 +1447,8 @@ PCs.</p>
 pca_coord = PCA(sign_tidy |&gt; select(anion_gap, blood_calcium, bicarbonate, lactic_acid, leucocyte, lymphocyte, neutrophils, rbc, urea_nitrogen), scale.unit = TRUE, graph = FALSE)
 
 fviz_pca_var(pca_coord, col.var = &quot;contrib&quot;, gradient.cols = c(&quot;#00AFBB&quot;, &quot;#E7B800&quot;, &quot;#FC4E07&quot;)) |&gt; ggplotly()</code></pre>
-<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-0b45d55fec1e0c97258e" style="width:672px;height:480px;"></div>
-<script type="application/json" data-for="htmlwidget-0b45d55fec1e0c97258e">{"x":{"data":[{"x":[-0.13291152498910364],"y":[-0.14164328579735919],"text":"rbc","hovertext":"x: -0.1329115<br />y: -0.1416432858<br />contrib:  0.9035090<br />name: rbc","textfont":{"size":15.118110236220474,"color":"rgba(0,175,187,1)"},"type":"scatter","mode":"text","hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[-0.19883805983908442],"y":[0.000925363824982651],"text":"blood_calcium","hovertext":"x: -0.1988381<br />y:  0.0009253638<br />contrib:  0.9468338<br />name: blood_calcium","textfont":{"size":15.118110236220474,"color":"rgba(11,175,186,1)"},"type":"scatter","mode":"text","hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0.36143489126605077],"y":[0.33725063716307668],"text":"lactic_acid","hovertext":"x:  0.3614349<br />y:  0.3372506372<br />contrib:  5.8521957<br />name: lactic_acid","textfont":{"size":15.118110236220474,"color":"rgba(164,180,120,1)"},"type":"scatter","mode":"text","hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0.53924164795205198],"y":[-0.18205346220402976],"text":"leucocyte","hovertext":"x:  0.5392416<br />y: -0.1820534622<br />contrib:  7.7572860<br />name: leucocyte","textfont":{"size":15.118110236220474,"color":"rgba(191,181,92,1)"},"type":"scatter","mode":"text","hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0.55576089503701354],"y":[0.247023386910456],"text":"urea_nitrogen","hovertext":"x:  0.5557609<br />y:  0.2470233869<br />contrib:  8.8580628<br />name: urea_nitrogen","textfont":{"size":15.118110236220474,"color":"rgba(204,182,74,1)"},"type":"scatter","mode":"text","hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[-0.64202166553084983],"y":[-0.47765238117070535],"text":"bicarbonate","hovertext":"x: -0.6420217<br />y: -0.4776523812<br />contrib: 15.3348100<br />name: bicarbonate","textfont":{"size":15.118110236220474,"color":"rgba(242,149,1,1)"},"type":"scatter","mode":"text","hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0.6973114937412076],"y":[0.51205394402518067],"text":"anion_gap","hovertext":"x:  0.6973115<br />y:  0.5120539440<br />contrib: 17.9235400<br />name: anion_gap","textfont":{"size":15.118110236220474,"color":"rgba(247,124,3,1)"},"type":"scatter","mode":"text","hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0.51865149942965583],"y":[-0.77125530749746485],"text":"neutrophils","hovertext":"x:  0.5186515<br />y: -0.7712553075<br />contrib: 20.6869122<br />name: neutrophils","textfont":{"size":15.118110236220474,"color":"rgba(251,92,6,1)"},"type":"scatter","mode":"text","hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[-0.5974038954881743],"y":[0.74214926306115658],"text":"lymphocyte","hovertext":"x: -0.5974039<br />y:  0.7421492631<br />contrib: 21.7368504<br />name: lymphocyte","textfont":{"size":15.118110236220474,"color":"rgba(252,78,7,1)"},"type":"scatter","mode":"text","hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0,-0.13291152498910364],"y":[0,-0.14164328579735919],"text":"xstart: 0<br />ystart: 0<br />x: -0.1329115<br />y: -0.1416432858<br />contrib:  0.9035090","type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(0,175,187,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0,-0.19883805983908442],"y":[0,0.000925363824982651],"text":"xstart: 0<br />ystart: 0<br />x: -0.1988381<br />y:  0.0009253638<br />contrib:  0.9468338","type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(11,175,186,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0,0.36143489126605077],"y":[0,0.33725063716307668],"text":"xstart: 0<br />ystart: 0<br />x:  0.3614349<br />y:  0.3372506372<br />contrib:  5.8521957","type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(164,180,120,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0,0.53924164795205198],"y":[0,-0.18205346220402976],"text":"xstart: 0<br />ystart: 0<br />x:  0.5392416<br />y: -0.1820534622<br />contrib:  7.7572860","type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(191,181,92,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0,0.55576089503701354],"y":[0,0.247023386910456],"text":"xstart: 0<br />ystart: 0<br />x:  0.5557609<br />y:  0.2470233869<br />contrib:  8.8580628","type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(204,182,74,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0,-0.64202166553084983],"y":[0,-0.47765238117070535],"text":"xstart: 0<br />ystart: 0<br />x: -0.6420217<br />y: -0.4776523812<br />contrib: 15.3348100","type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(242,149,1,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0,0.6973114937412076],"y":[0,0.51205394402518067],"text":"xstart: 0<br />ystart: 0<br />x:  0.6973115<br />y:  0.5120539440<br />contrib: 17.9235400","type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(247,124,3,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0,0.51865149942965583],"y":[0,-0.77125530749746485],"text":"xstart: 0<br />ystart: 0<br />x:  0.5186515<br />y: -0.7712553075<br />contrib: 20.6869122","type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(251,92,6,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0,-0.5974038954881743],"y":[0,0.74214926306115658],"text":"xstart: 0<br />ystart: 0<br />x: -0.5974039<br />y:  0.7421492631<br />contrib: 21.7368504","type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(252,78,7,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[-1,-0.99179001382324605,-0.96729486303902945,-0.92691675734602175,-0.87131870412338941,-0.8014136218679565,-0.71834935009772749,-0.62348980185873348,-0.51839256831052505,-0.40478334312239383,-0.28452758663103256,-0.15959989503337918,-0.032051577571655207,0.096023025907681664,0.22252093395631445,0.3453650544213076,0.4625382902408352,0.57211666012216955,0.67230089026131656,0.7614459583691342,0.83808810489184049,0.90096886790241915,0.94905574701066864,0.98155915699106533,0.99794539275033634,0.99794539275033634,0.98155915699106544,0.94905574701066875,0.90096886790241915,0.83808810489184071,0.76144595836913453,0.67230089026131701,0.57211666012216988,0.4625382902408352,0.34536505442130805,0.22252093395631445,0.09602302590768233,-0.032051577571654985,-0.15959989503337854,-0.28452758663103211,-0.40478334312239306,-0.5183925683105246,-0.62348980185873348,-0.71834935009772716,-0.8014136218679565,-0.87131870412338897,-0.92691675734602164,-0.96729486303902923,-0.99179001382324605,-1,-1,-0.99179001382324605,-0.96729486303902945,-0.92691675734602175,-0.87131870412338941,-0.8014136218679565,-0.71834935009772749,-0.62348980185873348,-0.51839256831052505,-0.40478334312239383,-0.28452758663103256,-0.15959989503337918,-0.032051577571655207,0.096023025907681664,0.22252093395631445,0.3453650544213076,0.4625382902408352,0.57211666012216955,0.67230089026131656,0.7614459583691342,0.83808810489184049,0.90096886790241915,0.94905574701066864,0.98155915699106533,0.99794539275033634,0.99794539275033634,0.98155915699106544,0.94905574701066875,0.90096886790241915,0.83808810489184071,0.76144595836913453,0.67230089026131701,0.57211666012216988,0.4625382902408352,0.34536505442130805,0.22252093395631445,0.09602302590768233,-0.032051577571654985,-0.15959989503337854,-0.28452758663103211,-0.40478334312239306,-0.5183925683105246,-0.62348980185873348,-0.71834935009772716,-0.8014136218679565,-0.87131870412338897,-0.92691675734602164,-0.96729486303902923,-0.99179001382324605,-1],"y":[-1.2246467991473532e-16,-0.12787716168450605,-0.25365458390950735,-0.37526700487937403,-0.49071755200393774,-0.5981105304912161,-0.69568255060348649,-0.78183148246802991,-0.8551427630053462,-0.9144126230158125,-0.95866785303666058,-0.98718178341445018,-0.99948621620068789,-0.99537911294919823,-0.97492791218182362,-0.93846842204976044,-0.88659930637300011,-0.82017225459695597,-0.74027799707531572,-0.64822839530778864,-0.54553490121054893,-0.43388373911755812,-0.31510821802362071,-0.19115862870137243,-0.064070219980713106,0.064070219980712662,0.19115862870137199,0.31510821802362032,0.43388373911755812,0.5455349012105486,0.64822839530778831,0.74027799707531539,0.82017225459695575,0.88659930637300011,0.93846842204976022,0.97492791218182362,0.99537911294919812,0.99948621620068789,0.98718178341445029,0.95866785303666069,0.91441262301581283,0.85514276300534642,0.78183148246802991,0.69568255060348683,0.5981105304912161,0.49071755200393852,0.37526700487937448,0.25365458390950824,0.1278771616845065,1.2246467991473532e-16,1.2246467991473532e-16,0.12787716168450605,0.25365458390950735,0.37526700487937403,0.49071755200393774,0.5981105304912161,0.69568255060348649,0.78183148246802991,0.8551427630053462,0.9144126230158125,0.95866785303666058,0.98718178341445018,0.99948621620068789,0.99537911294919823,0.97492791218182362,0.93846842204976044,0.88659930637300011,0.82017225459695597,0.74027799707531572,0.64822839530778864,0.54553490121054893,0.43388373911755812,0.31510821802362071,0.19115862870137243,0.064070219980713106,-0.064070219980712662,-0.19115862870137199,-0.31510821802362032,-0.43388373911755812,-0.5455349012105486,-0.64822839530778831,-0.74027799707531539,-0.82017225459695575,-0.88659930637300011,-0.93846842204976022,-0.97492791218182362,-0.99537911294919812,-0.99948621620068789,-0.98718178341445029,-0.95866785303666069,-0.91441262301581283,-0.85514276300534642,-0.78183148246802991,-0.69568255060348683,-0.5981105304912161,-0.49071755200393852,-0.37526700487937448,-0.25365458390950824,-0.1278771616845065,-1.2246467991473532e-16],"text":["xcircle: -1.00000000<br />ycircle: -1.224647e-16","xcircle: -0.99179001<br />ycircle: -1.278772e-01","xcircle: -0.96729486<br />ycircle: -2.536546e-01","xcircle: -0.92691676<br />ycircle: -3.752670e-01","xcircle: -0.87131870<br />ycircle: -4.907176e-01","xcircle: -0.80141362<br />ycircle: -5.981105e-01","xcircle: -0.71834935<br />ycircle: -6.956826e-01","xcircle: -0.62348980<br />ycircle: -7.818315e-01","xcircle: -0.51839257<br />ycircle: -8.551428e-01","xcircle: -0.40478334<br />ycircle: -9.144126e-01","xcircle: -0.28452759<br />ycircle: -9.586679e-01","xcircle: -0.15959990<br />ycircle: -9.871818e-01","xcircle: -0.03205158<br />ycircle: -9.994862e-01","xcircle:  0.09602303<br />ycircle: -9.953791e-01","xcircle:  0.22252093<br />ycircle: -9.749279e-01","xcircle:  0.34536505<br />ycircle: -9.384684e-01","xcircle:  0.46253829<br />ycircle: -8.865993e-01","xcircle:  0.57211666<br />ycircle: -8.201723e-01","xcircle:  0.67230089<br />ycircle: -7.402780e-01","xcircle:  0.76144596<br />ycircle: -6.482284e-01","xcircle:  0.83808810<br />ycircle: -5.455349e-01","xcircle:  0.90096887<br />ycircle: -4.338837e-01","xcircle:  0.94905575<br />ycircle: -3.151082e-01","xcircle:  0.98155916<br />ycircle: -1.911586e-01","xcircle:  0.99794539<br />ycircle: -6.407022e-02","xcircle:  0.99794539<br />ycircle:  6.407022e-02","xcircle:  0.98155916<br />ycircle:  1.911586e-01","xcircle:  0.94905575<br />ycircle:  3.151082e-01","xcircle:  0.90096887<br />ycircle:  4.338837e-01","xcircle:  0.83808810<br />ycircle:  5.455349e-01","xcircle:  0.76144596<br />ycircle:  6.482284e-01","xcircle:  0.67230089<br />ycircle:  7.402780e-01","xcircle:  0.57211666<br />ycircle:  8.201723e-01","xcircle:  0.46253829<br />ycircle:  8.865993e-01","xcircle:  0.34536505<br />ycircle:  9.384684e-01","xcircle:  0.22252093<br />ycircle:  9.749279e-01","xcircle:  0.09602303<br />ycircle:  9.953791e-01","xcircle: -0.03205158<br />ycircle:  9.994862e-01","xcircle: -0.15959990<br />ycircle:  9.871818e-01","xcircle: -0.28452759<br />ycircle:  9.586679e-01","xcircle: -0.40478334<br />ycircle:  9.144126e-01","xcircle: -0.51839257<br />ycircle:  8.551428e-01","xcircle: -0.62348980<br />ycircle:  7.818315e-01","xcircle: -0.71834935<br />ycircle:  6.956826e-01","xcircle: -0.80141362<br />ycircle:  5.981105e-01","xcircle: -0.87131870<br />ycircle:  4.907176e-01","xcircle: -0.92691676<br />ycircle:  3.752670e-01","xcircle: -0.96729486<br />ycircle:  2.536546e-01","xcircle: -0.99179001<br />ycircle:  1.278772e-01","xcircle: -1.00000000<br />ycircle:  1.224647e-16","xcircle: -1.00000000<br />ycircle:  1.224647e-16","xcircle: -0.99179001<br />ycircle:  1.278772e-01","xcircle: -0.96729486<br />ycircle:  2.536546e-01","xcircle: -0.92691676<br />ycircle:  3.752670e-01","xcircle: -0.87131870<br />ycircle:  4.907176e-01","xcircle: -0.80141362<br />ycircle:  5.981105e-01","xcircle: -0.71834935<br />ycircle:  6.956826e-01","xcircle: -0.62348980<br />ycircle:  7.818315e-01","xcircle: -0.51839257<br />ycircle:  8.551428e-01","xcircle: -0.40478334<br />ycircle:  9.144126e-01","xcircle: -0.28452759<br />ycircle:  9.586679e-01","xcircle: -0.15959990<br />ycircle:  9.871818e-01","xcircle: -0.03205158<br />ycircle:  9.994862e-01","xcircle:  0.09602303<br />ycircle:  9.953791e-01","xcircle:  0.22252093<br />ycircle:  9.749279e-01","xcircle:  0.34536505<br />ycircle:  9.384684e-01","xcircle:  0.46253829<br />ycircle:  8.865993e-01","xcircle:  0.57211666<br />ycircle:  8.201723e-01","xcircle:  0.67230089<br />ycircle:  7.402780e-01","xcircle:  0.76144596<br />ycircle:  6.482284e-01","xcircle:  0.83808810<br />ycircle:  5.455349e-01","xcircle:  0.90096887<br />ycircle:  4.338837e-01","xcircle:  0.94905575<br />ycircle:  3.151082e-01","xcircle:  0.98155916<br />ycircle:  1.911586e-01","xcircle:  0.99794539<br />ycircle:  6.407022e-02","xcircle:  0.99794539<br />ycircle: -6.407022e-02","xcircle:  0.98155916<br />ycircle: -1.911586e-01","xcircle:  0.94905575<br />ycircle: -3.151082e-01","xcircle:  0.90096887<br />ycircle: -4.338837e-01","xcircle:  0.83808810<br />ycircle: -5.455349e-01","xcircle:  0.76144596<br />ycircle: -6.482284e-01","xcircle:  0.67230089<br />ycircle: -7.402780e-01","xcircle:  0.57211666<br />ycircle: -8.201723e-01","xcircle:  0.46253829<br />ycircle: -8.865993e-01","xcircle:  0.34536505<br />ycircle: -9.384684e-01","xcircle:  0.22252093<br />ycircle: -9.749279e-01","xcircle:  0.09602303<br />ycircle: -9.953791e-01","xcircle: -0.03205158<br />ycircle: -9.994862e-01","xcircle: -0.15959990<br />ycircle: -9.871818e-01","xcircle: -0.28452759<br />ycircle: -9.586679e-01","xcircle: -0.40478334<br />ycircle: -9.144126e-01","xcircle: -0.51839257<br />ycircle: -8.551428e-01","xcircle: -0.62348980<br />ycircle: -7.818315e-01","xcircle: -0.71834935<br />ycircle: -6.956826e-01","xcircle: -0.80141362<br />ycircle: -5.981105e-01","xcircle: -0.87131870<br />ycircle: -4.907176e-01","xcircle: -0.92691676<br />ycircle: -3.752670e-01","xcircle: -0.96729486<br />ycircle: -2.536546e-01","xcircle: -0.99179001<br />ycircle: -1.278772e-01","xcircle: -1.00000000<br />ycircle: -1.224647e-16"],"type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(179,179,179,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[-1.0998972696375169,1.0978426623878532],"y":[0,0],"text":"yintercept: 0","type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(0,0,0,1)","dash":"dash"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0,0],"y":[-1.0994348378207568,1.0994348378207568],"text":"xintercept: 0","type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(0,0,0,1)","dash":"dash"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[-1],"y":[-1],"name":"99_370b70dadd2a855ef66aed6be95843e6","type":"scatter","mode":"markers","opacity":0,"hoverinfo":"skip","showlegend":false,"marker":{"color":[0,1],"colorscale":[[0,"#00AFBB"],[0.0033444816053511696,"#10AFBA"],[0.0066889632107023445,"#1AAFB9"],[0.010033444816053515,"#22AFB8"],[0.013377926421404684,"#28AFB7"],[0.016722408026755856,"#2DAFB6"],[0.020066889632107024,"#32AFB5"],[0.023411371237458192,"#36AFB5"],[0.026755852842809364,"#3AB0B4"],[0.030100334448160532,"#3EB0B3"],[0.033444816053511704,"#41B0B2"],[0.036789297658862873,"#44B0B1"],[0.040133779264214055,"#47B0B0"],[0.043478260869565223,"#4AB0AF"],[0.046822742474916391,"#4DB0AE"],[0.050167224080267567,"#50B0AD"],[0.053511705685618735,"#52B0AC"],[0.05685618729096991,"#55B0AB"],[0.060200668896321079,"#57B0AA"],[0.063545150501672254,"#59B0A9"],[0.066889632107023422,"#5BB0A8"],[0.070234113712374591,"#5EB0A8"],[0.073578595317725759,"#60B0A7"],[0.076923076923076927,"#62B1A6"],[0.080267558528428096,"#64B1A5"],[0.083612040133779264,"#66B1A4"],[0.086956521739130432,"#68B1A3"],[0.090301003344481601,"#69B1A2"],[0.093645484949832769,"#6BB1A1"],[0.096989966555183951,"#6DB1A0"],[0.10033444816053512,"#6FB19F"],[0.10367892976588629,"#70B19E"],[0.10702341137123746,"#72B19D"],[0.11036789297658862,"#74B19C"],[0.11371237458193979,"#75B19B"],[0.11705685618729096,"#77B19A"],[0.12040133779264213,"#79B19A"],[0.1237458193979933,"#7AB199"],[0.12709030100334448,"#7CB198"],[0.13043478260869565,"#7DB297"],[0.13377926421404682,"#7FB296"],[0.13712374581939799,"#80B295"],[0.14046822742474915,"#81B294"],[0.14381270903010032,"#83B293"],[0.14715719063545149,"#84B292"],[0.15050167224080266,"#86B291"],[0.15384615384615385,"#87B290"],[0.157190635451505,"#88B28F"],[0.16053511705685619,"#8AB28E"],[0.16387959866220739,"#8BB28D"],[0.16722408026755853,"#8CB28C"],[0.17056856187290972,"#8DB28B"],[0.17391304347826086,"#8FB28A"],[0.17725752508361206,"#90B289"],[0.1806020066889632,"#91B388"],[0.1839464882943144,"#92B388"],[0.18729096989966554,"#94B387"],[0.19063545150501673,"#95B386"],[0.1939799331103679,"#96B385"],[0.19732441471571904,"#97B384"],[0.20066889632107024,"#98B383"],[0.20401337792642138,"#99B382"],[0.20735785953177258,"#9BB381"],[0.21070234113712372,"#9CB380"],[0.21404682274247491,"#9DB37F"],[0.21739130434782611,"#9EB37E"],[0.22073578595317725,"#9FB37D"],[0.22408026755852845,"#A0B37C"],[0.22742474916387959,"#A1B37B"],[0.23076923076923078,"#A2B37A"],[0.23411371237458192,"#A3B479"],[0.23745819397993312,"#A4B478"],[0.24080267558528426,"#A5B477"],[0.24414715719063546,"#A6B476"],[0.2474916387959866,"#A7B475"],[0.25083612040133779,"#A9B474"],[0.25418060200668896,"#AAB473"],[0.25752508361204013,"#ABB472"],[0.2608695652173913,"#ACB471"],[0.26421404682274247,"#ADB470"],[0.26755852842809363,"#AEB46F"],[0.2709030100334448,"#AEB46E"],[0.27424749163879597,"#AFB46D"],[0.27759197324414714,"#B0B46C"],[0.28093645484949831,"#B1B46B"],[0.28428093645484948,"#B2B46A"],[0.28762541806020064,"#B3B469"],[0.29096989966555181,"#B4B568"],[0.29431438127090298,"#B5B567"],[0.29765886287625415,"#B6B566"],[0.30100334448160532,"#B7B565"],[0.30434782608695654,"#B8B564"],[0.30769230769230765,"#B9B563"],[0.31103678929765888,"#BAB562"],[0.31438127090300999,"#BBB560"],[0.31772575250836121,"#BCB55F"],[0.32107023411371238,"#BCB55E"],[0.32441471571906355,"#BDB55D"],[0.32775919732441472,"#BEB55C"],[0.33110367892976589,"#BFB55B"],[0.33444816053511706,"#C0B55A"],[0.33779264214046822,"#C1B559"],[0.34113712374581939,"#C2B558"],[0.34448160535117062,"#C3B657"],[0.34782608695652178,"#C3B656"],[0.3511705685618729,"#C4B654"],[0.35451505016722407,"#C5B653"],[0.35785953177257529,"#C6B652"],[0.36120401337792646,"#C7B651"],[0.36454849498327757,"#C8B650"],[0.36789297658862874,"#C8B64F"],[0.37123745819397996,"#C9B64D"],[0.37458193979933113,"#CAB64C"],[0.37792642140468224,"#CBB64B"],[0.38127090301003347,"#CCB64A"],[0.38461538461538458,"#CDB649"],[0.38795986622073581,"#CDB647"],[0.39130434782608697,"#CEB646"],[0.39464882943143809,"#CFB645"],[0.39799331103678925,"#D0B644"],[0.40133779264214048,"#D1B642"],[0.40468227424749165,"#D1B741"],[0.40802675585284276,"#D2B740"],[0.41137123745819393,"#D3B73E"],[0.41471571906354515,"#D4B73D"],[0.41806020066889632,"#D5B73B"],[0.42140468227424743,"#D5B73A"],[0.4247491638795986,"#D6B739"],[0.42809364548494983,"#D7B737"],[0.43143812709030099,"#D8B736"],[0.43478260869565222,"#D8B734"],[0.43812709030100333,"#D9B732"],[0.4414715719063545,"#DAB731"],[0.44481605351170567,"#DBB72F"],[0.44816053511705689,"#DCB72D"],[0.451505016722408,"#DCB72C"],[0.45484949832775917,"#DDB72A"],[0.45819397993311034,"#DEB728"],[0.46153846153846156,"#DFB726"],[0.46488294314381268,"#DFB724"],[0.46822742474916385,"#E0B822"],[0.47157190635451507,"#E1B820"],[0.47491638795986624,"#E2B81D"],[0.47826086956521735,"#E2B81B"],[0.48160535117056852,"#E3B818"],[0.48494983277591974,"#E4B815"],[0.48829431438127091,"#E4B811"],[0.49163879598662202,"#E5B80D"],[0.49498327759197319,"#E6B808"],[0.49832775919732442,"#E7B803"],[0.50167224080267558,"#E7B800"],[0.50501672240802675,"#E7B700"],[0.50836120401337792,"#E8B700"],[0.51170568561872909,"#E8B600"],[0.51505016722408026,"#E8B500"],[0.51839464882943143,"#E8B500"],[0.52173913043478259,"#E8B400"],[0.52508361204013376,"#E9B400"],[0.52842809364548493,"#E9B300"],[0.5317725752508361,"#E9B200"],[0.53511705685618727,"#E9B200"],[0.53846153846153844,"#E9B100"],[0.5418060200668896,"#EAB100"],[0.54515050167224077,"#EAB000"],[0.54849498327759194,"#EAAF00"],[0.55183946488294311,"#EAAF00"],[0.55518394648829428,"#EAAE00"],[0.55852842809364556,"#EBAE00"],[0.56187290969899661,"#EBAD00"],[0.56521739130434778,"#EBAC00"],[0.56856187290969895,"#EBAC00"],[0.57190635451505023,"#EBAB00"],[0.57525083612040129,"#ECAB00"],[0.57859531772575246,"#ECAA00"],[0.58193979933110362,"#ECA900"],[0.5852842809364549,"#ECA900"],[0.58862876254180596,"#ECA800"],[0.59197324414715713,"#EDA800"],[0.5953177257525083,"#EDA700"],[0.59866220735785958,"#EDA600"],[0.60200668896321063,"#EDA600"],[0.6053511705685618,"#EDA500"],[0.60869565217391308,"#EEA500"],[0.61204013377926425,"#EEA400"],[0.61538461538461531,"#EEA300"],[0.61872909698996648,"#EEA300"],[0.62207357859531776,"#EEA200"],[0.62541806020066892,"#EEA100"],[0.62876254180601998,"#EFA101"],[0.63210702341137115,"#EFA001"],[0.63545150501672243,"#EFA001"],[0.6387959866220736,"#EF9F01"],[0.64214046822742477,"#EF9E01"],[0.64548494983277582,"#EF9E01"],[0.6488294314381271,"#F09D01"],[0.65217391304347827,"#F09C01"],[0.65551839464882944,"#F09C01"],[0.65886287625418061,"#F09B01"],[0.66220735785953178,"#F09B01"],[0.66555183946488294,"#F09A01"],[0.66889632107023411,"#F19901"],[0.67224080267558528,"#F19901"],[0.67558528428093645,"#F19801"],[0.67892976588628762,"#F19701"],[0.68227424749163879,"#F19701"],[0.68561872909698995,"#F19601"],[0.68896321070234112,"#F29601"],[0.69230769230769229,"#F29501"],[0.69565217391304346,"#F29401"],[0.69899665551839463,"#F29401"],[0.7023411371237458,"#F29301"],[0.70568561872909696,"#F29201"],[0.70903010033444813,"#F29201"],[0.7123745819397993,"#F39101"],[0.71571906354515047,"#F39001"],[0.71906354515050164,"#F39001"],[0.72240802675585281,"#F38F02"],[0.72575250836120397,"#F38E02"],[0.72909698996655514,"#F38E02"],[0.73244147157190631,"#F38D02"],[0.73578595317725748,"#F48C02"],[0.73913043478260854,"#F48C02"],[0.7424749163879597,"#F48B02"],[0.74581939799331087,"#F48A02"],[0.74916387959866215,"#F48A02"],[0.75250836120401332,"#F48902"],[0.75585284280936449,"#F48802"],[0.75919732441471566,"#F58802"],[0.76254180602006694,"#F58702"],[0.76588628762541811,"#F58602"],[0.76923076923076916,"#F58602"],[0.77257525083612033,"#F58502"],[0.77591973244147161,"#F58402"],[0.77926421404682278,"#F58402"],[0.78260869565217395,"#F58302"],[0.78595317725752512,"#F68202"],[0.78929765886287617,"#F68203"],[0.79264214046822734,"#F68103"],[0.79598662207357851,"#F68003"],[0.79933110367892968,"#F67F03"],[0.80267558528428096,"#F67F03"],[0.80602006688963213,"#F67E03"],[0.80936454849498329,"#F67D03"],[0.81270903010033446,"#F77D03"],[0.81605351170568552,"#F77C03"],[0.81939799331103669,"#F77B03"],[0.82274247491638786,"#F77A03"],[0.82608695652173914,"#F77A03"],[0.8294314381270903,"#F77903"],[0.83277591973244147,"#F77803"],[0.83612040133779264,"#F77803"],[0.83946488294314381,"#F87703"],[0.84280936454849487,"#F87603"],[0.84615384615384603,"#F87504"],[0.8494983277591972,"#F87504"],[0.85284280936454848,"#F87404"],[0.85618729096989965,"#F87304"],[0.85953177257525082,"#F87204"],[0.86287625418060199,"#F87204"],[0.86622073578595316,"#F87104"],[0.86956521739130443,"#F97004"],[0.87290969899665538,"#F96F04"],[0.87625418060200666,"#F96E04"],[0.87959866220735783,"#F96E04"],[0.882943143812709,"#F96D04"],[0.88628762541806017,"#F96C04"],[0.88963210702341133,"#F96B04"],[0.89297658862876261,"#F96B04"],[0.89632107023411378,"#F96A05"],[0.89966555183946473,"#F96905"],[0.90301003344481601,"#FA6805"],[0.90635451505016718,"#FA6705"],[0.90969899665551834,"#FA6705"],[0.91304347826086951,"#FA6605"],[0.91638795986622068,"#FA6505"],[0.91973244147157196,"#FA6405"],[0.92307692307692313,"#FA6305"],[0.92642140468227419,"#FA6205"],[0.92976588628762535,"#FA6205"],[0.93311036789297652,"#FA6105"],[0.93645484949832769,"#FA6005"],[0.93979933110367886,"#FB5F06"],[0.94314381270903014,"#FB5E06"],[0.94648829431438131,"#FB5D06"],[0.94983277591973247,"#FB5C06"],[0.95317725752508353,"#FB5B06"],[0.9565217391304347,"#FB5A06"],[0.95986622073578587,"#FB5A06"],[0.96321070234113704,"#FB5906"],[0.96655518394648821,"#FB5806"],[0.96989966555183948,"#FB5706"],[0.97324414715719065,"#FB5606"],[0.97658862876254182,"#FB5506"],[0.97993311036789299,"#FC5406"],[0.98327759197324405,"#FC5307"],[0.98662207357859522,"#FC5207"],[0.98996655518394638,"#FC5107"],[0.99331103678929766,"#FC5007"],[0.99665551839464883,"#FC4F07"],[1,"#FC4E07"]],"colorbar":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"thickness":23.039999999999996,"title":"contrib","titlefont":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"tickmode":"array","ticktext":["5","10","15","20"],"tickvals":[0.19663149165887581,0.43663139813689561,0.67663130461491539,0.91663121109293533],"tickfont":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"ticklen":2,"len":0.5}},"xaxis":"x","yaxis":"y","frame":null}],"layout":{"margin":{"t":43.762557077625573,"r":7.3059360730593621,"b":40.182648401826498,"l":48.949771689497723},"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"title":{"text":"Variables - PCA","font":{"color":"rgba(0,0,0,1)","family":"","size":17.534246575342465},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-1.0998972696375169,1.0978426623878532],"tickmode":"array","ticktext":["-1.0","-0.5","0.0","0.5","1.0"],"tickvals":[-1,-0.49999999999999989,0,0.5,1.0000000000000002],"categoryorder":"array","categoryarray":["-1.0","-0.5","0.0","0.5","1.0"],"nticks":null,"ticks":"outside","tickcolor":"rgba(0,0,0,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":{"text":"Dim1 (25.7%)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"scaleanchor":"y","scaleratio":1,"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-1.0994348378207568,1.0994348378207568],"tickmode":"array","ticktext":["-1.0","-0.5","0.0","0.5","1.0"],"tickvals":[-1,-0.5,0,0.5,1],"categoryorder":"array","categoryarray":["-1.0","-0.5","0.0","0.5","1.0"],"nticks":null,"ticks":"outside","tickcolor":"rgba(0,0,0,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":{"text":"Dim2 (20.7%)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"scaleanchor":"x","scaleratio":1,"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":false,"legend":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"title":{"text":"","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"f25c19043cf4":{"x":{},"y":{},"colour":{},"label":{},"type":"scatter"},"f25c653dc400":{"x":{},"y":{},"xend":{},"yend":{},"colour":{}},"f25c3a0f0fed":{"x":{},"y":{}},"f25c32deae62":{"yintercept":{}},"f25c398abe05":{"xintercept":{}}},"cur_data":"f25c19043cf4","visdat":{"f25c19043cf4":["function (y) ","x"],"f25c653dc400":["function (y) ","x"],"f25c3a0f0fed":["function (y) ","x"],"f25c32deae62":["function (y) ","x"],"f25c398abe05":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-f3fd5fd404ebef6353e2" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-f3fd5fd404ebef6353e2">{"x":{"data":[{"x":[-0.13291152498910364],"y":[-0.14164328579735919],"text":"rbc","hovertext":"x: -0.1329115<br />y: -0.1416432858<br />contrib:  0.9035090<br />name: rbc","textfont":{"size":15.118110236220474,"color":"rgba(0,175,187,1)"},"type":"scatter","mode":"text","hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[-0.19883805983908442],"y":[0.000925363824982651],"text":"blood_calcium","hovertext":"x: -0.1988381<br />y:  0.0009253638<br />contrib:  0.9468338<br />name: blood_calcium","textfont":{"size":15.118110236220474,"color":"rgba(11,175,186,1)"},"type":"scatter","mode":"text","hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0.36143489126605077],"y":[0.33725063716307668],"text":"lactic_acid","hovertext":"x:  0.3614349<br />y:  0.3372506372<br />contrib:  5.8521957<br />name: lactic_acid","textfont":{"size":15.118110236220474,"color":"rgba(164,180,120,1)"},"type":"scatter","mode":"text","hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0.53924164795205198],"y":[-0.18205346220402976],"text":"leucocyte","hovertext":"x:  0.5392416<br />y: -0.1820534622<br />contrib:  7.7572860<br />name: leucocyte","textfont":{"size":15.118110236220474,"color":"rgba(191,181,92,1)"},"type":"scatter","mode":"text","hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0.55576089503701354],"y":[0.247023386910456],"text":"urea_nitrogen","hovertext":"x:  0.5557609<br />y:  0.2470233869<br />contrib:  8.8580628<br />name: urea_nitrogen","textfont":{"size":15.118110236220474,"color":"rgba(204,182,74,1)"},"type":"scatter","mode":"text","hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[-0.64202166553084983],"y":[-0.47765238117070535],"text":"bicarbonate","hovertext":"x: -0.6420217<br />y: -0.4776523812<br />contrib: 15.3348100<br />name: bicarbonate","textfont":{"size":15.118110236220474,"color":"rgba(242,149,1,1)"},"type":"scatter","mode":"text","hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0.6973114937412076],"y":[0.51205394402518067],"text":"anion_gap","hovertext":"x:  0.6973115<br />y:  0.5120539440<br />contrib: 17.9235400<br />name: anion_gap","textfont":{"size":15.118110236220474,"color":"rgba(247,124,3,1)"},"type":"scatter","mode":"text","hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0.51865149942965583],"y":[-0.77125530749746485],"text":"neutrophils","hovertext":"x:  0.5186515<br />y: -0.7712553075<br />contrib: 20.6869122<br />name: neutrophils","textfont":{"size":15.118110236220474,"color":"rgba(251,92,6,1)"},"type":"scatter","mode":"text","hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[-0.5974038954881743],"y":[0.74214926306115658],"text":"lymphocyte","hovertext":"x: -0.5974039<br />y:  0.7421492631<br />contrib: 21.7368504<br />name: lymphocyte","textfont":{"size":15.118110236220474,"color":"rgba(252,78,7,1)"},"type":"scatter","mode":"text","hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0,-0.13291152498910364],"y":[0,-0.14164328579735919],"text":"xstart: 0<br />ystart: 0<br />x: -0.1329115<br />y: -0.1416432858<br />contrib:  0.9035090","type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(0,175,187,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0,-0.19883805983908442],"y":[0,0.000925363824982651],"text":"xstart: 0<br />ystart: 0<br />x: -0.1988381<br />y:  0.0009253638<br />contrib:  0.9468338","type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(11,175,186,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0,0.36143489126605077],"y":[0,0.33725063716307668],"text":"xstart: 0<br />ystart: 0<br />x:  0.3614349<br />y:  0.3372506372<br />contrib:  5.8521957","type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(164,180,120,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0,0.53924164795205198],"y":[0,-0.18205346220402976],"text":"xstart: 0<br />ystart: 0<br />x:  0.5392416<br />y: -0.1820534622<br />contrib:  7.7572860","type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(191,181,92,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0,0.55576089503701354],"y":[0,0.247023386910456],"text":"xstart: 0<br />ystart: 0<br />x:  0.5557609<br />y:  0.2470233869<br />contrib:  8.8580628","type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(204,182,74,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0,-0.64202166553084983],"y":[0,-0.47765238117070535],"text":"xstart: 0<br />ystart: 0<br />x: -0.6420217<br />y: -0.4776523812<br />contrib: 15.3348100","type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(242,149,1,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0,0.6973114937412076],"y":[0,0.51205394402518067],"text":"xstart: 0<br />ystart: 0<br />x:  0.6973115<br />y:  0.5120539440<br />contrib: 17.9235400","type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(247,124,3,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0,0.51865149942965583],"y":[0,-0.77125530749746485],"text":"xstart: 0<br />ystart: 0<br />x:  0.5186515<br />y: -0.7712553075<br />contrib: 20.6869122","type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(251,92,6,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0,-0.5974038954881743],"y":[0,0.74214926306115658],"text":"xstart: 0<br />ystart: 0<br />x: -0.5974039<br />y:  0.7421492631<br />contrib: 21.7368504","type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(252,78,7,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[-1,-0.99179001382324605,-0.96729486303902945,-0.92691675734602175,-0.87131870412338941,-0.8014136218679565,-0.71834935009772749,-0.62348980185873348,-0.51839256831052505,-0.40478334312239383,-0.28452758663103256,-0.15959989503337918,-0.032051577571655207,0.096023025907681664,0.22252093395631445,0.3453650544213076,0.4625382902408352,0.57211666012216955,0.67230089026131656,0.7614459583691342,0.83808810489184049,0.90096886790241915,0.94905574701066864,0.98155915699106533,0.99794539275033634,0.99794539275033634,0.98155915699106544,0.94905574701066875,0.90096886790241915,0.83808810489184071,0.76144595836913453,0.67230089026131701,0.57211666012216988,0.4625382902408352,0.34536505442130805,0.22252093395631445,0.09602302590768233,-0.032051577571654985,-0.15959989503337854,-0.28452758663103211,-0.40478334312239306,-0.5183925683105246,-0.62348980185873348,-0.71834935009772716,-0.8014136218679565,-0.87131870412338897,-0.92691675734602164,-0.96729486303902923,-0.99179001382324605,-1,-1,-0.99179001382324605,-0.96729486303902945,-0.92691675734602175,-0.87131870412338941,-0.8014136218679565,-0.71834935009772749,-0.62348980185873348,-0.51839256831052505,-0.40478334312239383,-0.28452758663103256,-0.15959989503337918,-0.032051577571655207,0.096023025907681664,0.22252093395631445,0.3453650544213076,0.4625382902408352,0.57211666012216955,0.67230089026131656,0.7614459583691342,0.83808810489184049,0.90096886790241915,0.94905574701066864,0.98155915699106533,0.99794539275033634,0.99794539275033634,0.98155915699106544,0.94905574701066875,0.90096886790241915,0.83808810489184071,0.76144595836913453,0.67230089026131701,0.57211666012216988,0.4625382902408352,0.34536505442130805,0.22252093395631445,0.09602302590768233,-0.032051577571654985,-0.15959989503337854,-0.28452758663103211,-0.40478334312239306,-0.5183925683105246,-0.62348980185873348,-0.71834935009772716,-0.8014136218679565,-0.87131870412338897,-0.92691675734602164,-0.96729486303902923,-0.99179001382324605,-1],"y":[-1.2246467991473532e-16,-0.12787716168450605,-0.25365458390950735,-0.37526700487937403,-0.49071755200393774,-0.5981105304912161,-0.69568255060348649,-0.78183148246802991,-0.8551427630053462,-0.9144126230158125,-0.95866785303666058,-0.98718178341445018,-0.99948621620068789,-0.99537911294919823,-0.97492791218182362,-0.93846842204976044,-0.88659930637300011,-0.82017225459695597,-0.74027799707531572,-0.64822839530778864,-0.54553490121054893,-0.43388373911755812,-0.31510821802362071,-0.19115862870137243,-0.064070219980713106,0.064070219980712662,0.19115862870137199,0.31510821802362032,0.43388373911755812,0.5455349012105486,0.64822839530778831,0.74027799707531539,0.82017225459695575,0.88659930637300011,0.93846842204976022,0.97492791218182362,0.99537911294919812,0.99948621620068789,0.98718178341445029,0.95866785303666069,0.91441262301581283,0.85514276300534642,0.78183148246802991,0.69568255060348683,0.5981105304912161,0.49071755200393852,0.37526700487937448,0.25365458390950824,0.1278771616845065,1.2246467991473532e-16,1.2246467991473532e-16,0.12787716168450605,0.25365458390950735,0.37526700487937403,0.49071755200393774,0.5981105304912161,0.69568255060348649,0.78183148246802991,0.8551427630053462,0.9144126230158125,0.95866785303666058,0.98718178341445018,0.99948621620068789,0.99537911294919823,0.97492791218182362,0.93846842204976044,0.88659930637300011,0.82017225459695597,0.74027799707531572,0.64822839530778864,0.54553490121054893,0.43388373911755812,0.31510821802362071,0.19115862870137243,0.064070219980713106,-0.064070219980712662,-0.19115862870137199,-0.31510821802362032,-0.43388373911755812,-0.5455349012105486,-0.64822839530778831,-0.74027799707531539,-0.82017225459695575,-0.88659930637300011,-0.93846842204976022,-0.97492791218182362,-0.99537911294919812,-0.99948621620068789,-0.98718178341445029,-0.95866785303666069,-0.91441262301581283,-0.85514276300534642,-0.78183148246802991,-0.69568255060348683,-0.5981105304912161,-0.49071755200393852,-0.37526700487937448,-0.25365458390950824,-0.1278771616845065,-1.2246467991473532e-16],"text":["xcircle: -1.00000000<br />ycircle: -1.224647e-16","xcircle: -0.99179001<br />ycircle: -1.278772e-01","xcircle: -0.96729486<br />ycircle: -2.536546e-01","xcircle: -0.92691676<br />ycircle: -3.752670e-01","xcircle: -0.87131870<br />ycircle: -4.907176e-01","xcircle: -0.80141362<br />ycircle: -5.981105e-01","xcircle: -0.71834935<br />ycircle: -6.956826e-01","xcircle: -0.62348980<br />ycircle: -7.818315e-01","xcircle: -0.51839257<br />ycircle: -8.551428e-01","xcircle: -0.40478334<br />ycircle: -9.144126e-01","xcircle: -0.28452759<br />ycircle: -9.586679e-01","xcircle: -0.15959990<br />ycircle: -9.871818e-01","xcircle: -0.03205158<br />ycircle: -9.994862e-01","xcircle:  0.09602303<br />ycircle: -9.953791e-01","xcircle:  0.22252093<br />ycircle: -9.749279e-01","xcircle:  0.34536505<br />ycircle: -9.384684e-01","xcircle:  0.46253829<br />ycircle: -8.865993e-01","xcircle:  0.57211666<br />ycircle: -8.201723e-01","xcircle:  0.67230089<br />ycircle: -7.402780e-01","xcircle:  0.76144596<br />ycircle: -6.482284e-01","xcircle:  0.83808810<br />ycircle: -5.455349e-01","xcircle:  0.90096887<br />ycircle: -4.338837e-01","xcircle:  0.94905575<br />ycircle: -3.151082e-01","xcircle:  0.98155916<br />ycircle: -1.911586e-01","xcircle:  0.99794539<br />ycircle: -6.407022e-02","xcircle:  0.99794539<br />ycircle:  6.407022e-02","xcircle:  0.98155916<br />ycircle:  1.911586e-01","xcircle:  0.94905575<br />ycircle:  3.151082e-01","xcircle:  0.90096887<br />ycircle:  4.338837e-01","xcircle:  0.83808810<br />ycircle:  5.455349e-01","xcircle:  0.76144596<br />ycircle:  6.482284e-01","xcircle:  0.67230089<br />ycircle:  7.402780e-01","xcircle:  0.57211666<br />ycircle:  8.201723e-01","xcircle:  0.46253829<br />ycircle:  8.865993e-01","xcircle:  0.34536505<br />ycircle:  9.384684e-01","xcircle:  0.22252093<br />ycircle:  9.749279e-01","xcircle:  0.09602303<br />ycircle:  9.953791e-01","xcircle: -0.03205158<br />ycircle:  9.994862e-01","xcircle: -0.15959990<br />ycircle:  9.871818e-01","xcircle: -0.28452759<br />ycircle:  9.586679e-01","xcircle: -0.40478334<br />ycircle:  9.144126e-01","xcircle: -0.51839257<br />ycircle:  8.551428e-01","xcircle: -0.62348980<br />ycircle:  7.818315e-01","xcircle: -0.71834935<br />ycircle:  6.956826e-01","xcircle: -0.80141362<br />ycircle:  5.981105e-01","xcircle: -0.87131870<br />ycircle:  4.907176e-01","xcircle: -0.92691676<br />ycircle:  3.752670e-01","xcircle: -0.96729486<br />ycircle:  2.536546e-01","xcircle: -0.99179001<br />ycircle:  1.278772e-01","xcircle: -1.00000000<br />ycircle:  1.224647e-16","xcircle: -1.00000000<br />ycircle:  1.224647e-16","xcircle: -0.99179001<br />ycircle:  1.278772e-01","xcircle: -0.96729486<br />ycircle:  2.536546e-01","xcircle: -0.92691676<br />ycircle:  3.752670e-01","xcircle: -0.87131870<br />ycircle:  4.907176e-01","xcircle: -0.80141362<br />ycircle:  5.981105e-01","xcircle: -0.71834935<br />ycircle:  6.956826e-01","xcircle: -0.62348980<br />ycircle:  7.818315e-01","xcircle: -0.51839257<br />ycircle:  8.551428e-01","xcircle: -0.40478334<br />ycircle:  9.144126e-01","xcircle: -0.28452759<br />ycircle:  9.586679e-01","xcircle: -0.15959990<br />ycircle:  9.871818e-01","xcircle: -0.03205158<br />ycircle:  9.994862e-01","xcircle:  0.09602303<br />ycircle:  9.953791e-01","xcircle:  0.22252093<br />ycircle:  9.749279e-01","xcircle:  0.34536505<br />ycircle:  9.384684e-01","xcircle:  0.46253829<br />ycircle:  8.865993e-01","xcircle:  0.57211666<br />ycircle:  8.201723e-01","xcircle:  0.67230089<br />ycircle:  7.402780e-01","xcircle:  0.76144596<br />ycircle:  6.482284e-01","xcircle:  0.83808810<br />ycircle:  5.455349e-01","xcircle:  0.90096887<br />ycircle:  4.338837e-01","xcircle:  0.94905575<br />ycircle:  3.151082e-01","xcircle:  0.98155916<br />ycircle:  1.911586e-01","xcircle:  0.99794539<br />ycircle:  6.407022e-02","xcircle:  0.99794539<br />ycircle: -6.407022e-02","xcircle:  0.98155916<br />ycircle: -1.911586e-01","xcircle:  0.94905575<br />ycircle: -3.151082e-01","xcircle:  0.90096887<br />ycircle: -4.338837e-01","xcircle:  0.83808810<br />ycircle: -5.455349e-01","xcircle:  0.76144596<br />ycircle: -6.482284e-01","xcircle:  0.67230089<br />ycircle: -7.402780e-01","xcircle:  0.57211666<br />ycircle: -8.201723e-01","xcircle:  0.46253829<br />ycircle: -8.865993e-01","xcircle:  0.34536505<br />ycircle: -9.384684e-01","xcircle:  0.22252093<br />ycircle: -9.749279e-01","xcircle:  0.09602303<br />ycircle: -9.953791e-01","xcircle: -0.03205158<br />ycircle: -9.994862e-01","xcircle: -0.15959990<br />ycircle: -9.871818e-01","xcircle: -0.28452759<br />ycircle: -9.586679e-01","xcircle: -0.40478334<br />ycircle: -9.144126e-01","xcircle: -0.51839257<br />ycircle: -8.551428e-01","xcircle: -0.62348980<br />ycircle: -7.818315e-01","xcircle: -0.71834935<br />ycircle: -6.956826e-01","xcircle: -0.80141362<br />ycircle: -5.981105e-01","xcircle: -0.87131870<br />ycircle: -4.907176e-01","xcircle: -0.92691676<br />ycircle: -3.752670e-01","xcircle: -0.96729486<br />ycircle: -2.536546e-01","xcircle: -0.99179001<br />ycircle: -1.278772e-01","xcircle: -1.00000000<br />ycircle: -1.224647e-16"],"type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(179,179,179,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[-1.0998972696375169,1.0978426623878532],"y":[0,0],"text":"yintercept: 0","type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(0,0,0,1)","dash":"dash"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0,0],"y":[-1.0994348378207568,1.0994348378207568],"text":"xintercept: 0","type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(0,0,0,1)","dash":"dash"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[-1],"y":[-1],"name":"99_370b70dadd2a855ef66aed6be95843e6","type":"scatter","mode":"markers","opacity":0,"hoverinfo":"skip","showlegend":false,"marker":{"color":[0,1],"colorscale":[[0,"#00AFBB"],[0.0033444816053511696,"#10AFBA"],[0.0066889632107023445,"#1AAFB9"],[0.010033444816053515,"#22AFB8"],[0.013377926421404684,"#28AFB7"],[0.016722408026755856,"#2DAFB6"],[0.020066889632107024,"#32AFB5"],[0.023411371237458192,"#36AFB5"],[0.026755852842809364,"#3AB0B4"],[0.030100334448160532,"#3EB0B3"],[0.033444816053511704,"#41B0B2"],[0.036789297658862873,"#44B0B1"],[0.040133779264214055,"#47B0B0"],[0.043478260869565223,"#4AB0AF"],[0.046822742474916391,"#4DB0AE"],[0.050167224080267567,"#50B0AD"],[0.053511705685618735,"#52B0AC"],[0.05685618729096991,"#55B0AB"],[0.060200668896321079,"#57B0AA"],[0.063545150501672254,"#59B0A9"],[0.066889632107023422,"#5BB0A8"],[0.070234113712374591,"#5EB0A8"],[0.073578595317725759,"#60B0A7"],[0.076923076923076927,"#62B1A6"],[0.080267558528428096,"#64B1A5"],[0.083612040133779264,"#66B1A4"],[0.086956521739130432,"#68B1A3"],[0.090301003344481601,"#69B1A2"],[0.093645484949832769,"#6BB1A1"],[0.096989966555183951,"#6DB1A0"],[0.10033444816053512,"#6FB19F"],[0.10367892976588629,"#70B19E"],[0.10702341137123746,"#72B19D"],[0.11036789297658862,"#74B19C"],[0.11371237458193979,"#75B19B"],[0.11705685618729096,"#77B19A"],[0.12040133779264213,"#79B19A"],[0.1237458193979933,"#7AB199"],[0.12709030100334448,"#7CB198"],[0.13043478260869565,"#7DB297"],[0.13377926421404682,"#7FB296"],[0.13712374581939799,"#80B295"],[0.14046822742474915,"#81B294"],[0.14381270903010032,"#83B293"],[0.14715719063545149,"#84B292"],[0.15050167224080266,"#86B291"],[0.15384615384615385,"#87B290"],[0.157190635451505,"#88B28F"],[0.16053511705685619,"#8AB28E"],[0.16387959866220739,"#8BB28D"],[0.16722408026755853,"#8CB28C"],[0.17056856187290972,"#8DB28B"],[0.17391304347826086,"#8FB28A"],[0.17725752508361206,"#90B289"],[0.1806020066889632,"#91B388"],[0.1839464882943144,"#92B388"],[0.18729096989966554,"#94B387"],[0.19063545150501673,"#95B386"],[0.1939799331103679,"#96B385"],[0.19732441471571904,"#97B384"],[0.20066889632107024,"#98B383"],[0.20401337792642138,"#99B382"],[0.20735785953177258,"#9BB381"],[0.21070234113712372,"#9CB380"],[0.21404682274247491,"#9DB37F"],[0.21739130434782611,"#9EB37E"],[0.22073578595317725,"#9FB37D"],[0.22408026755852845,"#A0B37C"],[0.22742474916387959,"#A1B37B"],[0.23076923076923078,"#A2B37A"],[0.23411371237458192,"#A3B479"],[0.23745819397993312,"#A4B478"],[0.24080267558528426,"#A5B477"],[0.24414715719063546,"#A6B476"],[0.2474916387959866,"#A7B475"],[0.25083612040133779,"#A9B474"],[0.25418060200668896,"#AAB473"],[0.25752508361204013,"#ABB472"],[0.2608695652173913,"#ACB471"],[0.26421404682274247,"#ADB470"],[0.26755852842809363,"#AEB46F"],[0.2709030100334448,"#AEB46E"],[0.27424749163879597,"#AFB46D"],[0.27759197324414714,"#B0B46C"],[0.28093645484949831,"#B1B46B"],[0.28428093645484948,"#B2B46A"],[0.28762541806020064,"#B3B469"],[0.29096989966555181,"#B4B568"],[0.29431438127090298,"#B5B567"],[0.29765886287625415,"#B6B566"],[0.30100334448160532,"#B7B565"],[0.30434782608695654,"#B8B564"],[0.30769230769230765,"#B9B563"],[0.31103678929765888,"#BAB562"],[0.31438127090300999,"#BBB560"],[0.31772575250836121,"#BCB55F"],[0.32107023411371238,"#BCB55E"],[0.32441471571906355,"#BDB55D"],[0.32775919732441472,"#BEB55C"],[0.33110367892976589,"#BFB55B"],[0.33444816053511706,"#C0B55A"],[0.33779264214046822,"#C1B559"],[0.34113712374581939,"#C2B558"],[0.34448160535117062,"#C3B657"],[0.34782608695652178,"#C3B656"],[0.3511705685618729,"#C4B654"],[0.35451505016722407,"#C5B653"],[0.35785953177257529,"#C6B652"],[0.36120401337792646,"#C7B651"],[0.36454849498327757,"#C8B650"],[0.36789297658862874,"#C8B64F"],[0.37123745819397996,"#C9B64D"],[0.37458193979933113,"#CAB64C"],[0.37792642140468224,"#CBB64B"],[0.38127090301003347,"#CCB64A"],[0.38461538461538458,"#CDB649"],[0.38795986622073581,"#CDB647"],[0.39130434782608697,"#CEB646"],[0.39464882943143809,"#CFB645"],[0.39799331103678925,"#D0B644"],[0.40133779264214048,"#D1B642"],[0.40468227424749165,"#D1B741"],[0.40802675585284276,"#D2B740"],[0.41137123745819393,"#D3B73E"],[0.41471571906354515,"#D4B73D"],[0.41806020066889632,"#D5B73B"],[0.42140468227424743,"#D5B73A"],[0.4247491638795986,"#D6B739"],[0.42809364548494983,"#D7B737"],[0.43143812709030099,"#D8B736"],[0.43478260869565222,"#D8B734"],[0.43812709030100333,"#D9B732"],[0.4414715719063545,"#DAB731"],[0.44481605351170567,"#DBB72F"],[0.44816053511705689,"#DCB72D"],[0.451505016722408,"#DCB72C"],[0.45484949832775917,"#DDB72A"],[0.45819397993311034,"#DEB728"],[0.46153846153846156,"#DFB726"],[0.46488294314381268,"#DFB724"],[0.46822742474916385,"#E0B822"],[0.47157190635451507,"#E1B820"],[0.47491638795986624,"#E2B81D"],[0.47826086956521735,"#E2B81B"],[0.48160535117056852,"#E3B818"],[0.48494983277591974,"#E4B815"],[0.48829431438127091,"#E4B811"],[0.49163879598662202,"#E5B80D"],[0.49498327759197319,"#E6B808"],[0.49832775919732442,"#E7B803"],[0.50167224080267558,"#E7B800"],[0.50501672240802675,"#E7B700"],[0.50836120401337792,"#E8B700"],[0.51170568561872909,"#E8B600"],[0.51505016722408026,"#E8B500"],[0.51839464882943143,"#E8B500"],[0.52173913043478259,"#E8B400"],[0.52508361204013376,"#E9B400"],[0.52842809364548493,"#E9B300"],[0.5317725752508361,"#E9B200"],[0.53511705685618727,"#E9B200"],[0.53846153846153844,"#E9B100"],[0.5418060200668896,"#EAB100"],[0.54515050167224077,"#EAB000"],[0.54849498327759194,"#EAAF00"],[0.55183946488294311,"#EAAF00"],[0.55518394648829428,"#EAAE00"],[0.55852842809364556,"#EBAE00"],[0.56187290969899661,"#EBAD00"],[0.56521739130434778,"#EBAC00"],[0.56856187290969895,"#EBAC00"],[0.57190635451505023,"#EBAB00"],[0.57525083612040129,"#ECAB00"],[0.57859531772575246,"#ECAA00"],[0.58193979933110362,"#ECA900"],[0.5852842809364549,"#ECA900"],[0.58862876254180596,"#ECA800"],[0.59197324414715713,"#EDA800"],[0.5953177257525083,"#EDA700"],[0.59866220735785958,"#EDA600"],[0.60200668896321063,"#EDA600"],[0.6053511705685618,"#EDA500"],[0.60869565217391308,"#EEA500"],[0.61204013377926425,"#EEA400"],[0.61538461538461531,"#EEA300"],[0.61872909698996648,"#EEA300"],[0.62207357859531776,"#EEA200"],[0.62541806020066892,"#EEA100"],[0.62876254180601998,"#EFA101"],[0.63210702341137115,"#EFA001"],[0.63545150501672243,"#EFA001"],[0.6387959866220736,"#EF9F01"],[0.64214046822742477,"#EF9E01"],[0.64548494983277582,"#EF9E01"],[0.6488294314381271,"#F09D01"],[0.65217391304347827,"#F09C01"],[0.65551839464882944,"#F09C01"],[0.65886287625418061,"#F09B01"],[0.66220735785953178,"#F09B01"],[0.66555183946488294,"#F09A01"],[0.66889632107023411,"#F19901"],[0.67224080267558528,"#F19901"],[0.67558528428093645,"#F19801"],[0.67892976588628762,"#F19701"],[0.68227424749163879,"#F19701"],[0.68561872909698995,"#F19601"],[0.68896321070234112,"#F29601"],[0.69230769230769229,"#F29501"],[0.69565217391304346,"#F29401"],[0.69899665551839463,"#F29401"],[0.7023411371237458,"#F29301"],[0.70568561872909696,"#F29201"],[0.70903010033444813,"#F29201"],[0.7123745819397993,"#F39101"],[0.71571906354515047,"#F39001"],[0.71906354515050164,"#F39001"],[0.72240802675585281,"#F38F02"],[0.72575250836120397,"#F38E02"],[0.72909698996655514,"#F38E02"],[0.73244147157190631,"#F38D02"],[0.73578595317725748,"#F48C02"],[0.73913043478260854,"#F48C02"],[0.7424749163879597,"#F48B02"],[0.74581939799331087,"#F48A02"],[0.74916387959866215,"#F48A02"],[0.75250836120401332,"#F48902"],[0.75585284280936449,"#F48802"],[0.75919732441471566,"#F58802"],[0.76254180602006694,"#F58702"],[0.76588628762541811,"#F58602"],[0.76923076923076916,"#F58602"],[0.77257525083612033,"#F58502"],[0.77591973244147161,"#F58402"],[0.77926421404682278,"#F58402"],[0.78260869565217395,"#F58302"],[0.78595317725752512,"#F68202"],[0.78929765886287617,"#F68203"],[0.79264214046822734,"#F68103"],[0.79598662207357851,"#F68003"],[0.79933110367892968,"#F67F03"],[0.80267558528428096,"#F67F03"],[0.80602006688963213,"#F67E03"],[0.80936454849498329,"#F67D03"],[0.81270903010033446,"#F77D03"],[0.81605351170568552,"#F77C03"],[0.81939799331103669,"#F77B03"],[0.82274247491638786,"#F77A03"],[0.82608695652173914,"#F77A03"],[0.8294314381270903,"#F77903"],[0.83277591973244147,"#F77803"],[0.83612040133779264,"#F77803"],[0.83946488294314381,"#F87703"],[0.84280936454849487,"#F87603"],[0.84615384615384603,"#F87504"],[0.8494983277591972,"#F87504"],[0.85284280936454848,"#F87404"],[0.85618729096989965,"#F87304"],[0.85953177257525082,"#F87204"],[0.86287625418060199,"#F87204"],[0.86622073578595316,"#F87104"],[0.86956521739130443,"#F97004"],[0.87290969899665538,"#F96F04"],[0.87625418060200666,"#F96E04"],[0.87959866220735783,"#F96E04"],[0.882943143812709,"#F96D04"],[0.88628762541806017,"#F96C04"],[0.88963210702341133,"#F96B04"],[0.89297658862876261,"#F96B04"],[0.89632107023411378,"#F96A05"],[0.89966555183946473,"#F96905"],[0.90301003344481601,"#FA6805"],[0.90635451505016718,"#FA6705"],[0.90969899665551834,"#FA6705"],[0.91304347826086951,"#FA6605"],[0.91638795986622068,"#FA6505"],[0.91973244147157196,"#FA6405"],[0.92307692307692313,"#FA6305"],[0.92642140468227419,"#FA6205"],[0.92976588628762535,"#FA6205"],[0.93311036789297652,"#FA6105"],[0.93645484949832769,"#FA6005"],[0.93979933110367886,"#FB5F06"],[0.94314381270903014,"#FB5E06"],[0.94648829431438131,"#FB5D06"],[0.94983277591973247,"#FB5C06"],[0.95317725752508353,"#FB5B06"],[0.9565217391304347,"#FB5A06"],[0.95986622073578587,"#FB5A06"],[0.96321070234113704,"#FB5906"],[0.96655518394648821,"#FB5806"],[0.96989966555183948,"#FB5706"],[0.97324414715719065,"#FB5606"],[0.97658862876254182,"#FB5506"],[0.97993311036789299,"#FC5406"],[0.98327759197324405,"#FC5307"],[0.98662207357859522,"#FC5207"],[0.98996655518394638,"#FC5107"],[0.99331103678929766,"#FC5007"],[0.99665551839464883,"#FC4F07"],[1,"#FC4E07"]],"colorbar":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"thickness":23.039999999999996,"title":"contrib","titlefont":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"tickmode":"array","ticktext":["5","10","15","20"],"tickvals":[0.19663149165887581,0.43663139813689561,0.67663130461491539,0.91663121109293533],"tickfont":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"ticklen":2,"len":0.5}},"xaxis":"x","yaxis":"y","frame":null}],"layout":{"margin":{"t":43.762557077625573,"r":7.3059360730593621,"b":40.182648401826498,"l":48.949771689497723},"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"title":{"text":"Variables - PCA","font":{"color":"rgba(0,0,0,1)","family":"","size":17.534246575342465},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-1.0998972696375169,1.0978426623878532],"tickmode":"array","ticktext":["-1.0","-0.5","0.0","0.5","1.0"],"tickvals":[-1,-0.49999999999999989,0,0.5,1.0000000000000002],"categoryorder":"array","categoryarray":["-1.0","-0.5","0.0","0.5","1.0"],"nticks":null,"ticks":"outside","tickcolor":"rgba(0,0,0,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":{"text":"Dim1 (25.7%)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"scaleanchor":"y","scaleratio":1,"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-1.0994348378207568,1.0994348378207568],"tickmode":"array","ticktext":["-1.0","-0.5","0.0","0.5","1.0"],"tickvals":[-1,-0.5,0,0.5,1],"categoryorder":"array","categoryarray":["-1.0","-0.5","0.0","0.5","1.0"],"nticks":null,"ticks":"outside","tickcolor":"rgba(0,0,0,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":{"text":"Dim2 (20.7%)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"scaleanchor":"x","scaleratio":1,"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":false,"legend":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"title":{"text":"","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"a35a77f4fe70":{"x":{},"y":{},"colour":{},"label":{},"type":"scatter"},"a35a756ca896":{"x":{},"y":{},"xend":{},"yend":{},"colour":{}},"a35a30b04c14":{"x":{},"y":{}},"a35a652ce05":{"yintercept":{}},"a35a2653ad81":{"xintercept":{}}},"cur_data":"a35a77f4fe70","visdat":{"a35a77f4fe70":["function (y) ","x"],"a35a756ca896":["function (y) ","x"],"a35a30b04c14":["function (y) ","x"],"a35a652ce05":["function (y) ","x"],"a35a2653ad81":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 <p>We’ve created visualizations showcasing the importance of variables
 concerning the two most significant dimensions.</p>
 <p><code>cos2</code> is used to assess the variables’ importance,
@@ -2003,12 +1476,12 @@ components.</p>
 <p>=======</p>
 </div>
 </div>
-</div>
-<div id="regression" class="section level1">
-<h1>Regression</h1>
+<div id="regression" class="section level2">
+<h2>Regression</h2>
 <p>In this section, we want to generate a generalized linear model to
 see the relationship between patients’ mortality status and predictive
 variables.</p>
+</div>
 <div id="data-pre-processing" class="section level2">
 <h2>Data Pre-processing</h2>
 <p>Firstly, to prepare the data for the regression, the data types of
@@ -2034,16 +1507,15 @@ mortality_cleaned =
                       &quot;atrialfibrillation&quot;, &quot;chd_with_no_mi&quot;, &quot;diabetes&quot;, 
                       &quot;deficiencyanemias&quot;, &quot;depression&quot;, &quot;hyperlipemia&quot;, 
                       &quot;renal_failure&quot;, &quot;copd&quot;))</code></pre>
-</div>
-<div id="generalized-linear-model" class="section level2">
-<h2>Generalized linear model</h2>
+<div id="generalized-linear-model" class="section level3">
+<h3>Generalized linear model</h3>
 <p>Due to the response variable (outcome) is binary variable, a
 generalized linear model (GLM) is chosen for regression analysis.</p>
 <div
 id="generalized-linear-model-for-complete-dataset-group1-and-group2"
-class="section level3">
-<h3>Generalized Linear Model for Complete Dataset (Group1 and
-Group2)</h3>
+class="section level4">
+<h4>Generalized Linear Model for Complete Dataset (Group1 and
+Group2)</h4>
 <p>Fit a logistic regression model using all patients data (including
 both the derivation and validation groups) and use the stepwise method
 to select predictors to be included in the model.</p>
@@ -2388,8 +1860,8 @@ pco2. They may have the potential to be important physiological
 indicators worth monitoring closely in ICU patients.</p>
 </div>
 <div id="generalized-linear-model-for-derivation-dataset-group1"
-class="section level3">
-<h3>Generalized Linear Model for Derivation Dataset (Group1)</h3>
+class="section level4">
+<h4>Generalized Linear Model for Derivation Dataset (Group1)</h4>
 <p>Fit a logistic regression model using patients data from group1
 (derivation group) and use the stepwise method to select predictors to
 be included in the model.</p>
@@ -2710,8 +2182,8 @@ also among the most significant factors in the complete model, and these
 four should be particularly noteworthy.</p>
 </div>
 <div id="model-evaluation-on-validation-group-group2"
-class="section level3">
-<h3>Model Evaluation on Validation Group (Group2)</h3>
+class="section level4">
+<h4>Model Evaluation on Validation Group (Group2)</h4>
 <p>For the model generated using derivation group data, validate it on
 the validation group and plot Receiver Operating Characteristic (ROC)
 Curve.</p>
@@ -2729,10 +2201,104 @@ title(main = &quot;The ROC Curve of Generalized Linear Model&quot;)</code></pre>
 <p><img src="report_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
 <p>The AUC of the model on validation dataset: 0.7757475. According to
 the ROC plot and AUC value, the predictive performance of the model on
-the validation group data is generally satisfactory.
-&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-262bec8f6a779766e6ab69ed624ae47ab7fca05d</p>
+the validation group data is generally satisfactory.</p>
 </div>
+</div>
+</div>
+</div>
+<div id="discussion" class="section level1">
+<h1>Discussion</h1>
+<div id="findings" class="section level2">
+<h2>1. Findings</h2>
+<div id="generalized-linear-model-for-complete-dataset"
+class="section level3">
+<h3>1) Generalized Linear Model for Complete Dataset</h3>
+<p>The complete model is fitted using patients data from both group1
+(derivation group) and group2 (validation group). A stepwise method is
+conducted to select predictors to be included in the model.</p>
+<p>The expression of complete model is:</p>
+<p><span class="math display">\[
+outcome \sim age+deficiencyanemias1+renal\_failure1+copd1\\
++heart\_rate+diastolic\_blood\_pressure+respiratory\_rate\\
++temperature+sp\_o2+urine\_output+mch+mchc+rdw+leucocyte\\
++platelets+lymphocyte+creatinine+urea\_nitrogen\\
++blood\_potassium+blood\_calcium+anion\_gap+magnesium\_ion\\
++bicarbonate+pco2
+\]</span></p>
+<ul>
+<li>It is worth noting that among the comorbidity variables, only
+deficiencyanemias, renal_failure, and copd are selected by model, and
+the estimates for all three are negative. This suggests that the
+occurrence of these three comorbidities is associated with a decrease in
+mortality, which is counterintuitive. This phenomenon may be attributed
+to the correlation between the onset of these diseases and early
+diagnosis and treatment. Early detection and treatment of these diseases
+might reduce the risk of death. Alternatively, the occurrence of these
+diseases may prompt patients to pay more attention to their health and
+take actions to improve their health conditions, thereby enhancing their
+survival rates.</li>
+<li>In the remaining variables, the most significant six are
+blood_calcium, anion_gap, platelets, heart_rate, urea_nitrogen, and
+pco2. They may have the potential to be important physiological
+indicators worth monitoring closely in ICU patients.</li>
+</ul>
+</div>
+<div id="generalized-linear-model-for-derivation-dataset"
+class="section level3">
+<h3>2) Generalized Linear Model for Derivation Dataset</h3>
+<p>The derivation model is fitted using patients data from group1
+(derivation group). A stepwise method is conducted to select predictors
+to be included in the model.</p>
+<p>The expression of derivation model is:</p>
+<p><span class="math display">\[
+outcome\sim age+gender2+hypertensive1+atrialfibrillation1+diabetes1\\
++deficiencyanemias1+hyperlipemia1+renal\_failure1+copd1+heart\_rate\\
++diastolic\_blood\_pressure+sp\_o2+mcv+rdw+platelets+lymphocyte\\
++creatinine+urea\_nitrogen+blood\_calcium+anion\_gap+lactic\_acid+pco2
+\]</span></p>
+<ul>
+<li>Among all the predictors selected, there are 7 comorbidity
+variables: hypertensive, atrialfibrillation, diabetes,
+deficiencyanemias, hyperlipemia, renal_failure and copd. All of them
+have negative estimates except for atrialfibrillation. This indicates
+that the occurrence of other complications leads to a decrease in
+mortality (as discussed in the complete model section), but the presence
+of atrial fibrillation is a noteworthy sign of mortality and should be
+closely monitored, especially in the ICU.</li>
+<li>In the remaining variables, the most significant five are
+blood_calcium, anion_gap, heart_rate, urea_nitrogen, and creatinine. All
+of them excapt for creatinine are also among the most significant
+factors in the complete model, and these four should be particularly
+noteworthy.</li>
+</ul>
+</div>
+<div id="model-evaluation-on-validation-group" class="section level3">
+<h3>3) Model Evaluation on Validation Group</h3>
+<p>The derivation model is validated on the validation group (group2)
+and a Receiver Operating Characteristic (ROC) Curve is plotted.</p>
+<p>The AUC of the model on validation dataset: 0.7757475. According to
+the ROC plot and AUC value, the predictive performance of the model on
+the validation group data is generally satisfactory.</p>
+</div>
+</div>
+<div id="demographic-insights" class="section level2">
+<h2>2. Demographic Insights</h2>
+<p>The gender-based mortality analysis revealed a slightly higher
+mortality rate in male patients (14.3%) compared to females (12.8%).
+Age-wise, the highest mortality rate was observed in patients over 80
+years (15.9%), highlighting the increased vulnerability among the
+elderly.</p>
+</div>
+<div id="future-directions" class="section level2">
+<h2>3. Future Directions</h2>
+<p>The insights gained from this analysis can guide further detailed
+statistical analysis and predictive modeling. Especially, investigating
+the reasons behind the observed trends and how they interact to
+influence patient outcomes could be a valuable next step.</p>
+<p>This exploratory analysis sets the stage for more in-depth
+statistical analysis and modeling, aiming to enhance the understanding
+and prediction of mortality rates in heart failure patients admitted to
+the ICU.</p>
 </div>
 </div>
 

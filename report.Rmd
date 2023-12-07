@@ -8,8 +8,52 @@ output:
     theme: cosmo
     code_folding: hide
 ---
+# Motivation
 
-# Background Information of the datasets
+Predictors of in-hospital mortality in patients with heart failure admitted to the intensive care unit (ICU) remain unclear. Aimed to lay a solid foundation for Data Science, deepen our understanding of mortality, we conducted a comprehensive research based on the patient's mortality factors dataset. Although this dataset belongs to cross-sectional study, we still can dig out some key patterns that affect mortality and detect abnormal characteristics that indicate the death sign at the early stage. 
+
+# Related work
+ 
+Here are some key areas and examples of related published work:
+
+ 1. "Trends in Hospital Mortality Between 1999 and 2017": Studies analyzing long-term trends in hospital mortality rates can provide insights into improvements or challenges in healthcare outcomes over time. Such research often involves large-scale data analysis to identify patterns and changes.
+
+ 2. "Risk Factors for Hospital Mortality in Critically Ill Patients": Research that focuses on identifying and understanding specific risk factors associated with increased hospital mortality can inform targeted interventions. This may involve studying critically ill populations and factors such as comorbidities, severity of illness, and response to treatment.
+
+ 3. "Effectiveness of Early Warning Systems in Reducing Hospital Mortality": Investigating the impact of early warning systems and rapid response teams on hospital mortality is a common area of interest. This research often assesses the effectiveness of these systems in identifying deteriorating patients and facilitating timely interventions.
+
+ 4. "Quality Improvement Initiatives and Their Impact on Hospital Mortality": Published work on quality improvement initiatives explores how hospitals implement changes to improve patient outcomes. This may involve the introduction of new protocols, guidelines, or patient safety measures.
+
+ 5. "Role of Health Information Technology in Predicting and Preventing Hospital Mortality": Research examining the integration of health information technology, predictive modeling, and artificial intelligence in predicting and preventing hospital mortality is an evolving field. These studies often assess the accuracy and clinical utility of predictive models.
+
+ 6. "Ethical Considerations in End-of-Life Decision-Making and Hospital Mortality": Ethical considerations surrounding end-of-life care, decision-making processes, and their impact on hospital mortality are important topics. Studies in this area may explore the perspectives of healthcare professionals, patients, and families.
+
+ 7. "Interdisciplinary Collaboration and its Influence on Hospital Mortality": Research that investigates the role of effective communication and collaboration among healthcare teams in reducing hospital mortality is essential. This may include studies on teamwork, communication strategies, and interdisciplinary approaches to patient care.
+
+ 8. "Comparative Effectiveness Research in Hospital Mortality": Comparative effectiveness research aims to compare different treatment modalities and strategies to determine their impact on patient outcomes. Published work in this area may assess the effectiveness of various medical interventions and healthcare delivery models.
+ 
+ 
+\ \par
+\ \par
+
+# Initial questions
+
+What factors have a significant impact on mortality?
+
+What factors account for independent risk factors of in-hospital mortality?
+
+What potential clinical implications are the top three biomedical indices that make the most significant contributions to the specific disease? 
+
+# Data
+
+## Sources
+
+We choose Hospital Mortality Dataset as our dataset in our study. The data can be accessed [here](https://www.kaggle.com/datasets/saurabhshahane/in-hospital-mortality-prediction/data).
+
+
+## Scaping method
+
+Our main datasets is Zhou, Jingmin et al. (2021), Prediction model of in-hospital mortality in intensive care unit patients with heart failure: machine learning-based, retrospective analysis of the MIMIC-III database, Dryad, Dataset, https://doi.org/10.5061/dryad.0p2ngf1zd, which covers the patients' various indexes comprehensively, including 51 variables such as Blood Pressure and BMI. 
 
 We categorized the dataset into following aspects: 
 
@@ -21,12 +65,6 @@ We categorized the dataset into following aspects:
 
 4. **Laboratory variables:** hematocrit, red blood cells, mean corpuscular hemoglobin MCH, mean corpuscular hemoglobin concentration MCHC, mean corpuscular volume MCV, red blood cell distribution width RDW, platelet count, white blood cells, neutrophils, basophils, lymphocytes, prothrombin time PT, international normalized ratio INR, NT-proBNP, creatine kinase, creatinine, blood urea nitrogen BUN glucose, potassium, sodium, calcium, chloride, magnesium, the anion gap, bicarbonate, lactate, hydrogen ion concentration pH, partial pressure of CO2 in arterial blood, and LVEF
 
-
-
-
-# Data Dictionary
-
-We choose Hospital Mortality Dataset as our dataset in our study. The data can be accessed [here](https://www.kaggle.com/datasets/saurabhshahane/in-hospital-mortality-prediction/data).
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -41,115 +79,8 @@ library(tidyverse)
 
 ```
 
-Hospital mortality datasets contains a total of ```r length(unique(mortality_data))``` patients with age ranging from ```r min(unique(mortality_data$age))``` to ```r max(unique(mortality_data$age))```. There are a total of ```r length(mortality_data)``` variables. Out of which, we consider the variables and description is listed below:
 
-
-*```r colnames(mortality_data)[1]```: Patient's group (group_1=1, group_2 = 2); Binary Variable.
-
-*```r colnames(mortality_data)[2]```: Patient's id; Continuoues Variable.
-
-*```r colnames(mortality_data)[3]```: Patient's outcome (death=1, alive = 0); Binary Variable.
-
-*```r colnames(mortality_data)[4]```: Patient's age; Continuoues Variable.
-
-*```r colnames(mortality_data)[5]```: Patient's gender (male=1, female = 2); Binary Variable.
-
-*```r colnames(mortality_data)[6]```: Patient's BMI; Continuoues Variable.
-
-*```r colnames(mortality_data)[7]```: Whether patient had high blood pressure (yes=1, no = 0); Binary Variable.
-
-*```r colnames(mortality_data)[8]```: Whether patient had heart rhythm disorder (yes=1, no = 0); Binary Variable.
-
-*```r colnames(mortality_data)[9]```: Whether patient had ischemic heart disease (yes=1, no = 0); Binary Variable.
-
-*```r colnames(mortality_data)[10]```: Whether patient had diabetes mellitus (yes=1, no = 0); Binary Variable.
-
-*```r colnames(mortality_data)[11]```: Whether patient had deficiency of anemias (yes=1, no = 0); Binary Variable.
-
-*```r colnames(mortality_data)[12]```:  Whether patient had depression (yes=1, no = 0); Binary Variable.
-
-*```r colnames(mortality_data)[13]```: Whether patient had hyperlipidemia (yes=1, no = 0); Binary Variable.
-
-*```r colnames(mortality_data)[14]```: Whether patient had renal failure (yes=1, no = 0); Binary Variable.
-
-*```r colnames(mortality_data)[15]```: Whether patient had chronic obstructive pulmonary disease (yes=1, no = 0); Binary Variable.
-
-*```r colnames(mortality_data)[16]```: Patient's heart rate; Continuous variable.
-
-*```r colnames(mortality_data)[17]```: Patient's systolic blood pressure; Continuous variable.
-
-*```r colnames(mortality_data)[18]```: Patient's diasystolic blood pressure; Continuous variable.
-
-*```r colnames(mortality_data)[19]```: Patient's respiratory rate; Continuous variable.
-
-*```r colnames(mortality_data)[20]```: Patient's temperature; Continuous variable.
-
-*```r colnames(mortality_data)[21]```: Patient's saturation pulse oxygen; Continuous variable.
-
-*```r colnames(mortality_data)[22]```: Patient's urine output - first 24 h; Continuous variable.
-
-*```r colnames(mortality_data)[23]```: Patient's hematocrit; Continuous variable.
-
-*```r colnames(mortality_data)[24]```: Patient's volume percentage of red blood cells (RBCs) in blood; Continuous variable.
-
-*```r colnames(mortality_data)[25]```: Patient's mean corpuscular hemoglobin; Continuous variable.
-
-*```r colnames(mortality_data)[26]```: Patient's mean corpuscular hemoglobin concentration; Continuous variable.
-
-*```r colnames(mortality_data)[27]```: Patient's mean corpuscular volume; Continuous variable.
-
-*```r colnames(mortality_data)[28]```: Patient's red blood cell distribution width; Continuous variable.
-
-*```r colnames(mortality_data)[29]```: Patient's leucocyte; Continuous variable.
-
-*```r colnames(mortality_data)[30]```: Patient's platelet count; Continuous variable.
-
-*```r colnames(mortality_data)[31]```: Patient's neutrophils; Continuous variable.
-
-*```r colnames(mortality_data)[32]```: Patient's basophils; Continuous variable.
-
-*```r colnames(mortality_data)[33]```: Patient's lymphocyte; Continuous variable.
-
-*```r colnames(mortality_data)[34]```: Patient's prothrombin time; Continuous variable.
-
-*```r colnames(mortality_data)[35]```: Patient's international normalized ratio; Continuous variable.
-
-*```r colnames(mortality_data)[36]```: Patient's NT-proBNP; Continuous variable.
-
-*```r colnames(mortality_data)[37]```: Patient's creatine kinase; Continuous variable.
-
-*```r colnames(mortality_data)[38]```: Patient's creatinine; Continuous variable.
-
-*```r colnames(mortality_data)[39]```: Patient's blood urea nitrogen ; Continuous variable.
-
-*```r colnames(mortality_data)[40]```: Patient's glucose contents; Continuous variable.
-
-*```r colnames(mortality_data)[41]```: Patient's potassium contents; Continuous variable.
-
-*```r colnames(mortality_data)[42]```: Patient's sodium contents; Continuous variable.
-
-*```r colnames(mortality_data)[43]```: Patient's calcium contents; Continuous variable.
-
-*```r colnames(mortality_data)[44]```: Patient's chloride contents; Continuous variable.
-
-*```r colnames(mortality_data)[45]```: Patient's anion gap; Continuous variable.
-
-*```r colnames(mortality_data)[46]```: Patient's magnesium (ion) contents; Continuous variable.
-
-*```r colnames(mortality_data)[47]```: Patient's hydrogen ion concentration; Continuous variable.
-
-*```r colnames(mortality_data)[48]```: Patient's bicarbonate contents; Continuous variable.
-
-*```r colnames(mortality_data)[49]```: Patient's lactic acid  contents; Continuous variable.
-
-*```r colnames(mortality_data)[50]```: Patient's partial pressure of CO2 in arterial blood; Continuous variable.
-
-*```r colnames(mortality_data)[51]```: Patient's Left Ventricular Ejection Fraction; Continuous variable.
-
-<br>
-<br>
-
-# Imputation 
+## Cleaning
 
 **Data cleaning problems:**
 
@@ -295,7 +226,9 @@ sign_tidy =
   select(outcome, heart_rate:ef)
 ```
 
-# Exploratory Data Analysis
+# Additional analysis
+
+## Exploratory Data Analysis
 
 The EDA conducted on heart failure patients in the Intensive Care Unit (ICU) provides valuable insights into the demographic, physiological, and clinical factors influencing mortality rates.
 
@@ -501,10 +434,10 @@ Observations based on the plots include:
 
 
 
-# Preliminary Study
+## Preliminary Study
 
 
-## Correlation between Vital Signs
+### Correlation between Vital Signs
 
 
 ```{r fig.width = 10, fig.height = 12}
@@ -517,10 +450,10 @@ The correlation plot illustrates the relationships between vital signs pairwise.
 Strong positive correlations were observed between variables such as `rbc` and `hematocrit`, `mcv` and `mch`, `inr` and `pt`, `pco2` and `bicarbonate`. Conversely, a strong negative correlation was found between `neutrophils` and `lymphocyte`. Strong positive correlations often suggest the potential for dimension reduction by merging these variables during selection. 
 
 
-## CART and rf: Dimension Reduction and Core Variables Analysis
+### CART and rf: Dimension Reduction and Core Variables Analysis
 
 
-### Analysis of Patient comorbidities Variables
+#### Analysis of Patient comorbidities Variables
 
 
 ```{r}
@@ -553,7 +486,7 @@ The random forest yielded a list of variables ranked by their importance based o
 In descending order of importance, the top 5 variables are: `hyperlipemia`, `atrialfibrillation`, `renal_failure`, `deficiencyanemias`, `diabetes`.  
 
 
-### Analysis of Patient Vital Signs Variables
+#### Analysis of Patient Vital Signs Variables
 
 
 ```{r fig.width = 12, fig.height = 8}
@@ -586,7 +519,7 @@ The results obtained from the random forest exhibit a overlap with the decision 
 ## PCA: Dimension Reduction
 
 
-### Dimension Reduction for Patient Vital Signs Variables
+#### Dimension Reduction for Patient Vital Signs Variables
 
 
 ```{r}
@@ -715,7 +648,7 @@ Based on the outcome (`Alive` or `Death`), the data points were grouped and colo
 
 
 
-# Regression
+## Regression
 
 In this section, we want to generate a generalized linear model to see the relationship between patients' mortality status and predictive variables.
 
@@ -742,11 +675,11 @@ mortality_cleaned =
                       "renal_failure", "copd"))
 ```
 
-## Generalized linear model
+### Generalized linear model
 
 Due to the response variable (outcome) is binary variable, a generalized linear model (GLM) is chosen for regression analysis.
 
-### Generalized Linear Model for Complete Dataset (Group1 and Group2)
+#### Generalized Linear Model for Complete Dataset (Group1 and Group2)
 
 Fit a logistic regression model using all patients data (including both the derivation and validation groups) and use the stepwise method to select predictors to be included in the model.
 
@@ -791,7 +724,7 @@ $$
 It is worth noting that among the comorbidity variables, only deficiencyanemias, renal_failure, and copd are selected by model, and the estimates for all three are negative. This suggests that the occurrence of these three comorbidities is associated with a decrease in mortality, which is counterintuitive. This phenomenon may be attributed to the correlation between the onset of these diseases and early diagnosis and treatment. Early detection and treatment of these diseases might reduce the risk of death. Alternatively, the occurrence of these diseases may prompt patients to pay more attention to their health and take actions to improve their health conditions, thereby enhancing their survival rates.
 In the remaining variables, the most significant six are blood_calcium, anion_gap, platelets, heart_rate, urea_nitrogen, and pco2. They may have the potential to be important physiological indicators worth monitoring closely in ICU patients.
 
-### Generalized Linear Model for Derivation Dataset (Group1)
+#### Generalized Linear Model for Derivation Dataset (Group1)
 
 Fit a logistic regression model using patients data from group1 (derivation group) and use the stepwise method to select predictors to be included in the model.
 
@@ -833,7 +766,7 @@ $$
 
 Among all the predictors selected, there are 7 comorbidity variables: hypertensive, atrialfibrillation, diabetes, deficiencyanemias, hyperlipemia, renal_failure and copd. All of them have negative estimates except for atrialfibrillation. This indicates that the occurrence of other complications leads to a decrease in mortality (as discussed in the complete model section), but the presence of atrial fibrillation is a noteworthy sign of mortality and should be closely monitored, especially in the ICU. In the remaining variables, the most significant five are blood_calcium, anion_gap, heart_rate, urea_nitrogen, and creatinine. All of them excapt for creatinine are also among the most significant factors in the complete model, and these four should be particularly noteworthy.
 
-### Model Evaluation on Validation Group (Group2)
+#### Model Evaluation on Validation Group (Group2)
 
 For the model generated using derivation group data, validate it on the validation group and plot Receiver Operating Characteristic (ROC) Curve.
 
@@ -852,4 +785,58 @@ title(main = "The ROC Curve of Generalized Linear Model")
 ```
 
 The AUC of the model on validation dataset: 0.7757475. According to the ROC plot and AUC value, the predictive performance of the model on the validation group data is generally satisfactory.
->>>>>>> 262bec8f6a779766e6ab69ed624ae47ab7fca05d
+
+# Discussion
+
+## 1. Findings
+
+### 1) Generalized Linear Model for Complete Dataset 
+
+The complete model is fitted using patients data from both group1 (derivation group) and group2 (validation group). A stepwise method is conducted to select predictors to be included in the model.
+
+The expression of complete model is:
+
+$$
+outcome \sim age+deficiencyanemias1+renal\_failure1+copd1\\
++heart\_rate+diastolic\_blood\_pressure+respiratory\_rate\\
++temperature+sp\_o2+urine\_output+mch+mchc+rdw+leucocyte\\
++platelets+lymphocyte+creatinine+urea\_nitrogen\\
++blood\_potassium+blood\_calcium+anion\_gap+magnesium\_ion\\
++bicarbonate+pco2
+$$
+
+- It is worth noting that among the comorbidity variables, only deficiencyanemias, renal_failure, and copd are selected by model, and the estimates for all three are negative. This suggests that the occurrence of these three comorbidities is associated with a decrease in mortality, which is counterintuitive. This phenomenon may be attributed to the correlation between the onset of these diseases and early diagnosis and treatment. Early detection and treatment of these diseases might reduce the risk of death. Alternatively, the occurrence of these diseases may prompt patients to pay more attention to their health and take actions to improve their health conditions, thereby enhancing their survival rates.
+- In the remaining variables, the most significant six are blood_calcium, anion_gap, platelets, heart_rate, urea_nitrogen, and pco2. They may have the potential to be important physiological indicators worth monitoring closely in ICU patients.
+
+### 2) Generalized Linear Model for Derivation Dataset
+
+The derivation model is fitted using patients data from group1 (derivation group). A stepwise method is conducted to select predictors to be included in the model.
+
+The expression of derivation model is:
+
+$$
+outcome\sim age+gender2+hypertensive1+atrialfibrillation1+diabetes1\\ +deficiencyanemias1+hyperlipemia1+renal\_failure1+copd1+heart\_rate\\
++diastolic\_blood\_pressure+sp\_o2+mcv+rdw+platelets+lymphocyte\\
++creatinine+urea\_nitrogen+blood\_calcium+anion\_gap+lactic\_acid+pco2
+$$
+
+- Among all the predictors selected, there are 7 comorbidity variables: hypertensive, atrialfibrillation, diabetes, deficiencyanemias, hyperlipemia, renal_failure and copd. All of them have negative estimates except for atrialfibrillation. This indicates that the occurrence of other complications leads to a decrease in mortality (as discussed in the complete model section), but the presence of atrial fibrillation is a noteworthy sign of mortality and should be closely monitored, especially in the ICU. 
+- In the remaining variables, the most significant five are blood_calcium, anion_gap, heart_rate, urea_nitrogen, and creatinine. All of them excapt for creatinine are also among the most significant factors in the complete model, and these four should be particularly noteworthy.
+
+### 3) Model Evaluation on Validation Group
+
+The derivation model is validated on the validation group (group2) and a Receiver Operating Characteristic (ROC) Curve is plotted.
+
+The AUC of the model on validation dataset: 0.7757475. According to the ROC plot and AUC value, the predictive performance of the model on the validation group data is generally satisfactory.
+
+
+
+## 2. Demographic Insights
+
+The gender-based mortality analysis revealed a slightly higher mortality rate in male patients (14.3%) compared to females (12.8%). Age-wise, the highest mortality rate was observed in patients over 80 years (15.9%), highlighting the increased vulnerability among the elderly.
+
+## 3. Future Directions
+
+The insights gained from this analysis can guide further detailed statistical analysis and predictive modeling. Especially, investigating the reasons behind the observed trends and how they interact to influence patient outcomes could be a valuable next step.
+
+This exploratory analysis sets the stage for more in-depth statistical analysis and modeling, aiming to enhance the understanding and prediction of mortality rates in heart failure patients admitted to the ICU.
