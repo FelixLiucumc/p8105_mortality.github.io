@@ -710,7 +710,6 @@ Based on the outcome (`Alive` or `Death`), the data points were grouped and colo
 
 
 
-<<<<<<< HEAD
 =======
 
 
