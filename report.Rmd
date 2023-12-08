@@ -797,7 +797,7 @@ This study’s exploratory data analysis (EDA) on ICU heart failure patients hig
 
 The logistic regression analysis further refined our understanding. Surprisingly, comorbidities such as deficiency anemias, renal failure, and COPD were inversely associated with mortality. This counterintuitive finding might reflect the benefits of early diagnosis and management. Key physiological indicators, including blood calcium and anion gap, were identified, and their significance was reinforced in both complete and derivation datasets.
 
-##Challenges
+## Challenges
 
 When established Rshiny dashboard, we encountered problems of decision of choosing appropriate interaction plots, setting indexes options and converting different types of plots. Our biggest difficulty was previewing shiny dashborad in website, since `rmarkdown::render("Rshiny.Rmd", output_format = "flexdashboard::flex_dashboard")` conflicts original html document's format.
 
