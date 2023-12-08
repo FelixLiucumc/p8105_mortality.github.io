@@ -251,3 +251,14 @@ fviz_pca_ind(res_pca_sign,
 ```
 
 Based on the outcome (`Alive` or `Death`), the data points were grouped and color-coded accordingly. Ellipses were generated to encapsulate the sample points for different groups (alive and death), showcasing the analysis using the two principal components.  
+
+\ \par
+## 4. Limitations
+
+In the dimension reduction analyses we conducted, we've observed an absence of significant reduction effects.   
+
+Regarding random forests, the selection of classification nodes doesn't reliably support high success rates in outcome prediction. As for PCA, it's challenging to determine fewer dimensions that exhibit reliable predictive capabilities for the outcome, and with an increase in dimensions, there isn't a clear gradient of percent variance contribution, making it difficult to define the optimal number of dimensions.  
+
+Possible reasons could be the low correlation among variables, rendering ineffective condensed representations through dimension reduction. Additionally, utilizing the binary variable `outcome` as a predictive output might inherently hinder the construction of an effective predictive model.  
+
+
