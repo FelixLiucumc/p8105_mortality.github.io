@@ -8,9 +8,10 @@ output:
     theme: cosmo
     code_folding: hide
 ---
+
 # Motivation
 
-Predictors of in-hospital mortality in patients with heart failure admitted to the intensive care unit (ICU) remain unclear. Aimed to lay a solid foundation for Data Science, deepen our understanding of mortality, we conducted a comprehensive research based on the patient's mortality factors dataset. Although this dataset belongs to cross-sectional study, we still can dig out some key patterns that affect mortality and detect abnormal characteristics that indicate the death sign at the early stage. 
+Predictors of in-hospital mortality in patients with heart failure admitted to the intensive care unit (ICU) remain unclear. Aimed to lay a solid foundation for data science and deepen our understanding of mortality, we conducted comprehensive research based on the patients' mortality factors dataset. Although this dataset belongs to a cross-sectional study, we can still dig out some key patterns that affect mortality and detect abnormal characteristics that indicate the death sign at the early stage. 
 
 # Related work
  
@@ -32,9 +33,7 @@ Here are some key areas and examples of related published work:
 
  8. "Comparative Effectiveness Research in Hospital Mortality": Comparative effectiveness research aims to compare different treatment modalities and strategies to determine their impact on patient outcomes. Published work in this area may assess the effectiveness of various medical interventions and healthcare delivery models.
  
- 
-\ \par
-\ \par
+
 
 # Initial questions
 
@@ -543,7 +542,7 @@ get_eigenvalue(res_pca_sign) |>
   knitr::kable(digits = 3)
 ```
 
-The `eigenvalue` connects with the amount of data variance explained by each principal component (PC). A higher eigenvalue indicates a greater proportion of data variance that can be explained (`variance.percent`).  
+The `eigenvalue` connects with the amount of data variance explained by each principal component (PC). A higher eigenvalue indicates a more significant proportion of data variance that can be defined (`variance.percent`).  
   
 The PCs are arranged in descending order based on the eigenvalues, indicating that the PCs positioned earlier correspond to the directions with the greatest data variation. 
 
@@ -555,9 +554,9 @@ Typically, we can limit the number of dimensions/PCs by controlling the `cumulat
 fviz_screeplot(res_pca_sign, addlabels = TRUE, ylim = c(0, 15), main = "Scree Plot of Dimension's Contributions", font.main = 15)
 ```
 
-Another approach involves examining the **scree plot**, which visualizes the ability of each dimension to explain the overall variance in the data. When the explanatory power begins to decrease and flatten out, it suggests diminishing returns in terms of dimension reduction. This is often considered a bottleneck point, and it's generally reasonable to halt operations.  
+Another approach involves examining the **scree plot**, which visualizes the ability of each dimension to explain the overall variance in the data. When the explanatory power begins to decrease and flatten out, it suggests diminishing returns regarding dimension reduction. This is often considered a bottleneck point, and it's generally reasonable to halt operations.  
 
-In this instance, after introducing the third dimension, there's a limited change in the explanatory power as the dimensions increase. It might be considered to select the first three dimensions for subsequent model analysis. However, due to the relatively small absolute size of the overall explainable variance, the cumulative explained variance of the first three dimensions falls short of 50%. Therefore, in this case, this approach might not be suitable. 
+In this instance, after introducing the third dimension, there's a limited change in the explanatory power as the dimensions increase. Selecting the first three dimensions for subsequent model analysis might be considered. However, due to the relatively small absolute size of the overall explainable variance, the cumulative explained variance of the first three dimensions falls short of 50%. Therefore, in this case, this approach might not be suitable. 
 
 ```{r}
 #result_cos2
@@ -621,7 +620,7 @@ fviz_pca_var(pca_coord, col.var = "contrib", gradient.cols = c("#00AFBB", "#E7B8
 
 We've created visualizations showcasing the importance of variables concerning the two most significant dimensions.  
 
-`cos2` is used to assess the variables' importance, represented by the distance between the arrow endpoint and the origin of the plot. Variables closer to the correlation circle with r=1 indicate higher representation on the factor map, signifying greater importance. Variables closer to the center of the plot are less important for the selected principal components.  
+`cos2` is used to assess the importance of the variables, represented by the distance between the arrow endpoint and the origin of the plot. Variables closer to the correlation circle with r=1 indicate higher representation on the factor map, signifying greater importance. Variables closer to the center of the plot are less important for the selected principal components.  
 
 Additionally, variables with larger contributions can be highlighted on the correlation plot by coloring them based on the values from `var_sign$contrib`.  
 
@@ -636,13 +635,6 @@ fviz_pca_ind(res_pca_sign,
 ```
 
 Based on the outcome (`Alive` or `Death`), the data points were grouped and color-coded accordingly. Ellipses were generated to encapsulate the sample points for different groups (alive and death), showcasing the analysis using the two principal components.  
-
-
-
-
-
-=======
-
 
 
 
@@ -786,7 +778,7 @@ title(main = "The ROC Curve of Generalized Linear Model")
 
 The AUC of the model on validation dataset: 0.7757475. According to the ROC plot and AUC value, the predictive performance of the model on the validation group data is generally satisfactory.
 
-#### Conclusion
+### Conclusion
 
 The regression models, with reasonable predictive performance, underscore the potential for developing more sophisticated predictive tools. Future research should expand upon this work with larger datasets and consider the integration of machine learning approaches to enhance predictive accuracy. This could ultimately lead to improved patient stratification and personalized treatment protocols in critical care environments.
 
@@ -799,14 +791,10 @@ The logistic regression analysis further refined our understanding. Surprisingly
 
 ## Challenges
 
-In the dimension reduction analyses we conducted, we've observed an absence of significant reduction effects.   
+In our dimension reduction efforts, the anticipated benefits were not fully realized. Dimensionality reduction techniques, such as PCA, struggled with delineating a subset of dimensions that significantly contributed to predictive performance. This lack of discernible variance contribution gradient complicates the determination of an ideal dimension count. Similarly, our random forests models did not consistently select classification nodes that enhanced outcome prediction success rates. These challenges may stem from low variable correlation, diminishing the efficacy of reduced dimension representations. Moreover, the binary nature of the 'outcome' variable may have inherently limited the development of a robust model.
 
-Regarding random forests, the selection of classification nodes doesn't reliably support high success rates in outcome prediction. As for PCA, it's challenging to determine fewer dimensions that exhibit reliable predictive capabilities for the outcome, and with an increase in dimensions, there isn't a clear gradient of percent variance contribution, making it difficult to define the optimal number of dimensions.  
-
-Possible reasons could be the low correlation among variables, rendering ineffective condensed representations through dimension reduction. Additionally, utilizing the binary variable `outcome` as a predictive output might inherently hinder the construction of an effective predictive model.  
-
-When established Rshiny dashboard, we encountered problems of decision of choosing appropriate interaction plots, setting indexes options and converting different types of plots. Our biggest difficulty was previewing shiny dashborad in website, since `rmarkdown::render("Rshiny.Rmd", output_format = "flexdashboard::flex_dashboard")` conflicts original html document's format.
+When established Rshiny dashboard, we encountered problems of decision of choosing appropriate interaction plots, setting indexes options and converting different types of plots. The most significant obstacle was resolving conflicts between the R Markdown rendering command and the native HTML format, which impeded seamless dashboard previews. This suggests a need for more streamlined integration methods between R Shiny and existing web frameworks.
 
 ## Insights
 
-We still need more data to support our conclusion, since our original dataset contains too many NA values. Although we used mean value to represent missing values, information bias still exist, affecting  accuracy of conclusion.
+The initial analysis yields promising directions, but the data's integrity is compromised by the prevalence of missing values. Substituting these with mean values, while practical, introduces an element of bias, potentially skewing the accuracy of our conclusions. This methodological limitation underscores the need for a more comprehensive dataset to validate our findings. Acquiring additional, high-quality data will be crucial for enhancing the robustness of our conclusions and ensuring that our predictive models reliably reflect the underlying clinical realities.
