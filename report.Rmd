@@ -796,3 +796,11 @@ The regression models, with reasonable predictive performance, underscore the po
 This study’s exploratory data analysis (EDA) on ICU heart failure patients highlights several factors influencing mortality rates. We observed a higher mortality rate in males and a significant vulnerability among the elderly. Comorbidities like hypertension and diabetes, although prevalent, did not exhibit a clear impact on mortality. However, certain lab results, such as hematocrit and blood urea nitrogen levels, emerged as potential biomarkers for mortality.
 
 The logistic regression analysis further refined our understanding. Surprisingly, comorbidities such as deficiency anemias, renal failure, and COPD were inversely associated with mortality. This counterintuitive finding might reflect the benefits of early diagnosis and management. Key physiological indicators, including blood calcium and anion gap, were identified, and their significance was reinforced in both complete and derivation datasets.
+
+##Challenges
+
+When established Rshiny dashboard, we encountered problems of decision of choosing appropriate interaction plots, setting indexes options and converting different types of plots. Our biggest difficulty was previewing shiny dashborad in website, since `rmarkdown::render("Rshiny.Rmd", output_format = "flexdashboard::flex_dashboard")` conflicts original html document's format.
+
+## Insights
+
+We still need more data to support our conclusion, since our original dataset contains too many NA values. Although we used mean value to represent missing values, information bias still exist, affecting  accuracy of conclusion.
